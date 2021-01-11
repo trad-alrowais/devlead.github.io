@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Just an environment variable away from sleep</title>
+
+  <link rel="canonical" href="https://medium.com/@devlead/just-an-environment-variable-away-from-sleep-15013adc8cb6">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Just an environment variable away from sleep" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2019/2019-12-06-just-an-environment-variable-away-from-sleep" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Just an environment variable away from sleep
+          </h1>
+              <div class="meta">Published on Friday, 6 December 2019</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                      <a href="/tags/release-notes" class="badge badge-light"> Release Notes</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p>It’s a quarter past midnight, you should be going to sleep, but there’s that one unit test that fails only on GitHub Action macOS build agent — it’s mocking you so you stay awake just a bit longer…</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/002a2a50-81cb-491e-145e-bc8ef7ceb2bd.png?sv=2019-12-12&amp;st=2021-01-10T09%3A13%3A54Z&amp;se=2031-01-11T09%3A13%3A54Z&amp;sr=b&amp;sp=r&amp;sig=QDRIJM%2FTAGDrRbSk7zA%2FrdfRBNBxhZoIZuIkrmbWEQg%3D" alt="Failed MacOS build on GitHub PR" /></p>
+<p>You bring out you Mac and execute tests, fortunately we can reproduce — the test fails on your machine too! A quick inspection of test output informs you that error only occurs on .NET Core.</p>
+<p>Unfortunately, today neither VS Mac nor VSCode for some reason is your friend, solutions won’t build, tests aren’t found, break points aren’t hit and so on.</p>
+<p>Probably not their fault at all, more likely a case of complex multi target solution, having preview versions and just being too tired.</p>
+<p>Fortunately, as the .NET CLI “dotnet test” command executed by the build script compiled and executed the tests, one could leave the VS Mac/Code IDE tooling debugging for another day and trigger debugging from the command line.</p>
+<p>This is achieved by setting the environment variable <code>VSTEST_HOST_DEBUG</code> to <code>1</code>.</p>
+<h3 id="bash">Bash</h3>
+<pre><code class="language-bash">export VSTEST_HOST_DEBUG=1
+</code></pre>
+<h3 id="powershell">PowerShell</h3>
+<pre><code class="language-powershell">$env:VSTEST_HOST_DEBUG=1
+</code></pre>
+<p>Now when executing the test (specifying only the framework I want to test)</p>
+<pre><code class="language-bash">dotnet test My.Tests.csproj —-framework=netcoreapp3.0
+</code></pre>
+<p>It’ll will pause and wait for a debugger to attach.</p>
+<pre><code class="language-bash">Microsoft (R) Test Execution Command Line Tool Version 16.3.0
+Copyright (c) Microsoft Corporation.  All rights reserved.Starting test execution, please wait...A total of 1 test files matched the specified pattern.
+Host debugging is enabled. Please attach debugger to testhost process to continue.
+Process Id: 32723, Name: dotnet
+Waiting for debugger attach…
+Process Id: 32723, Name: dotnet
+</code></pre>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3f6c41b2-be6d-1259-483f-0cb610799074.png?sv=2019-12-12&amp;st=2021-01-10T09%3A45%3A48Z&amp;se=2031-01-11T09%3A45%3A48Z&amp;sr=b&amp;sp=r&amp;sig=OtBMnkTPJeuR93Eh9vo8MSGB5SwUiRnSH6UOw3WN4HY%3D" alt="Attach to Process in VSMac" /></p>
+<p>and VS Code</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/0d7a04ed-add1-3db6-6c14-55e0e733ce9f.png?sv=2019-12-12&amp;st=2021-01-10T09%3A46%3A29Z&amp;se=2031-01-11T09%3A46%3A29Z&amp;sr=b&amp;sp=r&amp;sig=NnZf%2Fdn1BQLaaj4Wos2%2Bn9QMDc4WLXK5AN8K6Cj8swo%3D" alt="Attach to Process VSCode" /></p>
+<p>Which allowed me to set break points, inspect variables and step through code, even though the IDEs themselves for some reason couldn’t compile and execute the tests.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/fa197436-9d59-63e7-00dc-795b2df63c12.png?sv=2019-12-12&amp;st=2021-01-10T09%3A47%3A13Z&amp;se=2031-01-11T09%3A47%3A13Z&amp;sr=b&amp;sp=r&amp;sig=W2frMVBD%2Bs4IH8a%2FCyPas4Aw2yVpzfzhF9%2FpXUT1VF0%3D" alt="IDE test break points hit" /></p>
+<p>Fairly quickly found the issue added a commit and builds were green and I could go to sleep.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f94d4dea-7f34-2d6b-2b98-b78a727ebe35.png?sv=2019-12-12&amp;st=2021-01-10T09%3A47%3A48Z&amp;se=2031-01-11T09%3A47%3A48Z&amp;sr=b&amp;sp=r&amp;sig=tgplc9XhXuY5qBJLd%2FCSU4ZUKaz%2BgorxGG%2B9h0%2F2C60%3D" alt="macOS build passes" /></p>
+<p>Sometimes you just want to attack the problem and not debug tooling, then attacking the problem from another direction might get you there quicker, today it was setting <code>VSTEST_HOST_DEBUG</code> to <code>1</code>.</p>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2019/2019-12-06-just-an-environment-variable-away-from-sleep.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/@devlead/just-an-environment-variable-away-from-sleep-15013adc8cb6">https://medium.com/@devlead/just-an-environment-variable-away-from-sleep-15013adc8cb6</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

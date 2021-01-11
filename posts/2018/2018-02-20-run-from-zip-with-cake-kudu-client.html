@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A new way to deploy your Azure Web Apps and Function Apps">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - &#x201C;Run-From-Zip&#x201D; with Cake Kudu Client</title>
+
+  <link rel="canonical" href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - &#x201C;Run-From-Zip&#x201D; with Cake Kudu Client" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            &#x201C;Run-From-Zip&#x201D; with Cake Kudu Client
+          </h1>
+            <h2 class="subheading">A new way to deploy your Azure Web Apps and Function Apps</h2>
+              <div class="meta">Published on Tuesday, 20 February 2018</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/29bf78b1-94f2-6301-ec83-fd4541c438b7.png?sv=2019-12-12&amp;st=2021-01-10T12%3A37%3A03Z&amp;se=2031-01-11T12%3A37%3A03Z&amp;sr=b&amp;sp=r&amp;sig=eyImi7f1xhlW0EtOsWQOS5NhsBgUv6fWlKtF03AqOXc%3D" alt="Ship at sea" /></p>
+<pre><code>Update! Since this post was written, there’s been some breaking changes to Azure App Services Run-From-Zip feature, this was fixed in Cake.Kudu.Client version 0.6.0 you can read more about that at the post below
+</code></pre>
+<p><a href="https://medium.com/&#64;devlead/cake-kudu-client-version-0-6-0-released-cb6435629684"><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3d72e5ff-aca6-965a-1989-d837ba7cce69.png?sv=2019-12-12&amp;st=2021-01-10T12%3A35%3A54Z&amp;se=2031-01-11T12%3A35%3A54Z&amp;sr=b&amp;sp=r&amp;sig=bbuUUuci2RePI%2BEBfDKhyAvBNOV98aYSZ%2FBEqXNQ%2F1M%3D" alt="Cake.Kudu Client version 0.6.0 released" /></a></p>
+<p>A couple of days ago Azure announced that they in preview added a new way to do app services deployments called <a href="https://github.com/Azure/app-service-announcements/issues/84">Run-From-Zip</a>, which lets you deploy using a zip file.</p>
+<p>Deploying using a zip file as been possible before, the difference with this new method is that the file isn’t extracted into the “wwwroot” directory, but instead the zip file <em>mounted</em> read only as “wwwroot”.</p>
+<p>The zip file can either be hosted externally from the site or in a special folder on the app service itself, and the latter is now what the “Kudu Client” Cake addin now supports — enabling you to use this new method of deployment in your Cake build scripts.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>To enable Run-From-Zip deployments you’ll first need to set an application setting called <code>WEBSITE_USE_ZIP</code>, you either set this to an url when deploying from an external source, or in this case just set it to <code>1</code>.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ca61d0c-daf2-3ada-e681-a129eee866fe.png?sv=2019-12-12&amp;st=2021-01-10T12%3A38%3A49Z&amp;se=2031-01-11T12%3A38%3A49Z&amp;sr=b&amp;sp=r&amp;sig=RHcKAy41C%2FrjCXhM5jfrZsIqlSi%2BEamUIZoLSp%2Bqjao%3D" alt="App Service app settings" /></p>
+<h2 id="ziprunfromdirectory">ZipRunFromDirectory</h2>
+<p>Naming things is hard, but the addin now has a method called <a href="https://cakebuild.net/api/Cake.Kudu.Client.Extensions/KuduClientZipExtensions/AA111BEB">ZipRunFromDirectory</a>, which will do all the “heavy lifting” and deploy a local directory.</p>
+<h2 id="example-usage">Example usage</h2>
+<p>o deploying a site using this new method just becomes a couple of lines of code</p>
+<pre><code class="language-csharp">#addin nuget:?package=Cake.Kudu.Client&amp;version=0.3.0
+
+string  baseUri     = EnvironmentVariable(&quot;KUDU_CLIENT_BASEURI&quot;),
+        userName    = EnvironmentVariable(&quot;KUDU_CLIENT_USERNAME&quot;),
+        password    = EnvironmentVariable(&quot;KUDU_CLIENT_PASSWORD&quot;);
+
+IKuduClient kuduClient = KuduClient(
+    baseUri,
+    userName,
+    password);
+
+DirectoryPath sourceDirectoryPath = &quot;./Documentation/&quot;;
+
+FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
+
+Information(&quot;Deployed to {0}&quot;, deployFilePath);
+</code></pre>
+<p>The file path returned, is the zip file deployed to the app service.</p>
+<h2 id="behind-the-curtain">Behind the curtain</h2>
+<p>So what does actually happen here?
+In a nutshell the method will:</p>
+<ol>
+<li>In memory zip source directory</li>
+<li>Push that zip to d:\home\data\SitePackages to a unique date stamped file name</li>
+<li>Push the filename of the zip to d:\home\data\SitePackages\siteversion.txt</li>
+<li>Via Kudu API call the site to ensure it’s up and right version deployed (a file called KuduClientZipRunFromDirectoryVersion.txt is included in deployed zip for this purpose)</li>
+<li>Return the remote path of the deployed zip</li>
+</ol>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/996eea2c-912e-28db-5430-4a962037b645.png?sv=2019-12-12&amp;st=2021-01-10T12%3A41%3A15Z&amp;se=2031-01-11T12%3A41%3A15Z&amp;sr=b&amp;sp=r&amp;sig=jQ0EAY8Joiny7%2BSJEP%2BwyjbR3kZRDBAsWBt%2FSVr5pzU%3D" alt="Kudu deploy zip files" /></p>
+<h2 id="closing-thoughts">Closing thoughts</h2>
+<p>I’ve tried this for a couple of days now, and have found deployments to be very stable and quick. But really need some more testing to see what the implications of running this in production, how existing apps behave in a read only mode, etc.</p>
+<p>This is a shiny new feature still in preview, general guidance and tooling support isn’t quite there yet, but as you seen with this post the primitives are in place to build upon and refine the experience in the future!</p>
+<p><a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/d815ce8f-f979-6770-5abb-02d65e195cf3.png?sv=2019-12-12&amp;st=2021-01-10T12%3A42%3A16Z&amp;se=2031-01-11T12%3A42%3A16Z&amp;sr=b&amp;sp=r&amp;sig=r4hBCgyhHLD%2FsHuT3RN49DXX4AeZczADKWtDnKCU5Vc%3D" alt="Introducing Cake Kudu Client" /></a></p>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37">https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

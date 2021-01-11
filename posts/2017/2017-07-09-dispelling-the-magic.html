@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="The layers and pieces of Cake">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Dispelling the magic!</title>
+
+  <link rel="canonical" href="https://medium.com/hackernoon/dispelling-the-magic-6dc0fdfe476c">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Dispelling the magic!" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Dispelling the magic!
+          </h1>
+            <h2 class="subheading">The layers and pieces of Cake</h2>
+              <div class="meta">Published on Sunday, 9 July 2017</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                      <a href="/tags/f" class="badge badge-light"> F#</a>
+                      <a href="/tags/visual-basic" class="badge badge-light"> Visual Basic</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9a556e23-9df5-b80b-edce-8103ba73bcea.png?sv=2019-12-12&amp;st=2021-01-10T13%3A15%3A19Z&amp;se=2031-01-11T13%3A15%3A19Z&amp;sr=b&amp;sp=r&amp;sig=bY%2FrcHwH0ULHLyo0Gh00lXcpdE3XXE1S5ZF84AQ7B08%3D" alt="build.cake -&gt; magic - Build success/fail" /></p>
+<p>When you don’t know the details behind a technology, it’s easy to dismiss it as magic, but if you dare to look behind the curtain — it might not be that complicated or foreign to what you already know.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53899274-3404-8df9-4c59-85cb29b5a673.png?sv=2019-12-12&amp;st=2021-01-10T13%3A16%3A42Z&amp;se=2031-01-11T13%3A16%3A42Z&amp;sr=b&amp;sp=r&amp;sig=1vvUx7y%2FZV2df%2FQdO04t6h6SE3eM9J%2B4OB2gSqQCyvY%3D" alt="Cake logo" /></p>
+<p>In this blog post, I’ll go through some of the pieces that make up the open source build orchestration tool <a href="http://cakebuild.net/">Cake</a>.</p>
+<p>I’ll show you how you can reuse pieces of Cake with different environments and even languages, I’ll go into detail on some parts and glance over others.</p>
+<p>If there’s any part you would want me to go into more detail with please let me now! I will provide links to the examples and resources at the end of this blog post.</p>
+<h2 id="its-just-c-and.net">“It’s just C# and .Net”</h2>
+<p>This is a statement I have often made as Cake scripts provide a superset of C# — which means anything you can do in C# you can do Cake. The Cake DSL via its aliases merely provide a shortcut to make APIs and tools easier to consume, but you can always opt to like “regular” code reference assemblies, write methods and classes.</p>
+<p>An example of this could be working with JSON, in your console or MVC app it’s likely that you would use JSON.Net to serialize/deserialize your JSON from/to .NET objects and doing the same with a Cake script doesn’t differ much from plain vanilla C#</p>
+<pre><code class="language-csharp">#addin &quot;Newtonsoft.Json&quot;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+public class MyDto
+{
+    public string Name { get; set; }
+}
+
+var dto = new MyDto {
+    Name = &quot;John Doe&quot;
+};
+
+var json = JsonConvert.SerializeObject(dto, Formatting.Indented);
+
+var dto2 = JsonConvert.DeserializeObject&lt;MyDto&gt;(json);
+</code></pre>
+<p>Basically, only difference is the <code>#addin</code> preprocessor, which fetches and references an assembly from NuGet and the lack of need to wrap in the code in a namespace/class/method.</p>
+<p>Being “just” C# and .NET truly means that you’ll always have the safety net of .NET, C# and the vast number of resources available for those pieces of technology.</p>
+<h2 id="the-pieces-of-cake">The pieces of Cake</h2>
+<p>Cake is distributed in two flavors, one for the full classic .NET which also works with Mono and a version for .NET Core — the new cross platform framework/runtime from Microsoft.</p>
+<p>The most common way to obtain the Cake tool is via the <code>Cake</code> and <code>Cake.CoreCLR</code>NuGet packages (Cake is also available via Chocolatey, Homebrew, GitHub and official docker containers are on their way).</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/46ed3f51-6cba-3f11-8cb7-04f729fb5877.png?sv=2019-12-12&amp;st=2021-01-10T13%3A25%3A17Z&amp;se=2031-01-11T13%3A25%3A17Z&amp;sr=b&amp;sp=r&amp;sig=QIFKVh4SEpjHISyoO%2F9eMwFiUARNHuHCXB0lfjk9x5w%3D" alt=".NET Full/Desktop vs .NET Core" /></p>
+<p>The NuGet packages contain all dependencies needed to execute under respective runtime, but the “Magic” is in three assemblies and a console application.</p>
+<h2 id="cake.exe-cake.dll-the-tool">Cake.exe / Cake.dll — “The Tool”</h2>
+<p>To name a few things it handles</p>
+<ul>
+<li>Compilation of scripts</li>
+<li>Argument parsing</li>
+<li>Console logging</li>
+<li>Composition of modules/assemblies</li>
+<li>Basically, it’s what glues everything together and provides the “Cake experience”</li>
+</ul>
+<h2 id="cake.core-the-heart">Cake.Core — “The heart”</h2>
+<p>Provides things like</p>
+<ul>
+<li>Core abstractions/interfaces/attributes used by Cake Tool/Addins/Modules (<em>this is the only assembly needed to reference when creating a Cake addin/module</em>)</li>
+<li>DSL Parsing and transpiling/codegen to C# that Roslyn understands and can compile</li>
+<li>Base tool implementation (<em>tool resolution, execution, settings etc.</em>)</li>
+<li>Cake Task runtime (<em>task runner/dependency graph/setup &amp; teardown etc.</em>)</li>
+</ul>
+<h2 id="cake.common-the-doer">Cake.Common — “The doer”</h2>
+<p>This assembly provides almost 400 convenient aliases/extension methods for things like</p>
+<ul>
+<li>Tools (MSBuild, NuGet, .NET Core CLI, code signing, etc.)</li>
+<li>APIs (compression, project file parsing, text templating, HTTP, etc.)</li>
+<li>Build system support (AppVeyor, VSTS, Jenkins, TeamCity, MyGet, etc.)</li>
+</ul>
+<h2 id="cake.nuget-the-fetcher">Cake.NuGet — “The Fetcher”</h2>
+<p>Cake module that enables fetching dependencies from NuGet for i.e. preprocessor directives like <code>#addin</code>, <code>#tool</code> and <code>#load</code>.</p>
+<h2 id="cake-composition-its-just-c-and.net-part-deux">Cake composition — “It’s just C# and .Net part deux”</h2>
+<p>The assemblies <code>Cake.Core</code>, <code>Cake.Common</code> and <code>Cake.NuGet</code> are all available up on NuGet.org targeting both .NET Full/Desktop and .NET Core.</p>
+<p>This means you can reference and leverage parts/most of the work and effort that’s been put into Cake with almost any .NET application, environment or platform — it’s just standard C# code and assemblies!</p>
+<p>That said Cake relies heavily on dependency injection and has over time been refactored into custom modules — so how it all fits together can be a bit daunting for someone that’s new to the project. A rough basic example of doing this using an Inversion of Control container like AutoFac could look something like this:</p>
+<pre><code class="language-csharp">var builder = new ContainerBuilder();
+// Core services.
+builder.RegisterType&lt;CakeEngine&gt;().As&lt;ICakeEngine&gt;().SingleInstance();
+builder.RegisterType&lt;FileSystem&gt;().As&lt;IFileSystem&gt;().SingleInstance();
+builder.RegisterType&lt;CakeEnvironment&gt;().As&lt;ICakeEnvironment&gt;().SingleInstance();
+builder.RegisterType&lt;Globber&gt;().As&lt;IGlobber&gt;().SingleInstance();
+builder.RegisterType&lt;ProcessRunner&gt;().As&lt;IProcessRunner&gt;().SingleInstance();
+builder.RegisterType&lt;WindowsRegistry&gt;().As&lt;IRegistry&gt;().SingleInstance();
+builder.RegisterType&lt;ToolLocator&gt;().As&lt;IToolLocator&gt;().SingleInstance();
+builder.RegisterType&lt;ToolResolutionStrategy&gt;().As&lt;IToolResolutionStrategy&gt;().SingleInstance();
+builder.RegisterType&lt;ToolRepository&gt;().As&lt;IToolRepository&gt;().SingleInstance();
+builder.RegisterType&lt;DefaultExecutionStrategy&gt;().As&lt;IExecutionStrategy&gt;().SingleInstance();
+builder.RegisterType&lt;CakePlatform&gt;().As&lt;ICakePlatform&gt;().SingleInstance();
+builder.RegisterType&lt;CakeRuntime&gt;().As&lt;ICakeRuntime&gt;().SingleInstance();
+builder.RegisterType&lt;CakeContext&gt;().As&lt;ICakeContext&gt;().SingleInstance();
+
+// Script Host Services - these are currently part of Cake.exe/dll and
+// not publicly available and need to be provided by any custom host
+builder.RegisterType&lt;CustomArguments&gt;().As&lt;ICakeArguments&gt;();
+builder.RegisterType&lt;CustomConfiguration&gt;().As&lt;ICakeConfiguration&gt;();
+builder.RegisterType&lt;CustomLog&gt;().As&lt;ICakeLog&gt;().SingleInstance();
+builder.RegisterType&lt;CustomReportPrinter&gt;().As&lt;ICakeReportPrinter&gt;().SingleInstance();
+builder.RegisterType&lt;CustomScriptHost&gt;().As&lt;IScriptHost&gt;().SingleInstance();
+
+// Script Host
+IScriptHost ScriptHost = builder.Build().Resolve&lt;IScriptHost&gt;();
+</code></pre>
+<p>As the observant might see from the comment there’s a few cases where the implementation currently resides in <code>Cake.exe/Cake.dll</code> (<em>this might be something we’ll look at refactoring in the future</em>), the interfaces they implement exist in Core so you can implement and provide your own implementation or depending on what parts of Cake you reuse you might not need them (<em>for unit testing we provide Cake.Testing which provides fake context and file system, environment abstractions for tool testing, etc. Unit testing Cake addins / modules might be a good topic for another blog post — please let me know if you reckon that’s the case</em>).</p>
+<h2 id="proof-of-concept-custom-script-host">Proof of concept custom script host</h2>
+<p>So, to do your own custom host for your own “build script” implementation, you currently need to implement a few interfaces: <code>ICakeArguments</code>, <code>ICakeConfiguration</code>, <code>ICakeLog</code>, <code>ICakeReportPrinter</code> and <code>IScriptHost</code>, because these implementations as mentioned earlier currently resides in <code>Cake.exe/Cake</code>.dll, but all other are available in <code>Cake.Core</code> ready for reuse in any .NET project.</p>
+<p>To demonstrate this, I’ve created the <em>“Proof of concept, in no way official, don’t use in production, just to see how the sausage is made, etc.”</em> assembly called <code>Cake.Bridge</code>, compiled for both .NET and .NET Core, which means it could be used most places .NET is available today (<em>binary is up on NuGet and source on GitHub, I’ll provide links to all resources at end of this post</em>).</p>
+<p><code>Cake.Bridge</code> provides a static <code>CakeBridge</code>class which provides easy access to working with the Cake task runner and the <code>ICakeContext</code> (<em>which is what all Cake aliases/methods extend</em>), created with the goal to demonstrate an easy way to reuse Cake assemblies from any .NET language and not only with C# which is what Cake supports out of the box.</p>
+<p>What you won’t get is anything the Cake DSL provides and no addin nor module support.</p>
+<p>To illustrate this I’ve authored a few code snippets on how using Cake from a few different .NET languages using the <code>Cake.Bridge</code> assembly, <em><strong>disclaimer</strong></em> the code snippets are quick and rough proof of concepts to mostly prove it can be done and obviously more refinement needs to be done for them to be more idiomatically correct.</p>
+<p>There often exist more native, prominent and widely used build systems already.</p>
+<h2 id="powershell">PowerShell</h2>
+<p>Even if perhaps mainly the sysadmin language of choice — PowerShell still is a .NET based language and its ability to utilize .NET makes it a very powerful scripting language as anything not provided native by the language often can be solved by reaching out to the framework it’s running on. It also means that you can use Cake from it:</p>
+<pre><code class="language-powershell">[string] $cakeBootstrapper      = './v0.0.5-alpha-cake.ps1'
+[string] $cakeBootstrapperUrl   = 'https://raw.githubusercontent.com/devlead/Cake.Bridge/v0.0.5-alpha/src/cake.ps1'
+if (!(Test-Path $cakeBootstrapper))
+{
+    Invoke-RestMethod $cakeBootstrapperUrl -OutFile $cakeBootstrapper
+}
+. $cakeBootstrapper
+
+######################################################################
+## GLOBALS
+######################################################################
+[FilePath]      $solution      = [Enumerable]::FirstOrDefault([GlobbingAliases]::GetFiles($context, &quot;./src/*.sln&quot;))
+[string]        $configuration = &quot;Release&quot;
+[DirectoryPath] $nugetRoot     = [DirectoryAliases]::MakeAbsolute($context, &quot;./nuget&quot;);
+
+######################################################################
+## SETUP / TEARDOWN
+######################################################################
+Setup([Action[ICakeContext]]{
+    param([ICakeContext] $ctx)
+})
+
+Teardown([Action[ITeardownContext]]{
+    param([ITeardownContext] $ctx)
+})
+
+######################################################################
+## TASKS
+######################################################################
+$cleanTask      = &quot;Clean&quot; |`
+                    Task |`
+                    Does -Action ({
+                        [DirectoryAliases]::CleanDirectories($context, &quot;./src/**/bin/$configuration&quot;)
+                        [DirectoryAliases]::CleanDirectories($context, &quot;./src/**/obj/$configuration&quot;)
+                        [DirectoryAliases]::CleanDirectory($context, $nugetRoot)
+                    })
+
+$restoreTask    = &quot;Restore&quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $cleanTask |`
+                    Does -Action ({
+                        [DotNetCoreAliases]::DotNetCoreRestore($context, $solution.FullPath)
+                    })
+
+$buildTask      = &quot;Build&quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $restoreTask |`
+                    Does -Action ({
+                        [DotNetCoreAliases]::DotNetCoreBuild($context, $solution.FullPath)
+                    })
+
+$packTask       = &quot;Pack&quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $buildTask |`
+                    Does -Action ({
+                        [DotNetCorePackSettings]   $packSettings = [DotNetCorePackSettings]::new()
+                        $packSettings.OutputDirectory = $nugetRoot
+
+                        [DotNetCoreAliases]::DotNetCorePack(
+                            $context,
+                            $solution.FullPath,
+                            $packSettings
+                        )
+                    })
+
+######################################################################
+## EXECUTION
+######################################################################
+$packTask | RunTarget
+</code></pre>
+<h2 id="visual-basic">Visual Basic</h2>
+<p>You can’t talk about .NET languages without mentioning Visual Basic and now when it’s also joining the .NET Core party too it’s getting up to date with the times. And obviously you can <strong>Bake</strong> with <strong>Cake</strong> using some Basic (<em>there’s no VB.NET interactive console that I know of so I created a simple VB.NET Core console app</em>).</p>
+<pre><code class="language-vb">Imports System
+Imports System.Linq
+Imports CakeBridge
+Imports Cake.Core
+Imports Cake.Core.Diagnostics
+Imports Cake.Core.IO
+Imports Cake.Common
+Imports Cake.Common.IO
+Imports Cake.Common.Diagnostics
+Imports Cake.Common.Tools.DotNetCore
+Imports Cake.Common.Tools.DotNetCore.Build
+Imports Cake.Common.Tools.DotNetCore.Pack
+Imports Cake.Common.Tools.DotNetCore.Restore
+Imports Cake.Common.Tools.DotNetCore.Test
+
+Module Program
+    Sub Main()
+        '//////////////////////////////////////////////////////////////////////
+        '// ARGUMENTS
+        '//////////////////////////////////////////////////////////////////////
+        Dim target          = Context.Argument(&quot;target&quot;, &quot;Default&quot;),
+            configuration   = Context.Argument(&quot;configuration&quot;, &quot;Release&quot;)
+
+        '//////////////////////////////////////////////////////////////////////
+        '// GLOBALS
+        '//////////////////////////////////////////////////////////////////////
+        Dim nugetRoot       As DirectoryPath    = Nothing,
+            solution        As FilePath         = Nothing,
+            solutionDir     As DirectoryPath    = Nothing,
+            semVersion      As String           = Nothing,
+            assemblyVersion As String           = Nothing,
+            fileVersion     As String           = Nothing
+
+        '//////////////////////////////////////////////////////////////////////
+        '// SETUP / TEARDOWN
+        '//////////////////////////////////////////////////////////////////////
+        Setup(
+            Sub(ctx As ICakeContext)
+                ctx.Information(&quot;Setting up...&quot;)
+
+                solution = ctx.GetFiles(&quot;./src/*.sln&quot;).Select(Function(file as FilePath) ctx.MakeAbsolute(file)).FirstOrDefault()
+
+                If solution Is Nothing Then
+                    Throw New Exception(&quot;Failed to find solution&quot;)
+                End If
+
+                solutionDir = solution.GetDirectory()
+                nugetRoot = ctx.MakeAbsolute(ctx.Directory(&quot;./nuget&quot;))
+
+                Dim releaseNotes    = ctx.ParseReleaseNotes(&quot;./ReleaseNotes.md&quot;)
+                assemblyVersion     = releaseNotes.Version.ToString()
+                fileVersion         = assemblyVersion
+                semVersion          = $&quot;{assemblyVersion}-alpha&quot;
+
+                ctx.Information(&quot;Executing build {0}...&quot;, semVersion)
+            End Sub
+        )
+
+        Teardown(
+            Sub(ctx As ITeardownContext) ctx.Information(&quot;Tearing down...&quot;)
+        )
+
+        '//////////////////////////////////////////////////////////////////////
+        '// TASKS
+        '//////////////////////////////////////////////////////////////////////
+        Dim cleanTask = Task(&quot;Clean&quot;).Does(
+            Sub()
+                Context.CleanDirectories($&quot;{solutionDir.FullPath}/**/bin/{configuration}&quot;)
+                Context.CleanDirectories($&quot;{solutionDir.FullPath}/**/obj/{configuration}&quot;)
+                Context.CleanDirectory(nugetRoot)
+            End Sub
+            )
+
+        Dim restoreTask = Task(&quot;Restore&quot;).Does(
+            Sub() Context.DotNetCoreRestore(solution.FullPath,
+                                  New DotNetCoreRestoreSettings With {
+                                  .Sources = {&quot;https://api.nuget.org/v3/index.json&quot;}
+                                  })
+            ).IsDependentOn(cleanTask)
+
+        Dim buildTask = Task(&quot;Build&quot;).Does(
+            Sub() Context.DotNetCoreBuild(solution.FullPath,
+                                  New DotNetCoreBuildSettings With {
+                                  .Configuration = configuration,
+                                  .ArgumentCustomization = Function(args) args.Append(
+                                                                                &quot;/p:Version={0}&quot;, semVersion
+                                                                            ).Append(
+                                                                                &quot;/p:AssemblyVersion={0}&quot;, assemblyVersion
+                                                                            ).Append(
+                                                                                &quot;/p:FileVersion={0}&quot;, fileVersion
+                                                                            )
+                                  })
+            ).IsDependentOn(restoreTask)
+
+        Dim testTask = Task(&quot;Test&quot;).Does(
+            Sub()
+                For Each project In Context.GetFiles(&quot;./src/**/*.Tests.vbproj&quot;)
+                    Context.DotNetCoreTest(project.FullPath,
+                                    New DotNetCoreTestSettings With {
+                                        .Configuration = configuration,
+                                        .NoBuild = True
+                                        })
+                Next
+            End Sub
+            ).IsDependentOn(buildTask)
+
+        Dim packTask = Task(&quot;Pack&quot;).Does(
+            Sub()
+                For Each project In (Context.GetFiles(&quot;./src/**/*.vbproj&quot;) - Context.GetFiles(&quot;./src/**/*.Tests.vbproj&quot;))
+                    Context.DotNetCorePack(project.FullPath,
+                                    New DotNetCorePackSettings With {
+                                        .Configuration = configuration,
+                                        .OutputDirectory = nugetRoot,
+                                        .NoBuild = True,
+                                        .ArgumentCustomization = Function(args) args.Append(
+                                                                                        &quot;/p:Version={0}&quot;, semVersion
+                                                                                    ).Append(
+                                                                                        &quot;/p:AssemblyVersion={0}&quot;, assemblyVersion
+                                                                                    ).Append(
+                                                                                        &quot;/p:FileVersion={0}&quot;, fileVersion
+                                                                                    )
+                                        })
+                Next
+            End Sub
+            ).IsDependentOn(testTask)
+
+        Task(&quot;Default&quot;).IsDependentOn(packTask)
+
+        '//////////////////////////////////////////////////////////////////////
+        '// EXECUTION
+        '//////////////////////////////////////////////////////////////////////
+        RunTarget(target)
+    End Sub
+End Module¨
+</code></pre>
+<h2 id="f">F#</h2>
+<p>F# is a .NET language which makes it fully possible to use Cake with F#.
+Full disclaimer though, as I’m not very proficient with the F# language and wanted something that somewhat looked like F# I called on the help and assistance of my friend <a href="https://github.com/mrange">Mårten Rånge</a> to do a quick port from C# to F# and this was the result:</p>
+<pre><code class="language-fsharp">#load &quot;tools/Cake.Bridge.0.0.4-alpha/content/cake.fsx&quot;
+
+//////////////////////////////////////////////////////////////////////
+// NAMESPACE IMPORTS
+//////////////////////////////////////////////////////////////////////
+open Cake.Common
+open Cake.Common.Diagnostics
+open Cake.Common.IO
+open Cake.Common.Tools.DotNetCore
+open Cake.Common.Tools.DotNetCore.Build
+open Cake.Common.Tools.DotNetCore.Pack
+open Cake.Core
+open Cake.Core.IO
+open System
+
+open CakeAdapter.CakeModule
+
+// Execute script with: fsi build.fsx
+
+//////////////////////////////////////////////////////////////////////
+// ARGUMENTS
+//////////////////////////////////////////////////////////////////////
+let target        = context.Argument(&quot;target&quot;, &quot;Default&quot;)
+let configuration = context.Argument(&quot;configuration&quot;, &quot;Release&quot;)
+
+//////////////////////////////////////////////////////////////////////
+// GLOBALS
+//////////////////////////////////////////////////////////////////////
+let directoryPath           = !&gt; (context.Directory &quot;./nuget&quot;)
+let nugetRoot               = context.MakeAbsolute directoryPath
+
+type ProjectInfo =
+  {
+    AssemblyVersion : string
+    FileVersion     : string
+    SemVersion      : string
+    Solution        : FilePath
+  }
+
+let mutable projectInfo     = None
+
+let argumentCustomizer      = Func&lt;ProcessArgumentBuilder,ProcessArgumentBuilder&gt; (fun args -&gt;
+                                let p = projectInfo.Value
+                                args
+                                  .Append(&quot;/p:Version={0}&quot;        , p.SemVersion      )
+                                  .Append(&quot;/p:AssemblyVersion={0}&quot;, p.AssemblyVersion )
+                                  .Append(&quot;/p:FileVersion={0}&quot;    , p.FileVersion     ))
+
+//////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+//////////////////////////////////////////////////////////////////////
+setup (fun context -&gt;
+    context.Information &quot;Setting up...&quot;
+
+    let solution        =
+      match context.GetFiles &quot;./src/*.sln&quot; |&gt; Seq.tryHead with
+      | Some solution -&gt; solution
+      | None          -&gt; failwith &quot;Failed to find solution&quot;
+
+    let releaseNotes    = context.ParseReleaseNotes(!&gt; &quot;./ReleaseNotes.md&quot;)
+    let assemblyVersion = string releaseNotes.Version
+    let fileVersion     = assemblyVersion
+    let semVersion      = assemblyVersion + &quot;-alpha&quot;
+
+    projectInfo &lt;- Some {
+        AssemblyVersion = assemblyVersion
+        FileVersion     = fileVersion
+        SemVersion      = semVersion
+        Solution        = solution
+      }
+
+    context.Information(&quot;Executing build {0}...&quot;, semVersion)
+  )
+
+tearDown (fun context -&gt;
+    context.Information &quot;Tearing down...&quot;
+  )
+//////////////////////////////////////////////////////////////////////
+// TASKS
+//////////////////////////////////////////////////////////////////////
+let clean =
+  task &quot;Clean&quot;
+  |&gt; does (fun () -&gt;
+    context.CleanDirectories(&quot;./src/**/bin/&quot; + configuration)
+    context.CleanDirectories(&quot;./src/**/obj/&quot; + configuration)
+    context.CleanDirectory nugetRoot
+  )
+
+let restore =
+  task &quot;Restore&quot;
+  |&gt; isDependentOn clean
+  |&gt; does (fun () -&gt;
+    context.DotNetCoreRestore projectInfo.Value.Solution.FullPath
+  )
+
+let build =
+  task &quot;Build&quot;
+  |&gt; isDependentOn restore
+  |&gt; does (fun () -&gt;
+    context.DotNetCoreBuild(
+      projectInfo.Value.Solution.FullPath         ,
+      DotNetCoreBuildSettings(
+        Configuration         = configuration     ,
+        ArgumentCustomization = argumentCustomizer))
+  )
+
+let pack =
+  task &quot;Pack&quot;
+  |&gt; isDependentOn build
+  |&gt; does (fun () -&gt;
+    if context.DirectoryExists nugetRoot |&gt; not then context.CreateDirectory nugetRoot
+
+    let projectFiles =
+      context.GetFiles &quot;./src/**/*.fsproj&quot;
+      |&gt; Seq.filter (fun file -&gt; file.FullPath.EndsWith &quot;Tests&quot; |&gt; not)
+      |&gt; Seq.toArray
+
+    for project in projectFiles do
+        context.DotNetCorePack(
+          project.FullPath                            ,
+          DotNetCorePackSettings(
+            Configuration         = configuration     ,
+            OutputDirectory       = nugetRoot         ,
+            NoBuild               = true              ,
+            ArgumentCustomization = argumentCustomizer))
+  )
+
+task &quot;Default&quot;
+  |&gt; isDependentOn pack
+
+//////////////////////////////////////////////////////////////////////
+// EXECUTION
+//////////////////////////////////////////////////////////////////////
+runTarget target
+</code></pre>
+<h2 id="cake-c">Cake / C#</h2>
+<p>For reference below is the script that was used for inspiration when porting to other languages/runtimes, there’s a little less bootstrapping involved but besides that they’re very similar:</p>
+<pre><code class="language-csharp">//////////////////////////////////////////////////////////////////////
+// ARGUMENTS
+//////////////////////////////////////////////////////////////////////
+var target = Argument&lt;string&gt;(&quot;target&quot;, &quot;Default&quot;);
+var configuration = Argument&lt;string&gt;(&quot;configuration&quot;, &quot;Release&quot;);
+
+//////////////////////////////////////////////////////////////////////
+// GLOBALS
+//////////////////////////////////////////////////////////////////////
+DirectoryPath nugetRoot = MakeAbsolute(Directory(&quot;./nuget&quot;));
+FilePath solution = null;
+string  semVersion,
+        assemblyVersion,
+        fileVersion;
+
+//////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+//////////////////////////////////////////////////////////////////////
+
+Setup(context =&gt;
+{
+    Information(&quot;Setting up...&quot;);
+    solution = GetFiles(&quot;./src/*.sln&quot;)
+                .FirstOrDefault();
+    if (solution == null)
+        throw new Exception(&quot;Failed to find solution&quot;);
+
+
+    var releaseNotes = ParseReleaseNotes(&quot;./ReleaseNotes.md&quot;);
+    assemblyVersion =releaseNotes.Version.ToString();
+    fileVersion = assemblyVersion;
+    semVersion = assemblyVersion + &quot;-alpha&quot;;
+
+    Information(&quot;Executing build {0}...&quot;, semVersion);
+});
+
+Teardown(context =&gt;
+{
+    Information(&quot;Tearing down...&quot;);
+});
+
+//////////////////////////////////////////////////////////////////////
+// TASKS
+//////////////////////////////////////////////////////////////////////
+
+var clean = Task(&quot;Clean&quot;)
+    .Does(() =&gt;
+    {
+        CleanDirectories(&quot;./src/**/bin/&quot; + configuration);
+        CleanDirectories(&quot;./src/**/obj/&quot; + configuration);
+        CleanDirectory(nugetRoot);
+    });
+
+var restore = Task(&quot;Restore&quot;)
+    .IsDependentOn(clean)
+    .Does(() =&gt;
+    {
+        DotNetCoreRestore(solution.FullPath);
+    });
+
+var build = Task(&quot;Build&quot;)
+    .IsDependentOn(restore)
+    .Does(() =&gt;
+    {
+        DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings {
+            Configuration = configuration,
+            ArgumentCustomization = args =&gt; args
+                .Append(&quot;/p:Version={0}&quot;, semVersion)
+                .Append(&quot;/p:AssemblyVersion={0}&quot;, assemblyVersion)
+                .Append(&quot;/p:FileVersion={0}&quot;, fileVersion)
+        });
+    });
+
+var pack = Task(&quot;Pack&quot;)
+    .IsDependentOn(build)
+    .Does(() =&gt;
+    {
+        if (!DirectoryExists(nugetRoot))
+        {
+            CreateDirectory(nugetRoot);
+        }
+
+        foreach(var project in GetFiles(&quot;./src/**/*.csproj&quot;)
+                                .Where(file=&gt;!file.FullPath.EndsWith(&quot;Tests&quot;)))
+        {
+            DotNetCorePack(project.FullPath, new DotNetCorePackSettings {
+                Configuration = configuration,
+                OutputDirectory = nugetRoot,
+                NoBuild = true,
+                ArgumentCustomization = args =&gt; args
+                    .Append(&quot;/p:Version={0}&quot;, semVersion)
+                    .Append(&quot;/p:AssemblyVersion={0}&quot;, assemblyVersion)
+                    .Append(&quot;/p:FileVersion={0}&quot;, fileVersion)
+            });
+        }
+    });
+
+Task(&quot;Default&quot;)
+    .IsDependentOn(pack);
+
+//////////////////////////////////////////////////////////////////////
+// EXECUTION
+//////////////////////////////////////////////////////////////////////
+RunTarget(target);
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Even though there might seem to be some Magic around Cake and it’s DSL it’s mostly just .NET and C#, having skills in those areas — are skills you can use with Cake scripts or when using Cake assemblies in some other way. If you have a different need from what the official supported way offers, you could still have a piece of the Cake.</p>
+<h2 id="resources">Resources</h2>
+<h3 id="cake.bridge">Cake.Bridge</h3>
+<ul>
+<li>GitHub: <a href="https://github.com/devlead/Cake.Bridge">github.com/devlead/Cake.Bridge</a></li>
+<li>NuGet: <a href="https://www.nuget.org/packages/Cake.Bridge">www.nuget.org/packages/Cake.Bridge</a></li>
+</ul>
+<h3 id="powershell-proof-of-concept">PowerShell proof of concept</h3>
+<ul>
+<li><a href="https://github.com/devlead/PsPoC">github.com/devlead/PsPoC</a></li>
+</ul>
+<h3 id="visual-basic-proof-of-concept">Visual Basic proof of concept</h3>
+<ul>
+<li><a href="https://github.com/devlead/VBPoC">github.com/devlead/VBPoC</a></li>
+</ul>
+<h3 id="f-interactive-script-proof-of-concept">F# interactive script proof of concept</h3>
+<ul>
+<li><a href="https://github.com/devlead/FsxPoC">github.com/devlead/FsxPoC</a></li>
+</ul>
+<h3 id="c-interactive-proof-of-concept">C# interactive proof of concept</h3>
+<ul>
+<li><a href="https://github.com/devlead/CsxPoC">github.com/devlead/CsxPoC</a></li>
+</ul>
+<h3 id="cake">Cake</h3>
+<ul>
+<li>Website: <a href="https://cakebuild.net">cakebuild.net</a></li>
+<li>GitHub: <a href="https://github.com/cake-build/cake">github.com/cake-build/cake</a></li>
+<li>NuGet: <a href="https://www.nuget.org/profiles/cake-build">www.nuget.org/profiles/cake-build</a></li>
+</ul>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2017/2017-07-09-dispelling-the-magic.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/hackernoon/dispelling-the-magic-6dc0fdfe476c">https://medium.com/hackernoon/dispelling-the-magic-6dc0fdfe476c</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

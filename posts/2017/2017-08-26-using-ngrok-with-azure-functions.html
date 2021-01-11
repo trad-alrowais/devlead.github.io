@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Serverless debugging on steroids&#x1F4AA;">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Using ngrok with Azure Functions&#x26A1;</title>
+
+  <link rel="canonical" href="https://medium.com/hackernoon/using-ngrok-with-azure-functions-7e209e96538c">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Using ngrok with Azure Functions&#x26A1;" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2017/2017-08-26-using-ngrok-with-azure-functions" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Using ngrok with Azure Functions&#x26A1;
+          </h1>
+            <h2 class="subheading">Serverless debugging on steroids&#x1F4AA;</h2>
+              <div class="meta">Published on Sunday, 20 August 2017</div>
+                <div class="mt-3">
+                      <a href="/tags/api" class="badge badge-light"> API</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/azure-functions" class="badge badge-light"> Azure Functions</a>
+                      <a href="/tags/ngrok" class="badge badge-light"> Ngrok</a>
+                      <a href="/tags/serverless" class="badge badge-light"> Serverless</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p>With things like the Azure Functions Cli and Azure Functions tools for Visual Studio you get the full development and debugging story locally on your machine. This is great as you can iterate and test quickly without the need to push the code to the cloud first, the drawback of this is that you can’t do incoming webhooks from. 3:rd party services, i.e. GitHub can’t access your locally running function.</p>
+<p>But what if I said there’s a way you have your cake and eat it, wouldn’t that be great?</p>
+<h2 id="ngrok">ngrok</h2>
+<p>Introducing ngrok, ngrok is a tool and a service that will let you securely inspect and tunnel traffic to your local computer. It’s a free service with paid plans that will give you extra features like custom and reserved domains, IP address whitelisting etc.</p>
+<h2 id="obtaining-the-tool">Obtaining the tool</h2>
+<p>ngrok is available cross platform for MacOS, Windows, Linux and FreeBSD and it’s just a single binary you can download and unzip from <a href="https://ngrok.com/download">ngrok.com/download</a>. If you’re running Chocolatey on Windows like me, then it’s just a simple command way to get it installed:
+<code>choco install -y ngrok.portable</code></p>
+<h2 id="using-ngrok">Using ngrok</h2>
+<p>Using ngrok is very straightforward, in general you launch the tool with which protocol and port your local service is listening on.
+<code>ngrok http 8080</code></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/75ba557b-50d3-94cc-39a6-e330a127244c.png?sv=2019-12-12&amp;st=2021-01-10T13%3A04%3A11Z&amp;se=2031-01-11T13%3A04%3A11Z&amp;sr=b&amp;sp=r&amp;sig=MJNZ3xMphCitS5%2FwHM3yUcBrHAcf2W%2BG8SWt1xLjSz8%3D" alt="ngrok running" /></p>
+<p>ngrok will launch and the forwarding urls is what you use to access your local service from the Internet.</p>
+<h2 id="using-ngrok-with-azure-functions">Using ngrok with Azure Functions</h2>
+<p>You can find out which local port your Azure Functions by looking at the output of when the host starts, you can also specify the port using the port switch when launching the functions host
+<code>func host -p 8080</code></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3cc00ea9-6f20-c435-c5eb-85ed3c08804d.png?sv=2019-12-12&amp;st=2021-01-10T13%3A05%3A19Z&amp;se=2031-01-11T13%3A05%3A19Z&amp;sr=b&amp;sp=r&amp;sig=sbfyFtGZwwBnqMDpi%2FiU4QyJ9oweCeb5cU6URfbaYG8%3D" alt="Azure Functions Host port" /></p>
+<p>By default, ngrok will forward it’s temporary domain as host header to the locally running service, but as The Azure Functions host only listens to the hostname “localhost” we’ll need to override the default behavior using the host header switch
+<code>ngrok http 8080 --host-header localhost</code></p>
+<h2 id="externally-calling-local-function">Externally calling local function</h2>
+<p>To use your locally running function externally you just replace the base url provided by the function host to the temporary url provided by ngrok i.e.
+<code>http://localhost:8080</code> becomes <code>https://tempsubdomain.ngrok.io</code>.</p>
+<p>So say you have a GitHub webhook called <code>GithubWebhookCSharp</code> its local url will be <code>http://localhost:8080/api/GithubWebhookCSharp</code> and it’s external url will be <code>https://tempsubdomain.ngrok.io/api/GithubWebhookCSharp</code>.</p>
+<p>Which you then could set up as i.e. a GitHub webhook</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/fd80337f-d020-ae4f-e2fd-b60f60843b74.png?sv=2019-12-12&amp;st=2021-01-10T13%3A06%3A49Z&amp;se=2031-01-11T13%3A06%3A49Z&amp;sr=b&amp;sp=r&amp;sig=nRjbhYTdQuW0%2BGbz8RvZUbX6PI0OdLsyUaLw%2BDBWYfo%3D" alt="Setting up webhook on GitHub" /></p>
+<p>now when GitHub webhook triggers it’ll tunnel through ngrok and its payload will be delivered to your locally otherwise externally inaccessible function</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/03bb2043-2dcf-d789-ffa3-fe26079537b9.png?sv=2019-12-12&amp;st=2021-01-10T13%3A09%3A19Z&amp;se=2031-01-11T13%3A09%3A19Z&amp;sr=b&amp;sp=r&amp;sig=aAtxSvy0er9zBq5q0s3Vl6JXzxUn3s7lh0PQGtkl0tw%3D" alt="ngrok / Azure function host serving local function" /></p>
+<h2 id="inspecting-traffic">Inspecting traffic</h2>
+<p>On off the real killer features of ngrok is that it provides a local web interface, you’ll find it’s url in the tool’s output</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/c4c98d7a-a7c6-e009-ebe1-0e2e0d85f036.png?sv=2019-12-12&amp;st=2021-01-10T13%3A09%3A48Z&amp;se=2031-01-11T13%3A09%3A48Z&amp;sr=b&amp;sp=r&amp;sig=0emxBg1Jsllf974MaJ7dVZXrYM3ll2qyhPS%2BOoAfJUY%3D" alt="ngrok web interface url" /></p>
+<p>This interface provides deep insight of all traffic that travels through the ngrok tunnel, you can see the response/request body and headers, it also lets you replay a request as many times as you like without needing to trigger an event on the external service, which is really useful when debugging, iterating over an implementation and fixing bugs!</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a5d64ad8-64c9-b05c-37cd-ab487c32e480.png?sv=2019-12-12&amp;st=2021-01-10T13%3A10%3A11Z&amp;se=2031-01-11T13%3A10%3A11Z&amp;sr=b&amp;sp=r&amp;sig=3n1GdorjYDsMbGzCcsGY3ng%2B7lmLZk2IBMdhk9KC9WY%3D" alt="ngrok web interface" /></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Using a service like ngrok is really powerful and can ultimately speed up the development process.</p>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2017/2017-08-26-using-ngrok-with-azure-functions.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/hackernoon/using-ngrok-with-azure-functions-7e209e96538c">https://medium.com/hackernoon/using-ngrok-with-azure-functions-7e209e96538c</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

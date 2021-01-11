@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Deploying .NET Core to Azure using Bitrise and Cake</title>
+
+  <link rel="canonical" href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Deploying .NET Core to Azure using Bitrise and Cake" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Deploying .NET Core to Azure using Bitrise and Cake
+          </h1>
+              <div class="meta">Published on Friday, 23 March 2018</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/bitrise" class="badge badge-light"> Bitrise</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                      <a href="/tags/docker" class="badge badge-light"> Docker</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p>Originally published at <a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/">blog.bitrise.com</a>.</p>
+<p>Mattias Karlsson demonstrates how you can build and ship a .NET Core website using a custom docker build image and the open source build system Cake.</p>
+<p>Guest blog post by Mattias Karlsson.</p>
+<pre><code>Mattias Karlsson is a Microsoft Azure MVP and Open Source maintainer.
+</code></pre>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ce723c3-edc9-8b41-6ed2-d474367040f5.png?sv=2019-12-12&amp;st=2021-01-10T12%3A03%3A31Z&amp;se=2031-01-11T12%3A03%3A31Z&amp;sr=b&amp;sp=r&amp;sig=EMmpaNTM2%2Bhh3%2BVry4Tdumjs6aEMKLZwIKGQVE%2Bhwco%3D" alt="Bitrise Cake" /></p>
+<p>Bitrise is mostly known for providing hosted continuous integration and deployment targeting iOS and Android projects, but it’s much more capable than that and can build and ship basically anything you can build on MacOS or Linux.</p>
+<h2 id="adding-a-project-to-bitrise">Adding a project to Bitrise</h2>
+<p>Adding a new project is straightforward, click the “Add new app” Button.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6bffcbe9-e099-e882-c949-7578884ff356.png?sv=2019-12-12&amp;st=2021-01-10T12%3A04%3A12Z&amp;se=2031-01-11T12%3A04%3A12Z&amp;sr=b&amp;sp=r&amp;sig=XsOZ8Dbh2%2F5ScmcaC5NIp2nFni6IJ5cl8%2B%2BTYfX8kKQ%3D" alt="Add New Bitrise app" /></p>
+<p>Then pick your source code management provider of choice and pick your project.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/2d53378d-28c4-81c1-7455-65648e9e1156.png?sv=2019-12-12&amp;st=2021-01-10T12%3A04%3A46Z&amp;se=2031-01-11T12%3A04%3A46Z&amp;sr=b&amp;sp=r&amp;sig=0BY%2BinxBgzqkiCooJgYL7ca%2FB7cZsqeRN7hsbKXx4YU%3D" alt="Bitrise new project UI" /></p>
+<p>Let Bitrise setup SSH keys and validate the repository.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/77e1853c-dcd6-e0e7-7f9e-fc011611912e.png?sv=2019-12-12&amp;st=2021-01-10T12%3A05%3A20Z&amp;se=2031-01-11T12%3A05%3A20Z&amp;sr=b&amp;sp=r&amp;sig=nX6475e%2BP%2FmYnKObAcQBmWs68HnZ2GkYRwsu5Anqv44%3D" alt="Bitrise repo access configuration" /></p>
+<p>Once Bitrise is done validating the repository, pick manual and then <code>other / manual</code> and &quot;Android &amp; Docker on Ubuntu&quot;, this will let us pick our own custom docker image later.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/ef576575-dd01-9bd5-2323-1cbd02a295e2.png?sv=2019-12-12&amp;st=2021-01-10T12%3A05%3A58Z&amp;se=2031-01-11T12%3A05%3A58Z&amp;sr=b&amp;sp=r&amp;sig=vLe20a998sciuAvXRTZOFtgVq6v4rWfjFqzY0S9hrA0%3D" alt="Bitrise Project build configuration" /></p>
+<p>To get continuous builds let Bitrise setup a webhook for you:</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/69c69813-8114-8c85-91ed-00df387e6fd4.png?sv=2019-12-12&amp;st=2021-01-10T12%3A06%3A19Z&amp;se=2031-01-11T12%3A06%3A19Z&amp;sr=b&amp;sp=r&amp;sig=WrGowtyfgngndjGfQDezBmt8nTNpuEPgNNnZirQ7yJI%3D" alt="Bitrise webhook setup" /></p>
+<p>Bitrise will then kick off a build, that will just clone the repository and let you know all is set up.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f3d155a7-0577-67db-7e62-c96a47e3e68b.png?sv=2019-12-12&amp;st=2021-01-10T12%3A06%3A42Z&amp;se=2031-01-11T12%3A06%3A42Z&amp;sr=b&amp;sp=r&amp;sig=y2MXfmSVQqX9JWqV53gqrGqkW5uINbTyKWA9oxMfO6k%3D" alt="Bitrise running build" /></p>
+<h2 id="setup-a-custom-build-docker-image">Setup a custom build docker image</h2>
+<p>You could download and bootstrap Cake as part of a build step, but Bitrise also lets you pick custom docker images from Docker Hub, which could be tailored with your tools pre-installed. I’ve created and published <code>cakebuild/cake:2.1-sdk-bitrise</code> on Docker Hub, which contains Bitrise CLI, .NET Core SDK 2.1 and Cake script runner.</p>
+<p>To switch to custom Docker image, navigate to “Workflow” and click on “Stack”.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7abbd37e-e5c1-002a-2e74-e48957a39ed0.png?sv=2019-12-12&amp;st=2021-01-10T12%3A07%3A30Z&amp;se=2031-01-11T12%3A07%3A30Z&amp;sr=b&amp;sp=r&amp;sig=n9pR68dRGlzeG25Gqiif%2FhxF8S%2Fdnl7pkR6v4PjdPjs%3D" alt="Bitrise workflow UI" /></p>
+<p>Then change Docker Image to use to your custom image (i.e. <code>cakebuild/cake:2.1-sdk-bitrise</code>, the only requirement is that Bitrise CLI and its dependencies need to be present).</p>
+<h2 id="configuring-cake">Configuring Cake</h2>
+<p>When picking the “manual” template you’ll get 4 build steps, which will handle authentication, fetching code, the “hello world” build script and also handle artifacts.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53b6d29d-26d1-9b4b-bcf9-9df2579e0f69.png?sv=2019-12-12&amp;st=2021-01-10T12%3A13%3A30Z&amp;se=2031-01-11T12%3A13%3A30Z&amp;sr=b&amp;sp=r&amp;sig=YtIPD%2Be5oIH6t7DC1o1G6U5WCleKFXeR3yfhYS4oaOc%3D" alt="Bitrise configuring Build work flow" /></p>
+<p>As Cake is pre-loaded on the custom container image, all that’s needed to execute Cake build script is <code>Cake [path to cake script]</code>, if your build script is in the root and follows the <code>build.cake</code> convention, then all that's needed is <code>Cake</code>.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/60b0c772-1718-2cfa-9d9e-6c7b1ae0124c.png?sv=2019-12-12&amp;st=2021-01-10T12%3A15%3A08Z&amp;se=2031-01-11T12%3A15%3A08Z&amp;sr=b&amp;sp=r&amp;sig=N%2FlvKWLEw4KZeNrmwssdn5ZgRNYdzxJOhEn02mswtCA%3D" alt="Bitrise Cake build step" /></p>
+<h2 id="the-build-script">The Build script</h2>
+<p>The example <a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake/blob/master/build.cake">build.cake</a> used for this post has the following steps</p>
+<ol>
+<li>Clean build output &amp; Restore build dependencies</li>
+<li>Build code</li>
+<li>Run unit tests</li>
+<li>Publish web</li>
+<li>Deploy to Azure</li>
+</ol>
+<p>Deploying to Azure is done using Azure App Service Kudu rest API using the <a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38">Cake.Kudu.Client</a> Cake addin.</p>
+<h2 id="keeping-secrets">Keeping secrets</h2>
+<p>To deploy to Azure with Cake.Kudu.Client, you’ll need the base URL for the site’s Kudu API, the username, and password. You can find this information by downloading your publishing profile from the Azure portal</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9246ea9b-4f1a-6d44-49bc-2259baf27317.png?sv=2019-12-12&amp;st=2021-01-10T12%3A17%3A08Z&amp;se=2031-01-11T12%3A17%3A08Z&amp;sr=b&amp;sp=r&amp;sig=awELNBjLpVX389GaIU%2Flod3ecRMC6t4J06j%2B6US9IQ8%3D" alt="Azure Portal App Servuce overview blade" /></p>
+<p>This is, of course, sensitive information that you don’t want to be in your repository or accessible from e.g. pull requests.</p>
+<p>To cater for this need Bitrise provides “Secrets”, Secrets are exposed as environment variables, so they can easily be consumed from build steps / scripts. But to add an extra level of security they’re not part of your build definition and by default, they won’t be available from pull requests.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7c7e9f35-228b-5473-7d48-4d9ff08483da.png?sv=2019-12-12&amp;st=2021-01-10T12%3A17%3A49Z&amp;se=2031-01-11T12%3A17%3A49Z&amp;sr=b&amp;sp=r&amp;sig=zt4xJyLiZCO5AC%2FwWXRxELQREb68NpgVQtSf7aajVxQ%3D" alt="Bitrise Secret Environment Variables" /></p>
+<h2 id="all-set">All set</h2>
+<p>Now hit Start a Build or push a commit and your website will continuously build and deploy.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1ce86013-621d-ba8f-3490-37902ab1b0dc.png?sv=2019-12-12&amp;st=2021-01-10T12%3A20%3A20Z&amp;se=2031-01-11T12%3A20%3A20Z&amp;sr=b&amp;sp=r&amp;sig=aXM%2BQrIollFehwDDMS7dxEGY9e96s5x26HXe70jqMEs%3D" alt="Bitrise Start/Schedule new build" /></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/aeaed4b6-04dc-d99e-fe2a-bb8ffcc04057.png?sv=2019-12-12&amp;st=2021-01-10T12%3A20%3A33Z&amp;se=2031-01-11T12%3A20%3A33Z&amp;sr=b&amp;sp=r&amp;sig=2JZDluWVvMzRVKOyjaX4IqQmWavSwfynDIzBBEARCUQ%3D" alt="Cake build log" /></p>
+<h2 id="resources">Resources</h2>
+<p>The example repository can be found on GitHub <a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake">here</a>.</p>
+<p>A GitHub Gist of the Bitrise build definition is available <a href="https://gist.github.com/devlead/6086fe79b0a5e4ebbbf145d4244a9713">here</a>.</p>
+<p>If you haven’t but want to try Bitrise, then you can use <a href="https://www.bitrise.io/?referrer=8049ac73f66b5427">this referral link</a> which benefits the <a href="https://cakebuild.net/">Cake</a> project.</p>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/">https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<id>https://www.devlead.se/</id>
+	<title />
+	<link rel="self" href="https://www.devlead.se/" />
+	<rights>© Mattias Karlsson 2021</rights>
+	<updated>2021-01-11T23:25:15Z</updated>
+	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq</id>
+		<title>Blog migrated to Statiq</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a20c196d-ae40-ed83-1a49-ec09f0e55e2e.png?sv=2019-12-12&amp;st=2021-01-10T20%253A53%253A57Z&amp;se=2031-01-11T20%253A53%253A57Z&amp;sr=b&amp;sp=r&amp;sig=ZzDlx22k%252BmCJJkPeHnEcxZFZ5xbBoG4PQluscRG7%252BeM%253D" />
+		<updated>2021-01-11T00:00:00Z</updated>
+		<content>&lt;p&gt;Since 2016 I've been using Medium as my platform of choice, this is not a rage quit from the platform, I'll keep posting on Medium, the difference is that the main source for my posts will be on my own canonical domain, where I've got full access and control over my words.&lt;/p&gt;
+&lt;p&gt;The decision is just as much that I've found a stack and toolchain I really like, feel comfortable, and hopefully productive with.&lt;/p&gt;
+&lt;p&gt;The stack I've settled on has a few key components&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Statiq Web&lt;/a&gt; - a brilliant .NET based static site generator by &lt;a href="https://daveaglick.com/"&gt;Dave Glick&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/"&gt;GitHub&lt;/a&gt; - where the code is stored.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; - where the html is served from.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://azure.microsoft.com/en-us/services/cdn/"&gt;Azure CDN&lt;/a&gt; - where the blog images are served from.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://marketplace.visualstudio.com/items?itemName=gep13.clipimg-vscode"&gt;ClipImg&lt;/a&gt; - Visual Studio Code addin that takes images from clipboard, uploads to Azure blob storage and inserts the markdown needed to render image - with just one keyboard shortcut.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>It was long overdue</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2019/2019-12-06-just-an-environment-variable-away-from-sleep</id>
+		<title>Just an environment variable away from sleep</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2019/2019-12-06-just-an-environment-variable-away-from-sleep" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2019-12-06T00:00:00Z</updated>
+		<content>&lt;p&gt;It’s a quarter past midnight, you should be going to sleep, but there’s that one unit test that fails only on GitHub Action macOS build agent — it’s mocking you so you stay awake just a bit longer…&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/002a2a50-81cb-491e-145e-bc8ef7ceb2bd.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A13%3A54Z&amp;amp;se=2031-01-11T09%3A13%3A54Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=QDRIJM%2FTAGDrRbSk7zA%2FrdfRBNBxhZoIZuIkrmbWEQg%3D" alt="Failed MacOS build on GitHub PR" /&gt;&lt;/p&gt;
+&lt;p&gt;You bring out you Mac and execute tests, fortunately we can reproduce — the test fails on your machine too! A quick inspection of test output informs you that error only occurs on .NET Core.&lt;/p&gt;
+&lt;p&gt;Unfortunately, today neither VS Mac nor VSCode for some reason is your friend, solutions won’t build, tests aren’t found, break points aren’t hit and so on.&lt;/p&gt;
+&lt;p&gt;Probably not their fault at all, more likely a case of complex multi target solution, having preview versions and just being too tired.&lt;/p&gt;
+&lt;p&gt;Fortunately, as the .NET CLI “dotnet test” command executed by the build script compiled and executed the tests, one could leave the VS Mac/Code IDE tooling debugging for another day and trigger debugging from the command line.&lt;/p&gt;
+&lt;p&gt;This is achieved by setting the environment variable &lt;code&gt;VSTEST_HOST_DEBUG&lt;/code&gt; to &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="bash"&gt;Bash&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;export VSTEST_HOST_DEBUG=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="powershell"&gt;PowerShell&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;$env:VSTEST_HOST_DEBUG=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now when executing the test (specifying only the framework I want to test)&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet test My.Tests.csproj —-framework=netcoreapp3.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’ll will pause and wait for a debugger to attach.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;Microsoft (R) Test Execution Command Line Tool Version 16.3.0
+Copyright (c) Microsoft Corporation.  All rights reserved.Starting test execution, please wait...A total of 1 test files matched the specified pattern.
+Host debugging is enabled. Please attach debugger to testhost process to continue.
+Process Id: 32723, Name: dotnet
+Waiting for debugger attach…
+Process Id: 32723, Name: dotnet
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3f6c41b2-be6d-1259-483f-0cb610799074.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A45%3A48Z&amp;amp;se=2031-01-11T09%3A45%3A48Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=OtBMnkTPJeuR93Eh9vo8MSGB5SwUiRnSH6UOw3WN4HY%3D" alt="Attach to Process in VSMac" /&gt;&lt;/p&gt;
+&lt;p&gt;and VS Code&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/0d7a04ed-add1-3db6-6c14-55e0e733ce9f.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A46%3A29Z&amp;amp;se=2031-01-11T09%3A46%3A29Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=NnZf%2Fdn1BQLaaj4Wos2%2Bn9QMDc4WLXK5AN8K6Cj8swo%3D" alt="Attach to Process VSCode" /&gt;&lt;/p&gt;
+&lt;p&gt;Which allowed me to set break points, inspect variables and step through code, even though the IDEs themselves for some reason couldn’t compile and execute the tests.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/fa197436-9d59-63e7-00dc-795b2df63c12.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A47%3A13Z&amp;amp;se=2031-01-11T09%3A47%3A13Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=W2frMVBD%2Bs4IH8a%2FCyPas4Aw2yVpzfzhF9%2FpXUT1VF0%3D" alt="IDE test break points hit" /&gt;&lt;/p&gt;
+&lt;p&gt;Fairly quickly found the issue added a commit and builds were green and I could go to sleep.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f94d4dea-7f34-2d6b-2b98-b78a727ebe35.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A47%3A48Z&amp;amp;se=2031-01-11T09%3A47%3A48Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=tgplc9XhXuY5qBJLd%2FCSU4ZUKaz%2BgorxGG%2B9h0%2F2C60%3D" alt="macOS build passes" /&gt;&lt;/p&gt;
+&lt;p&gt;Sometimes you just want to attack the problem and not debug tooling, then attacking the problem from another direction might get you there quicker, today it was setting &lt;code&gt;VSTEST_HOST_DEBUG&lt;/code&gt; to &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;It’s a quarter past midnight, you should be going to sleep, but there’s that one unit test that fails only on GitHub Action macOS build agent — it’s mocking you so you stay awake just a bit longer…&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released</id>
+		<title>Cake.Kudu.Client version 0.6.0 released</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2018-06-03T00:00:00Z</updated>
+		<content>&lt;p&gt;This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.&lt;/p&gt;
+&lt;h2 id="app-service-changes"&gt;App Service Changes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;App Setting: &lt;code&gt;WEBSITE_USE_ZIP&lt;/code&gt; --&amp;gt; &lt;code&gt;WEBSITE_RUN_FROM_ZIP&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Marker filename: &lt;code&gt;siteversion.txt&lt;/code&gt; --&amp;gt; &lt;code&gt;packagename.txt&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="action-you-need-to-take"&gt;Action you need to take&lt;/h2&gt;
+&lt;p&gt;As the App Setting has change you’ll need to change you setting name to &lt;code&gt;WEBSITE_RUN_FROM_ZIP&lt;/code&gt; (it’s value should still be &lt;code&gt;1&lt;/code&gt; )&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/b0858633-3124-5aec-09c6-de238e198b19.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A54%3A47Z&amp;amp;se=2031-01-11T09%3A54%3A47Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=D%2BroDxmN6v7WRtasetPKfTpV%2Bxj2Y%2Bx3vM0Mc97pbwo%3D" alt="App Service App Settings" /&gt;&lt;/p&gt;
+&lt;p&gt;Maker filename is handled by the new version so all you need to update scripts to use Cake.Kudu.Client version &lt;code&gt;0.6.0&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.6.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;nothing else needs to be changed in your Cake script.&lt;/p&gt;
+&lt;h2 id="verifying-change"&gt;Verifying change&lt;/h2&gt;
+&lt;p&gt;You can verify the publish succeeded under App Service Advanced Tools ( Kudu ) — Debug Console by navigating to &lt;code&gt;data/SitePackages&lt;/code&gt; and see deployment package and the new &lt;code&gt;packagename.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/73564b06-ae73-e415-a9f3-f34c69bbddd5.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A56%3A42Z&amp;amp;se=2031-01-11T09%3A56%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=471bIcnxlyPDPBXWGvnPeSRQ0YHSoT4FFkcv1qb9pdQ%3D" alt="Kudu Debug Console" /&gt;&lt;/p&gt;
+&lt;h2 id="full-example"&gt;Full example&lt;/h2&gt;
+&lt;p&gt;If you haven’t used the feature before below is a full example&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.6.0
+
+Task(&amp;quot;Deploy-Run-From-Zip&amp;quot;)
+ .Does( ()=&amp;gt;
+ {
+    string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
+            userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
+            password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
+
+    IKuduClient kuduClient = KuduClient(
+        baseUri,
+        userName,
+        password);
+
+    DirectoryPath sourceDirectoryPath = &amp;quot;./website/&amp;quot;;
+
+    FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
+
+    Information(&amp;quot;Deployed to {0}&amp;quot;, deployFilePath);
+ });
+
+ RunTarget(&amp;quot;Deploy-Run-From-Zip&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/8ecbff75-0985-f2e0-b354-9c0095b52cdf.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A57%3A52Z&amp;amp;se=2031-01-11T09%3A57%3A52Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=ucQsy%2B4S8GqWnr7bK9N%2BR3QarAsM%2FnUDSrJ5QeRAQTI%3D" alt="Deploy Run From Zip Cake console output log" /&gt;&lt;/p&gt;
+&lt;p&gt;Related posts&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://medium.com/hackernoon/introducing-cake-kudu-client-abda40d15f38"&gt;Introducing Cake Kudu Client&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37"&gt;“Run-From-Zip” with Cake Kudu Client&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>&lt;p&gt;This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake</id>
+		<title>Deploying .NET Core to Azure using Bitrise and Cake</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2018-03-23T00:00:00Z</updated>
+		<content>&lt;p&gt;Originally published at &lt;a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/"&gt;blog.bitrise.com&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Mattias Karlsson demonstrates how you can build and ship a .NET Core website using a custom docker build image and the open source build system Cake.&lt;/p&gt;
+&lt;p&gt;Guest blog post by Mattias Karlsson.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Mattias Karlsson is a Microsoft Azure MVP and Open Source maintainer.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ce723c3-edc9-8b41-6ed2-d474367040f5.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A03%3A31Z&amp;amp;se=2031-01-11T12%3A03%3A31Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=EMmpaNTM2%2Bhh3%2BVry4Tdumjs6aEMKLZwIKGQVE%2Bhwco%3D" alt="Bitrise Cake" /&gt;&lt;/p&gt;
+&lt;p&gt;Bitrise is mostly known for providing hosted continuous integration and deployment targeting iOS and Android projects, but it’s much more capable than that and can build and ship basically anything you can build on MacOS or Linux.&lt;/p&gt;
+&lt;h2 id="adding-a-project-to-bitrise"&gt;Adding a project to Bitrise&lt;/h2&gt;
+&lt;p&gt;Adding a new project is straightforward, click the “Add new app” Button.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6bffcbe9-e099-e882-c949-7578884ff356.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A04%3A12Z&amp;amp;se=2031-01-11T12%3A04%3A12Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=XsOZ8Dbh2%2F5ScmcaC5NIp2nFni6IJ5cl8%2B%2BTYfX8kKQ%3D" alt="Add New Bitrise app" /&gt;&lt;/p&gt;
+&lt;p&gt;Then pick your source code management provider of choice and pick your project.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/2d53378d-28c4-81c1-7455-65648e9e1156.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A04%3A46Z&amp;amp;se=2031-01-11T12%3A04%3A46Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=0BY%2BinxBgzqkiCooJgYL7ca%2FB7cZsqeRN7hsbKXx4YU%3D" alt="Bitrise new project UI" /&gt;&lt;/p&gt;
+&lt;p&gt;Let Bitrise setup SSH keys and validate the repository.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/77e1853c-dcd6-e0e7-7f9e-fc011611912e.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A05%3A20Z&amp;amp;se=2031-01-11T12%3A05%3A20Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=nX6475e%2BP%2FmYnKObAcQBmWs68HnZ2GkYRwsu5Anqv44%3D" alt="Bitrise repo access configuration" /&gt;&lt;/p&gt;
+&lt;p&gt;Once Bitrise is done validating the repository, pick manual and then &lt;code&gt;other / manual&lt;/code&gt; and &amp;quot;Android &amp;amp; Docker on Ubuntu&amp;quot;, this will let us pick our own custom docker image later.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/ef576575-dd01-9bd5-2323-1cbd02a295e2.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A05%3A58Z&amp;amp;se=2031-01-11T12%3A05%3A58Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=vLe20a998sciuAvXRTZOFtgVq6v4rWfjFqzY0S9hrA0%3D" alt="Bitrise Project build configuration" /&gt;&lt;/p&gt;
+&lt;p&gt;To get continuous builds let Bitrise setup a webhook for you:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/69c69813-8114-8c85-91ed-00df387e6fd4.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A06%3A19Z&amp;amp;se=2031-01-11T12%3A06%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=WrGowtyfgngndjGfQDezBmt8nTNpuEPgNNnZirQ7yJI%3D" alt="Bitrise webhook setup" /&gt;&lt;/p&gt;
+&lt;p&gt;Bitrise will then kick off a build, that will just clone the repository and let you know all is set up.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f3d155a7-0577-67db-7e62-c96a47e3e68b.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A06%3A42Z&amp;amp;se=2031-01-11T12%3A06%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=y2MXfmSVQqX9JWqV53gqrGqkW5uINbTyKWA9oxMfO6k%3D" alt="Bitrise running build" /&gt;&lt;/p&gt;
+&lt;h2 id="setup-a-custom-build-docker-image"&gt;Setup a custom build docker image&lt;/h2&gt;
+&lt;p&gt;You could download and bootstrap Cake as part of a build step, but Bitrise also lets you pick custom docker images from Docker Hub, which could be tailored with your tools pre-installed. I’ve created and published &lt;code&gt;cakebuild/cake:2.1-sdk-bitrise&lt;/code&gt; on Docker Hub, which contains Bitrise CLI, .NET Core SDK 2.1 and Cake script runner.&lt;/p&gt;
+&lt;p&gt;To switch to custom Docker image, navigate to “Workflow” and click on “Stack”.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7abbd37e-e5c1-002a-2e74-e48957a39ed0.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A07%3A30Z&amp;amp;se=2031-01-11T12%3A07%3A30Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=n9pR68dRGlzeG25Gqiif%2FhxF8S%2Fdnl7pkR6v4PjdPjs%3D" alt="Bitrise workflow UI" /&gt;&lt;/p&gt;
+&lt;p&gt;Then change Docker Image to use to your custom image (i.e. &lt;code&gt;cakebuild/cake:2.1-sdk-bitrise&lt;/code&gt;, the only requirement is that Bitrise CLI and its dependencies need to be present).&lt;/p&gt;
+&lt;h2 id="configuring-cake"&gt;Configuring Cake&lt;/h2&gt;
+&lt;p&gt;When picking the “manual” template you’ll get 4 build steps, which will handle authentication, fetching code, the “hello world” build script and also handle artifacts.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53b6d29d-26d1-9b4b-bcf9-9df2579e0f69.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A13%3A30Z&amp;amp;se=2031-01-11T12%3A13%3A30Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=YtIPD%2Be5oIH6t7DC1o1G6U5WCleKFXeR3yfhYS4oaOc%3D" alt="Bitrise configuring Build work flow" /&gt;&lt;/p&gt;
+&lt;p&gt;As Cake is pre-loaded on the custom container image, all that’s needed to execute Cake build script is &lt;code&gt;Cake [path to cake script]&lt;/code&gt;, if your build script is in the root and follows the &lt;code&gt;build.cake&lt;/code&gt; convention, then all that's needed is &lt;code&gt;Cake&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/60b0c772-1718-2cfa-9d9e-6c7b1ae0124c.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A15%3A08Z&amp;amp;se=2031-01-11T12%3A15%3A08Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=N%2FlvKWLEw4KZeNrmwssdn5ZgRNYdzxJOhEn02mswtCA%3D" alt="Bitrise Cake build step" /&gt;&lt;/p&gt;
+&lt;h2 id="the-build-script"&gt;The Build script&lt;/h2&gt;
+&lt;p&gt;The example &lt;a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake/blob/master/build.cake"&gt;build.cake&lt;/a&gt; used for this post has the following steps&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Clean build output &amp;amp; Restore build dependencies&lt;/li&gt;
+&lt;li&gt;Build code&lt;/li&gt;
+&lt;li&gt;Run unit tests&lt;/li&gt;
+&lt;li&gt;Publish web&lt;/li&gt;
+&lt;li&gt;Deploy to Azure&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Deploying to Azure is done using Azure App Service Kudu rest API using the &lt;a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"&gt;Cake.Kudu.Client&lt;/a&gt; Cake addin.&lt;/p&gt;
+&lt;h2 id="keeping-secrets"&gt;Keeping secrets&lt;/h2&gt;
+&lt;p&gt;To deploy to Azure with Cake.Kudu.Client, you’ll need the base URL for the site’s Kudu API, the username, and password. You can find this information by downloading your publishing profile from the Azure portal&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9246ea9b-4f1a-6d44-49bc-2259baf27317.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A17%3A08Z&amp;amp;se=2031-01-11T12%3A17%3A08Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=awELNBjLpVX389GaIU%2Flod3ecRMC6t4J06j%2B6US9IQ8%3D" alt="Azure Portal App Servuce overview blade" /&gt;&lt;/p&gt;
+&lt;p&gt;This is, of course, sensitive information that you don’t want to be in your repository or accessible from e.g. pull requests.&lt;/p&gt;
+&lt;p&gt;To cater for this need Bitrise provides “Secrets”, Secrets are exposed as environment variables, so they can easily be consumed from build steps / scripts. But to add an extra level of security they’re not part of your build definition and by default, they won’t be available from pull requests.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7c7e9f35-228b-5473-7d48-4d9ff08483da.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A17%3A49Z&amp;amp;se=2031-01-11T12%3A17%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=zt4xJyLiZCO5AC%2FwWXRxELQREb68NpgVQtSf7aajVxQ%3D" alt="Bitrise Secret Environment Variables" /&gt;&lt;/p&gt;
+&lt;h2 id="all-set"&gt;All set&lt;/h2&gt;
+&lt;p&gt;Now hit Start a Build or push a commit and your website will continuously build and deploy.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1ce86013-621d-ba8f-3490-37902ab1b0dc.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A20%3A20Z&amp;amp;se=2031-01-11T12%3A20%3A20Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=aXM%2BQrIollFehwDDMS7dxEGY9e96s5x26HXe70jqMEs%3D" alt="Bitrise Start/Schedule new build" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/aeaed4b6-04dc-d99e-fe2a-bb8ffcc04057.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A20%3A33Z&amp;amp;se=2031-01-11T12%3A20%3A33Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=2JZDluWVvMzRVKOyjaX4IqQmWavSwfynDIzBBEARCUQ%3D" alt="Cake build log" /&gt;&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;p&gt;The example repository can be found on GitHub &lt;a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A GitHub Gist of the Bitrise build definition is available &lt;a href="https://gist.github.com/devlead/6086fe79b0a5e4ebbbf145d4244a9713"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you haven’t but want to try Bitrise, then you can use &lt;a href="https://www.bitrise.io/?referrer=8049ac73f66b5427"&gt;this referral link&lt;/a&gt; which benefits the &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; project.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Originally published at &lt;a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/"&gt;blog.bitrise.com&lt;/a&gt;.&lt;/p&gt;</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client</id>
+		<title>“Run-From-Zip” with Cake Kudu Client</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2018-02-20T00:00:00Z</updated>
+		<content>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/29bf78b1-94f2-6301-ec83-fd4541c438b7.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A37%3A03Z&amp;amp;se=2031-01-11T12%3A37%3A03Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=eyImi7f1xhlW0EtOsWQOS5NhsBgUv6fWlKtF03AqOXc%3D" alt="Ship at sea" /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Update! Since this post was written, there’s been some breaking changes to Azure App Services Run-From-Zip feature, this was fixed in Cake.Kudu.Client version 0.6.0 you can read more about that at the post below
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="https://medium.com/&amp;#64;devlead/cake-kudu-client-version-0-6-0-released-cb6435629684"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3d72e5ff-aca6-965a-1989-d837ba7cce69.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A35%3A54Z&amp;amp;se=2031-01-11T12%3A35%3A54Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=bbuUUuci2RePI%2BEBfDKhyAvBNOV98aYSZ%2FBEqXNQ%2F1M%3D" alt="Cake.Kudu Client version 0.6.0 released" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A couple of days ago Azure announced that they in preview added a new way to do app services deployments called &lt;a href="https://github.com/Azure/app-service-announcements/issues/84"&gt;Run-From-Zip&lt;/a&gt;, which lets you deploy using a zip file.&lt;/p&gt;
+&lt;p&gt;Deploying using a zip file as been possible before, the difference with this new method is that the file isn’t extracted into the “wwwroot” directory, but instead the zip file &lt;em&gt;mounted&lt;/em&gt; read only as “wwwroot”.&lt;/p&gt;
+&lt;p&gt;The zip file can either be hosted externally from the site or in a special folder on the app service itself, and the latter is now what the “Kudu Client” Cake addin now supports — enabling you to use this new method of deployment in your Cake build scripts.&lt;/p&gt;
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;To enable Run-From-Zip deployments you’ll first need to set an application setting called &lt;code&gt;WEBSITE_USE_ZIP&lt;/code&gt;, you either set this to an url when deploying from an external source, or in this case just set it to &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ca61d0c-daf2-3ada-e681-a129eee866fe.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A38%3A49Z&amp;amp;se=2031-01-11T12%3A38%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=RHcKAy41C%2FrjCXhM5jfrZsIqlSi%2BEamUIZoLSp%2Bqjao%3D" alt="App Service app settings" /&gt;&lt;/p&gt;
+&lt;h2 id="ziprunfromdirectory"&gt;ZipRunFromDirectory&lt;/h2&gt;
+&lt;p&gt;Naming things is hard, but the addin now has a method called &lt;a href="https://cakebuild.net/api/Cake.Kudu.Client.Extensions/KuduClientZipExtensions/AA111BEB"&gt;ZipRunFromDirectory&lt;/a&gt;, which will do all the “heavy lifting” and deploy a local directory.&lt;/p&gt;
+&lt;h2 id="example-usage"&gt;Example usage&lt;/h2&gt;
+&lt;p&gt;o deploying a site using this new method just becomes a couple of lines of code&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.3.0
+
+string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
+        userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
+        password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
+
+IKuduClient kuduClient = KuduClient(
+    baseUri,
+    userName,
+    password);
+
+DirectoryPath sourceDirectoryPath = &amp;quot;./Documentation/&amp;quot;;
+
+FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
+
+Information(&amp;quot;Deployed to {0}&amp;quot;, deployFilePath);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The file path returned, is the zip file deployed to the app service.&lt;/p&gt;
+&lt;h2 id="behind-the-curtain"&gt;Behind the curtain&lt;/h2&gt;
+&lt;p&gt;So what does actually happen here?
+In a nutshell the method will:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In memory zip source directory&lt;/li&gt;
+&lt;li&gt;Push that zip to d:\home\data\SitePackages to a unique date stamped file name&lt;/li&gt;
+&lt;li&gt;Push the filename of the zip to d:\home\data\SitePackages\siteversion.txt&lt;/li&gt;
+&lt;li&gt;Via Kudu API call the site to ensure it’s up and right version deployed (a file called KuduClientZipRunFromDirectoryVersion.txt is included in deployed zip for this purpose)&lt;/li&gt;
+&lt;li&gt;Return the remote path of the deployed zip&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/996eea2c-912e-28db-5430-4a962037b645.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A41%3A15Z&amp;amp;se=2031-01-11T12%3A41%3A15Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=jQ0EAY8Joiny7%2BSJEP%2BwyjbR3kZRDBAsWBt%2FSVr5pzU%3D" alt="Kudu deploy zip files" /&gt;&lt;/p&gt;
+&lt;h2 id="closing-thoughts"&gt;Closing thoughts&lt;/h2&gt;
+&lt;p&gt;I’ve tried this for a couple of days now, and have found deployments to be very stable and quick. But really need some more testing to see what the implications of running this in production, how existing apps behave in a read only mode, etc.&lt;/p&gt;
+&lt;p&gt;This is a shiny new feature still in preview, general guidance and tooling support isn’t quite there yet, but as you seen with this post the primitives are in place to build upon and refine the experience in the future!&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/d815ce8f-f979-6770-5abb-02d65e195cf3.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A42%3A16Z&amp;amp;se=2031-01-11T12%3A42%3A16Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=r4hBCgyhHLD%2FsHuT3RN49DXX4AeZczADKWtDnKCU5Vc%3D" alt="Introducing Cake Kudu Client" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+		<summary>A new way to deploy your Azure Web Apps and Function Apps</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2018/2018-02-08-introducing-cake-kudu-client</id>
+		<title>Introducing Cake Kudu Client</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2018/2018-02-08-introducing-cake-kudu-client" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2018-02-08T00:00:00Z</updated>
+		<content>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/4e020ade-f4b0-0bc4-55d8-fccd0fc0e416.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A45%3A04Z&amp;amp;se=2031-01-11T12%3A45%3A04Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=uakWSiJ6qtkF8nHV89itEeTnzN48MTOAzVLHZmfE77g%3D" alt="Long ship at sea" /&gt;&lt;/p&gt;
+&lt;p&gt;I’ve previously written how you on Azure App Services itself can build and deploy your web applications and functions utilizing &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; build scripts and the &lt;a href="https://www.nuget.org/packages/Cake.Kudu"&gt;Cake.Kudu&lt;/a&gt; addin.&lt;/p&gt;
+&lt;p&gt;While it’s fairly easy to get going, just add a build script and connect it to your source code repository of choice, for some scenarios it makes more sense to ship your application prebuilt.&lt;/p&gt;
+&lt;p&gt;A few of those scenarios can be&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Static web sites&lt;/strong&gt;, where it requires more resources build, than to serve.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi region apps&lt;/strong&gt;, where you deploy same bits to multiple sites and makes sense to just build it once.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Build requirements&lt;/strong&gt;, by building on App services you’re limited to the tooling it has pre-installed or it’s environment supports.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Private resources&lt;/strong&gt;, using private nugget feeds or other compile time sensitive information can be cumbersome, and might not be what you want to have lying around on your web site.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="cake-kudu-client-to-the-rescue"&gt;Cake Kudu Client to the rescue&lt;/h2&gt;
+&lt;p&gt;Kudu the “engine” behind Azure web and function apps provides and http-based API, which deploy is one of the features it offers. And it’s this API the “Cake Kudu Client” provides a typed C# API which makes it close to a one-liner to deploy from a directory or zip file.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt; #addin nuget:?package=Cake.Kudu.Client
+
+ string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
+         userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
+         password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
+
+ IKuduClient kuduClient = KuduClient(
+     baseUri,
+     userName,
+     password);
+
+ DirectoryPath sourceDirectoryPath = &amp;quot;./Documentation/&amp;quot;;
+
+ kuduClient.ZipDeployDirectory(
+     sourceDirectoryPath);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What the above does is essentially&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;From environment variables gets Kudu endpoint for your App Service (i.e. &lt;code&gt;https://{yoursite}.scm.azurewebsites.net&lt;/code&gt;), user name and password.&lt;/li&gt;
+&lt;li&gt;Instantiate a new client using the &lt;code&gt;KuduClient&lt;/code&gt; alias.&lt;/li&gt;
+&lt;li&gt;Use the &lt;code&gt;ZipDeployDirectory&lt;/code&gt; method which with zip that folder in memory and deploy it.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A real world example using this with the static site generator WYAM could look something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#tool &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Wyam&amp;amp;version=1.2.0&amp;quot;
+#addin &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Cake.Wyam&amp;amp;version=1.2.0&amp;quot;
+#addin &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Cake.Kudu.Client&amp;amp;version=0.1.0&amp;quot;
+
+DirectoryPath   outputPath = MakeAbsolute(Directory(&amp;quot;./output&amp;quot;));
+string          target     = Argument(&amp;quot;target&amp;quot;, &amp;quot;Kudu-Publish-Documentation&amp;quot;),
+                baseUri    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
+                userName   = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
+                password   = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
+
+Task(&amp;quot;Clean-Documentation&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    CleanDirectory(outputPath);
+});
+
+Task(&amp;quot;Generate-Documentaton&amp;quot;)
+    .IsDependentOn(&amp;quot;Clean-Documentation&amp;quot;)
+    .Does(() =&amp;gt;
+{
+    Wyam(new WyamSettings
+    {
+        Recipe = &amp;quot;Docs&amp;quot;,
+        Theme = &amp;quot;Samson&amp;quot;,
+        OutputPath = outputPath,
+        Settings = new Dictionary&amp;lt;string, object&amp;gt;
+        {
+            { &amp;quot;BaseEditUrl&amp;quot;, &amp;quot;https://github.com/cake-contrib/Cake.Kudu.Client&amp;quot; },
+            { &amp;quot;SourceFiles&amp;quot;, &amp;quot;./src&amp;quot; },
+            { &amp;quot;Title&amp;quot;, &amp;quot;Cake Kudu Client&amp;quot; }
+    }});
+});
+
+Task(&amp;quot;Kudu-Publish-Documentation&amp;quot;)
+    .IsDependentOn(&amp;quot;Generate-Documentaton&amp;quot;)
+    .WithCriteria(!string.IsNullOrEmpty(baseUri)
+        &amp;amp;&amp;amp; !string.IsNullOrEmpty(userName)
+        &amp;amp;&amp;amp; !string.IsNullOrEmpty(password)
+    )
+    .Does(()=&amp;gt;
+{
+    IKuduClient kuduClient = KuduClient(
+        baseUri,
+        userName,
+        password);
+
+    kuduClient.ZipDeployDirectory(
+        outputPath);
+});
+
+RunTarget(target);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="not-just-deployments"&gt;Not just deployments&lt;/h2&gt;
+&lt;p&gt;Deployments is only one of the features the Cake Kudu Client addin handles&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Execute remote shell commands&lt;/li&gt;
+&lt;li&gt;Enumerate remote files and directories on&lt;/li&gt;
+&lt;li&gt;Upload files and directories to AppService&lt;/li&gt;
+&lt;li&gt;Download files and directories from AppService&lt;/li&gt;
+&lt;li&gt;Deploy to AppService from local folder or zip file&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;and more features are planned.&lt;/p&gt;
+&lt;p&gt;You can find the complete list of available methods with examples are available on the Cake web site at:
+&lt;a href="https://cakebuild.net/dsl/kudu/"&gt;cakebuild.net/dsl/kudu/&lt;/a&gt;&lt;/p&gt;
+</content>
+		<summary>Ship remotely to Azure App Services using Cake</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2017/2017-08-27-polyfill-with-powershell</id>
+		<title>Polyfill with PowerShell</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2017/2017-08-27-polyfill-with-powershell" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2017-08-20T00:00:00Z</updated>
+		<content>&lt;p&gt;When writing scripts, targeting multiple runtime versions can be really painful, scripts can be forked in different files or contain hairy conditional statements to handle differences/missing between versions of PowerShell runtime/modules, resulting in unreadable and unmaintainable spaghetti code.&lt;/p&gt;
+&lt;p&gt;What if you instead detect missing commands and supply an implementation for those when needed? This would allow you to have your scripts look the same and basically be agnostic to the which runtime it’s running on, making code more concise and easier to maintain.&lt;/p&gt;
+&lt;p&gt;The technique for this is called polyfilling and is common practise in web development where things can differ between browser versions and vendors.&lt;/p&gt;
+&lt;p&gt;It turns out it’s fairly simple to do in PowerShell, I’ll demonstrate this using the &lt;a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/expand-archive?view=powershell-5.0"&gt;Expand-Archive&lt;/a&gt; command that was introduced in PowerShell 5, which extracts files from a specified archive&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;Expand-Archive
+      -DestinationPath] &amp;lt;String&amp;gt;
+      -LiteralPath &amp;lt;String&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’ll obviously fail miserably on previous versions of PowerShell&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6b6ac33f-a389-ab22-e0e7-533d069770ce.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A57%3A25Z&amp;amp;se=2031-01-11T12%3A57%3A25Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=mbq3sabMzSdHFGGntTGEUJ3Ya%2BaalzKv3zX2U2svLXA%3D" alt="Expand-Archive failes on previous versions of PowerShell" /&gt;&lt;/p&gt;
+&lt;p&gt;As PowerShell has the full power of .NET we can utilize the ZipFile class that has been provided since .NET 4.5 (&lt;em&gt;for even older versions of PowerShell we could also potentially just shell out to 7zip or similar command line utility or utilize 3rd party .NET assembly, as we can do anything in our polyfill that’s possible PowerShell&lt;/em&gt;).
+Such a polyfill could look something like below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;if (-not (Get-Command Expand-Archive -ErrorAction SilentlyContinue))
+{
+  &amp;amp; {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    function global:Expand-Archive
+    {
+        param([string]$Path, [string]$DestinationPath)
+        [System.IO.Compression.ZipFile]::ExtractToDirectory($Path, $DestinationPath)
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The above script checks if command exists, if it doesn’t it’ll execute a code block which will create a globally available function, with the parameters and functionality we expect. To use it in our scripts we dot source it into our script or shell
+&lt;code&gt;. .\Expand-Archive.Polyfill.ps1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/32e374ff-3b83-e9eb-a0a7-39cac1d37cca.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A59%3A00Z&amp;amp;se=2031-01-11T12%3A59%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=ZPFzNZQHdnUgbLCeJAf9pfwFGg1N7VdOWHzO9A%2F0Xqs%3D" alt="Demonstraing Expand-Archive available" /&gt;&lt;/p&gt;
+&lt;p&gt;and it’ll be available for us to utilize just like we would have done in a newer version of PowerShell.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/02fd4235-bed7-d9ea-299b-4cbb38ec58b8.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A59%3A43Z&amp;amp;se=2031-01-11T12%3A59%3A43Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=DMrIzL%2FATJBZdm7cb6kkCKU7DZrKbTGJzTAycjgKO0k%3D" alt="Demonstrating usage of the polyfilled command" /&gt;&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Polyfilling is a very neat way having more homogenous and maintainable scripts, while also letting you adopt new commands and features, even if you have one or two old servers in the closet ;)&lt;/p&gt;
+</content>
+		<summary>Spackle missing pieces on legacy versions of PowerShell</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2017/2017-08-26-using-ngrok-with-azure-functions</id>
+		<title>Using ngrok with Azure Functions⚡</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2017/2017-08-26-using-ngrok-with-azure-functions" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2017-08-20T00:00:00Z</updated>
+		<content>&lt;p&gt;With things like the Azure Functions Cli and Azure Functions tools for Visual Studio you get the full development and debugging story locally on your machine. This is great as you can iterate and test quickly without the need to push the code to the cloud first, the drawback of this is that you can’t do incoming webhooks from. 3:rd party services, i.e. GitHub can’t access your locally running function.&lt;/p&gt;
+&lt;p&gt;But what if I said there’s a way you have your cake and eat it, wouldn’t that be great?&lt;/p&gt;
+&lt;h2 id="ngrok"&gt;ngrok&lt;/h2&gt;
+&lt;p&gt;Introducing ngrok, ngrok is a tool and a service that will let you securely inspect and tunnel traffic to your local computer. It’s a free service with paid plans that will give you extra features like custom and reserved domains, IP address whitelisting etc.&lt;/p&gt;
+&lt;h2 id="obtaining-the-tool"&gt;Obtaining the tool&lt;/h2&gt;
+&lt;p&gt;ngrok is available cross platform for MacOS, Windows, Linux and FreeBSD and it’s just a single binary you can download and unzip from &lt;a href="https://ngrok.com/download"&gt;ngrok.com/download&lt;/a&gt;. If you’re running Chocolatey on Windows like me, then it’s just a simple command way to get it installed:
+&lt;code&gt;choco install -y ngrok.portable&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="using-ngrok"&gt;Using ngrok&lt;/h2&gt;
+&lt;p&gt;Using ngrok is very straightforward, in general you launch the tool with which protocol and port your local service is listening on.
+&lt;code&gt;ngrok http 8080&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/75ba557b-50d3-94cc-39a6-e330a127244c.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A04%3A11Z&amp;amp;se=2031-01-11T13%3A04%3A11Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=MJNZ3xMphCitS5%2FwHM3yUcBrHAcf2W%2BG8SWt1xLjSz8%3D" alt="ngrok running" /&gt;&lt;/p&gt;
+&lt;p&gt;ngrok will launch and the forwarding urls is what you use to access your local service from the Internet.&lt;/p&gt;
+&lt;h2 id="using-ngrok-with-azure-functions"&gt;Using ngrok with Azure Functions&lt;/h2&gt;
+&lt;p&gt;You can find out which local port your Azure Functions by looking at the output of when the host starts, you can also specify the port using the port switch when launching the functions host
+&lt;code&gt;func host -p 8080&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3cc00ea9-6f20-c435-c5eb-85ed3c08804d.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A05%3A19Z&amp;amp;se=2031-01-11T13%3A05%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=sbfyFtGZwwBnqMDpi%2FiU4QyJ9oweCeb5cU6URfbaYG8%3D" alt="Azure Functions Host port" /&gt;&lt;/p&gt;
+&lt;p&gt;By default, ngrok will forward it’s temporary domain as host header to the locally running service, but as The Azure Functions host only listens to the hostname “localhost” we’ll need to override the default behavior using the host header switch
+&lt;code&gt;ngrok http 8080 --host-header localhost&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="externally-calling-local-function"&gt;Externally calling local function&lt;/h2&gt;
+&lt;p&gt;To use your locally running function externally you just replace the base url provided by the function host to the temporary url provided by ngrok i.e.
+&lt;code&gt;http://localhost:8080&lt;/code&gt; becomes &lt;code&gt;https://tempsubdomain.ngrok.io&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So say you have a GitHub webhook called &lt;code&gt;GithubWebhookCSharp&lt;/code&gt; its local url will be &lt;code&gt;http://localhost:8080/api/GithubWebhookCSharp&lt;/code&gt; and it’s external url will be &lt;code&gt;https://tempsubdomain.ngrok.io/api/GithubWebhookCSharp&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Which you then could set up as i.e. a GitHub webhook&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/fd80337f-d020-ae4f-e2fd-b60f60843b74.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A06%3A49Z&amp;amp;se=2031-01-11T13%3A06%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=nRjbhYTdQuW0%2BGbz8RvZUbX6PI0OdLsyUaLw%2BDBWYfo%3D" alt="Setting up webhook on GitHub" /&gt;&lt;/p&gt;
+&lt;p&gt;now when GitHub webhook triggers it’ll tunnel through ngrok and its payload will be delivered to your locally otherwise externally inaccessible function&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/03bb2043-2dcf-d789-ffa3-fe26079537b9.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A09%3A19Z&amp;amp;se=2031-01-11T13%3A09%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=aAtxSvy0er9zBq5q0s3Vl6JXzxUn3s7lh0PQGtkl0tw%3D" alt="ngrok / Azure function host serving local function" /&gt;&lt;/p&gt;
+&lt;h2 id="inspecting-traffic"&gt;Inspecting traffic&lt;/h2&gt;
+&lt;p&gt;On off the real killer features of ngrok is that it provides a local web interface, you’ll find it’s url in the tool’s output&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/c4c98d7a-a7c6-e009-ebe1-0e2e0d85f036.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A09%3A48Z&amp;amp;se=2031-01-11T13%3A09%3A48Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=0emxBg1Jsllf974MaJ7dVZXrYM3ll2qyhPS%2BOoAfJUY%3D" alt="ngrok web interface url" /&gt;&lt;/p&gt;
+&lt;p&gt;This interface provides deep insight of all traffic that travels through the ngrok tunnel, you can see the response/request body and headers, it also lets you replay a request as many times as you like without needing to trigger an event on the external service, which is really useful when debugging, iterating over an implementation and fixing bugs!&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a5d64ad8-64c9-b05c-37cd-ab487c32e480.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A10%3A11Z&amp;amp;se=2031-01-11T13%3A10%3A11Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=3n1GdorjYDsMbGzCcsGY3ng%2B7lmLZk2IBMdhk9KC9WY%3D" alt="ngrok web interface" /&gt;&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Using a service like ngrok is really powerful and can ultimately speed up the development process.&lt;/p&gt;
+</content>
+		<summary>Serverless debugging on steroids💪</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic</id>
+		<title>Dispelling the magic!</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2017-07-09T00:00:00Z</updated>
+		<content>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9a556e23-9df5-b80b-edce-8103ba73bcea.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A15%3A19Z&amp;amp;se=2031-01-11T13%3A15%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=bY%2FrcHwH0ULHLyo0Gh00lXcpdE3XXE1S5ZF84AQ7B08%3D" alt="build.cake -&amp;gt; magic - Build success/fail" /&gt;&lt;/p&gt;
+&lt;p&gt;When you don’t know the details behind a technology, it’s easy to dismiss it as magic, but if you dare to look behind the curtain — it might not be that complicated or foreign to what you already know.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53899274-3404-8df9-4c59-85cb29b5a673.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A16%3A42Z&amp;amp;se=2031-01-11T13%3A16%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=1vvUx7y%2FZV2df%2FQdO04t6h6SE3eM9J%2B4OB2gSqQCyvY%3D" alt="Cake logo" /&gt;&lt;/p&gt;
+&lt;p&gt;In this blog post, I’ll go through some of the pieces that make up the open source build orchestration tool &lt;a href="http://cakebuild.net/"&gt;Cake&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I’ll show you how you can reuse pieces of Cake with different environments and even languages, I’ll go into detail on some parts and glance over others.&lt;/p&gt;
+&lt;p&gt;If there’s any part you would want me to go into more detail with please let me now! I will provide links to the examples and resources at the end of this blog post.&lt;/p&gt;
+&lt;h2 id="its-just-c-and.net"&gt;“It’s just C# and .Net”&lt;/h2&gt;
+&lt;p&gt;This is a statement I have often made as Cake scripts provide a superset of C# — which means anything you can do in C# you can do Cake. The Cake DSL via its aliases merely provide a shortcut to make APIs and tools easier to consume, but you can always opt to like “regular” code reference assemblies, write methods and classes.&lt;/p&gt;
+&lt;p&gt;An example of this could be working with JSON, in your console or MVC app it’s likely that you would use JSON.Net to serialize/deserialize your JSON from/to .NET objects and doing the same with a Cake script doesn’t differ much from plain vanilla C#&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin &amp;quot;Newtonsoft.Json&amp;quot;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+public class MyDto
+{
+    public string Name { get; set; }
+}
+
+var dto = new MyDto {
+    Name = &amp;quot;John Doe&amp;quot;
+};
+
+var json = JsonConvert.SerializeObject(dto, Formatting.Indented);
+
+var dto2 = JsonConvert.DeserializeObject&amp;lt;MyDto&amp;gt;(json);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Basically, only difference is the &lt;code&gt;#addin&lt;/code&gt; preprocessor, which fetches and references an assembly from NuGet and the lack of need to wrap in the code in a namespace/class/method.&lt;/p&gt;
+&lt;p&gt;Being “just” C# and .NET truly means that you’ll always have the safety net of .NET, C# and the vast number of resources available for those pieces of technology.&lt;/p&gt;
+&lt;h2 id="the-pieces-of-cake"&gt;The pieces of Cake&lt;/h2&gt;
+&lt;p&gt;Cake is distributed in two flavors, one for the full classic .NET which also works with Mono and a version for .NET Core — the new cross platform framework/runtime from Microsoft.&lt;/p&gt;
+&lt;p&gt;The most common way to obtain the Cake tool is via the &lt;code&gt;Cake&lt;/code&gt; and &lt;code&gt;Cake.CoreCLR&lt;/code&gt;NuGet packages (Cake is also available via Chocolatey, Homebrew, GitHub and official docker containers are on their way).&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/46ed3f51-6cba-3f11-8cb7-04f729fb5877.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A25%3A17Z&amp;amp;se=2031-01-11T13%3A25%3A17Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=QIFKVh4SEpjHISyoO%2F9eMwFiUARNHuHCXB0lfjk9x5w%3D" alt=".NET Full/Desktop vs .NET Core" /&gt;&lt;/p&gt;
+&lt;p&gt;The NuGet packages contain all dependencies needed to execute under respective runtime, but the “Magic” is in three assemblies and a console application.&lt;/p&gt;
+&lt;h2 id="cake.exe-cake.dll-the-tool"&gt;Cake.exe / Cake.dll — “The Tool”&lt;/h2&gt;
+&lt;p&gt;To name a few things it handles&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Compilation of scripts&lt;/li&gt;
+&lt;li&gt;Argument parsing&lt;/li&gt;
+&lt;li&gt;Console logging&lt;/li&gt;
+&lt;li&gt;Composition of modules/assemblies&lt;/li&gt;
+&lt;li&gt;Basically, it’s what glues everything together and provides the “Cake experience”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="cake.core-the-heart"&gt;Cake.Core — “The heart”&lt;/h2&gt;
+&lt;p&gt;Provides things like&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core abstractions/interfaces/attributes used by Cake Tool/Addins/Modules (&lt;em&gt;this is the only assembly needed to reference when creating a Cake addin/module&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;DSL Parsing and transpiling/codegen to C# that Roslyn understands and can compile&lt;/li&gt;
+&lt;li&gt;Base tool implementation (&lt;em&gt;tool resolution, execution, settings etc.&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Cake Task runtime (&lt;em&gt;task runner/dependency graph/setup &amp;amp; teardown etc.&lt;/em&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="cake.common-the-doer"&gt;Cake.Common — “The doer”&lt;/h2&gt;
+&lt;p&gt;This assembly provides almost 400 convenient aliases/extension methods for things like&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tools (MSBuild, NuGet, .NET Core CLI, code signing, etc.)&lt;/li&gt;
+&lt;li&gt;APIs (compression, project file parsing, text templating, HTTP, etc.)&lt;/li&gt;
+&lt;li&gt;Build system support (AppVeyor, VSTS, Jenkins, TeamCity, MyGet, etc.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="cake.nuget-the-fetcher"&gt;Cake.NuGet — “The Fetcher”&lt;/h2&gt;
+&lt;p&gt;Cake module that enables fetching dependencies from NuGet for i.e. preprocessor directives like &lt;code&gt;#addin&lt;/code&gt;, &lt;code&gt;#tool&lt;/code&gt; and &lt;code&gt;#load&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="cake-composition-its-just-c-and.net-part-deux"&gt;Cake composition — “It’s just C# and .Net part deux”&lt;/h2&gt;
+&lt;p&gt;The assemblies &lt;code&gt;Cake.Core&lt;/code&gt;, &lt;code&gt;Cake.Common&lt;/code&gt; and &lt;code&gt;Cake.NuGet&lt;/code&gt; are all available up on NuGet.org targeting both .NET Full/Desktop and .NET Core.&lt;/p&gt;
+&lt;p&gt;This means you can reference and leverage parts/most of the work and effort that’s been put into Cake with almost any .NET application, environment or platform — it’s just standard C# code and assemblies!&lt;/p&gt;
+&lt;p&gt;That said Cake relies heavily on dependency injection and has over time been refactored into custom modules — so how it all fits together can be a bit daunting for someone that’s new to the project. A rough basic example of doing this using an Inversion of Control container like AutoFac could look something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var builder = new ContainerBuilder();
+// Core services.
+builder.RegisterType&amp;lt;CakeEngine&amp;gt;().As&amp;lt;ICakeEngine&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;FileSystem&amp;gt;().As&amp;lt;IFileSystem&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CakeEnvironment&amp;gt;().As&amp;lt;ICakeEnvironment&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;Globber&amp;gt;().As&amp;lt;IGlobber&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;ProcessRunner&amp;gt;().As&amp;lt;IProcessRunner&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;WindowsRegistry&amp;gt;().As&amp;lt;IRegistry&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;ToolLocator&amp;gt;().As&amp;lt;IToolLocator&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;ToolResolutionStrategy&amp;gt;().As&amp;lt;IToolResolutionStrategy&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;ToolRepository&amp;gt;().As&amp;lt;IToolRepository&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;DefaultExecutionStrategy&amp;gt;().As&amp;lt;IExecutionStrategy&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CakePlatform&amp;gt;().As&amp;lt;ICakePlatform&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CakeRuntime&amp;gt;().As&amp;lt;ICakeRuntime&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CakeContext&amp;gt;().As&amp;lt;ICakeContext&amp;gt;().SingleInstance();
+
+// Script Host Services - these are currently part of Cake.exe/dll and
+// not publicly available and need to be provided by any custom host
+builder.RegisterType&amp;lt;CustomArguments&amp;gt;().As&amp;lt;ICakeArguments&amp;gt;();
+builder.RegisterType&amp;lt;CustomConfiguration&amp;gt;().As&amp;lt;ICakeConfiguration&amp;gt;();
+builder.RegisterType&amp;lt;CustomLog&amp;gt;().As&amp;lt;ICakeLog&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CustomReportPrinter&amp;gt;().As&amp;lt;ICakeReportPrinter&amp;gt;().SingleInstance();
+builder.RegisterType&amp;lt;CustomScriptHost&amp;gt;().As&amp;lt;IScriptHost&amp;gt;().SingleInstance();
+
+// Script Host
+IScriptHost ScriptHost = builder.Build().Resolve&amp;lt;IScriptHost&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As the observant might see from the comment there’s a few cases where the implementation currently resides in &lt;code&gt;Cake.exe/Cake.dll&lt;/code&gt; (&lt;em&gt;this might be something we’ll look at refactoring in the future&lt;/em&gt;), the interfaces they implement exist in Core so you can implement and provide your own implementation or depending on what parts of Cake you reuse you might not need them (&lt;em&gt;for unit testing we provide Cake.Testing which provides fake context and file system, environment abstractions for tool testing, etc. Unit testing Cake addins / modules might be a good topic for another blog post — please let me know if you reckon that’s the case&lt;/em&gt;).&lt;/p&gt;
+&lt;h2 id="proof-of-concept-custom-script-host"&gt;Proof of concept custom script host&lt;/h2&gt;
+&lt;p&gt;So, to do your own custom host for your own “build script” implementation, you currently need to implement a few interfaces: &lt;code&gt;ICakeArguments&lt;/code&gt;, &lt;code&gt;ICakeConfiguration&lt;/code&gt;, &lt;code&gt;ICakeLog&lt;/code&gt;, &lt;code&gt;ICakeReportPrinter&lt;/code&gt; and &lt;code&gt;IScriptHost&lt;/code&gt;, because these implementations as mentioned earlier currently resides in &lt;code&gt;Cake.exe/Cake&lt;/code&gt;.dll, but all other are available in &lt;code&gt;Cake.Core&lt;/code&gt; ready for reuse in any .NET project.&lt;/p&gt;
+&lt;p&gt;To demonstrate this, I’ve created the &lt;em&gt;“Proof of concept, in no way official, don’t use in production, just to see how the sausage is made, etc.”&lt;/em&gt; assembly called &lt;code&gt;Cake.Bridge&lt;/code&gt;, compiled for both .NET and .NET Core, which means it could be used most places .NET is available today (&lt;em&gt;binary is up on NuGet and source on GitHub, I’ll provide links to all resources at end of this post&lt;/em&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Cake.Bridge&lt;/code&gt; provides a static &lt;code&gt;CakeBridge&lt;/code&gt;class which provides easy access to working with the Cake task runner and the &lt;code&gt;ICakeContext&lt;/code&gt; (&lt;em&gt;which is what all Cake aliases/methods extend&lt;/em&gt;), created with the goal to demonstrate an easy way to reuse Cake assemblies from any .NET language and not only with C# which is what Cake supports out of the box.&lt;/p&gt;
+&lt;p&gt;What you won’t get is anything the Cake DSL provides and no addin nor module support.&lt;/p&gt;
+&lt;p&gt;To illustrate this I’ve authored a few code snippets on how using Cake from a few different .NET languages using the &lt;code&gt;Cake.Bridge&lt;/code&gt; assembly, &lt;em&gt;&lt;strong&gt;disclaimer&lt;/strong&gt;&lt;/em&gt; the code snippets are quick and rough proof of concepts to mostly prove it can be done and obviously more refinement needs to be done for them to be more idiomatically correct.&lt;/p&gt;
+&lt;p&gt;There often exist more native, prominent and widely used build systems already.&lt;/p&gt;
+&lt;h2 id="powershell"&gt;PowerShell&lt;/h2&gt;
+&lt;p&gt;Even if perhaps mainly the sysadmin language of choice — PowerShell still is a .NET based language and its ability to utilize .NET makes it a very powerful scripting language as anything not provided native by the language often can be solved by reaching out to the framework it’s running on. It also means that you can use Cake from it:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;[string] $cakeBootstrapper      = './v0.0.5-alpha-cake.ps1'
+[string] $cakeBootstrapperUrl   = 'https://raw.githubusercontent.com/devlead/Cake.Bridge/v0.0.5-alpha/src/cake.ps1'
+if (!(Test-Path $cakeBootstrapper))
+{
+    Invoke-RestMethod $cakeBootstrapperUrl -OutFile $cakeBootstrapper
+}
+. $cakeBootstrapper
+
+######################################################################
+## GLOBALS
+######################################################################
+[FilePath]      $solution      = [Enumerable]::FirstOrDefault([GlobbingAliases]::GetFiles($context, &amp;quot;./src/*.sln&amp;quot;))
+[string]        $configuration = &amp;quot;Release&amp;quot;
+[DirectoryPath] $nugetRoot     = [DirectoryAliases]::MakeAbsolute($context, &amp;quot;./nuget&amp;quot;);
+
+######################################################################
+## SETUP / TEARDOWN
+######################################################################
+Setup([Action[ICakeContext]]{
+    param([ICakeContext] $ctx)
+})
+
+Teardown([Action[ITeardownContext]]{
+    param([ITeardownContext] $ctx)
+})
+
+######################################################################
+## TASKS
+######################################################################
+$cleanTask      = &amp;quot;Clean&amp;quot; |`
+                    Task |`
+                    Does -Action ({
+                        [DirectoryAliases]::CleanDirectories($context, &amp;quot;./src/**/bin/$configuration&amp;quot;)
+                        [DirectoryAliases]::CleanDirectories($context, &amp;quot;./src/**/obj/$configuration&amp;quot;)
+                        [DirectoryAliases]::CleanDirectory($context, $nugetRoot)
+                    })
+
+$restoreTask    = &amp;quot;Restore&amp;quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $cleanTask |`
+                    Does -Action ({
+                        [DotNetCoreAliases]::DotNetCoreRestore($context, $solution.FullPath)
+                    })
+
+$buildTask      = &amp;quot;Build&amp;quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $restoreTask |`
+                    Does -Action ({
+                        [DotNetCoreAliases]::DotNetCoreBuild($context, $solution.FullPath)
+                    })
+
+$packTask       = &amp;quot;Pack&amp;quot; |`
+                    Task |`
+                    IsDependentOn -Dependency $buildTask |`
+                    Does -Action ({
+                        [DotNetCorePackSettings]   $packSettings = [DotNetCorePackSettings]::new()
+                        $packSettings.OutputDirectory = $nugetRoot
+
+                        [DotNetCoreAliases]::DotNetCorePack(
+                            $context,
+                            $solution.FullPath,
+                            $packSettings
+                        )
+                    })
+
+######################################################################
+## EXECUTION
+######################################################################
+$packTask | RunTarget
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="visual-basic"&gt;Visual Basic&lt;/h2&gt;
+&lt;p&gt;You can’t talk about .NET languages without mentioning Visual Basic and now when it’s also joining the .NET Core party too it’s getting up to date with the times. And obviously you can &lt;strong&gt;Bake&lt;/strong&gt; with &lt;strong&gt;Cake&lt;/strong&gt; using some Basic (&lt;em&gt;there’s no VB.NET interactive console that I know of so I created a simple VB.NET Core console app&lt;/em&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-vb"&gt;Imports System
+Imports System.Linq
+Imports CakeBridge
+Imports Cake.Core
+Imports Cake.Core.Diagnostics
+Imports Cake.Core.IO
+Imports Cake.Common
+Imports Cake.Common.IO
+Imports Cake.Common.Diagnostics
+Imports Cake.Common.Tools.DotNetCore
+Imports Cake.Common.Tools.DotNetCore.Build
+Imports Cake.Common.Tools.DotNetCore.Pack
+Imports Cake.Common.Tools.DotNetCore.Restore
+Imports Cake.Common.Tools.DotNetCore.Test
+
+Module Program
+    Sub Main()
+        '//////////////////////////////////////////////////////////////////////
+        '// ARGUMENTS
+        '//////////////////////////////////////////////////////////////////////
+        Dim target          = Context.Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;),
+            configuration   = Context.Argument(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;)
+
+        '//////////////////////////////////////////////////////////////////////
+        '// GLOBALS
+        '//////////////////////////////////////////////////////////////////////
+        Dim nugetRoot       As DirectoryPath    = Nothing,
+            solution        As FilePath         = Nothing,
+            solutionDir     As DirectoryPath    = Nothing,
+            semVersion      As String           = Nothing,
+            assemblyVersion As String           = Nothing,
+            fileVersion     As String           = Nothing
+
+        '//////////////////////////////////////////////////////////////////////
+        '// SETUP / TEARDOWN
+        '//////////////////////////////////////////////////////////////////////
+        Setup(
+            Sub(ctx As ICakeContext)
+                ctx.Information(&amp;quot;Setting up...&amp;quot;)
+
+                solution = ctx.GetFiles(&amp;quot;./src/*.sln&amp;quot;).Select(Function(file as FilePath) ctx.MakeAbsolute(file)).FirstOrDefault()
+
+                If solution Is Nothing Then
+                    Throw New Exception(&amp;quot;Failed to find solution&amp;quot;)
+                End If
+
+                solutionDir = solution.GetDirectory()
+                nugetRoot = ctx.MakeAbsolute(ctx.Directory(&amp;quot;./nuget&amp;quot;))
+
+                Dim releaseNotes    = ctx.ParseReleaseNotes(&amp;quot;./ReleaseNotes.md&amp;quot;)
+                assemblyVersion     = releaseNotes.Version.ToString()
+                fileVersion         = assemblyVersion
+                semVersion          = $&amp;quot;{assemblyVersion}-alpha&amp;quot;
+
+                ctx.Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion)
+            End Sub
+        )
+
+        Teardown(
+            Sub(ctx As ITeardownContext) ctx.Information(&amp;quot;Tearing down...&amp;quot;)
+        )
+
+        '//////////////////////////////////////////////////////////////////////
+        '// TASKS
+        '//////////////////////////////////////////////////////////////////////
+        Dim cleanTask = Task(&amp;quot;Clean&amp;quot;).Does(
+            Sub()
+                Context.CleanDirectories($&amp;quot;{solutionDir.FullPath}/**/bin/{configuration}&amp;quot;)
+                Context.CleanDirectories($&amp;quot;{solutionDir.FullPath}/**/obj/{configuration}&amp;quot;)
+                Context.CleanDirectory(nugetRoot)
+            End Sub
+            )
+
+        Dim restoreTask = Task(&amp;quot;Restore&amp;quot;).Does(
+            Sub() Context.DotNetCoreRestore(solution.FullPath,
+                                  New DotNetCoreRestoreSettings With {
+                                  .Sources = {&amp;quot;https://api.nuget.org/v3/index.json&amp;quot;}
+                                  })
+            ).IsDependentOn(cleanTask)
+
+        Dim buildTask = Task(&amp;quot;Build&amp;quot;).Does(
+            Sub() Context.DotNetCoreBuild(solution.FullPath,
+                                  New DotNetCoreBuildSettings With {
+                                  .Configuration = configuration,
+                                  .ArgumentCustomization = Function(args) args.Append(
+                                                                                &amp;quot;/p:Version={0}&amp;quot;, semVersion
+                                                                            ).Append(
+                                                                                &amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion
+                                                                            ).Append(
+                                                                                &amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion
+                                                                            )
+                                  })
+            ).IsDependentOn(restoreTask)
+
+        Dim testTask = Task(&amp;quot;Test&amp;quot;).Does(
+            Sub()
+                For Each project In Context.GetFiles(&amp;quot;./src/**/*.Tests.vbproj&amp;quot;)
+                    Context.DotNetCoreTest(project.FullPath,
+                                    New DotNetCoreTestSettings With {
+                                        .Configuration = configuration,
+                                        .NoBuild = True
+                                        })
+                Next
+            End Sub
+            ).IsDependentOn(buildTask)
+
+        Dim packTask = Task(&amp;quot;Pack&amp;quot;).Does(
+            Sub()
+                For Each project In (Context.GetFiles(&amp;quot;./src/**/*.vbproj&amp;quot;) - Context.GetFiles(&amp;quot;./src/**/*.Tests.vbproj&amp;quot;))
+                    Context.DotNetCorePack(project.FullPath,
+                                    New DotNetCorePackSettings With {
+                                        .Configuration = configuration,
+                                        .OutputDirectory = nugetRoot,
+                                        .NoBuild = True,
+                                        .ArgumentCustomization = Function(args) args.Append(
+                                                                                        &amp;quot;/p:Version={0}&amp;quot;, semVersion
+                                                                                    ).Append(
+                                                                                        &amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion
+                                                                                    ).Append(
+                                                                                        &amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion
+                                                                                    )
+                                        })
+                Next
+            End Sub
+            ).IsDependentOn(testTask)
+
+        Task(&amp;quot;Default&amp;quot;).IsDependentOn(packTask)
+
+        '//////////////////////////////////////////////////////////////////////
+        '// EXECUTION
+        '//////////////////////////////////////////////////////////////////////
+        RunTarget(target)
+    End Sub
+End Module¨
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="f"&gt;F#&lt;/h2&gt;
+&lt;p&gt;F# is a .NET language which makes it fully possible to use Cake with F#.
+Full disclaimer though, as I’m not very proficient with the F# language and wanted something that somewhat looked like F# I called on the help and assistance of my friend &lt;a href="https://github.com/mrange"&gt;Mårten Rånge&lt;/a&gt; to do a quick port from C# to F# and this was the result:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-fsharp"&gt;#load &amp;quot;tools/Cake.Bridge.0.0.4-alpha/content/cake.fsx&amp;quot;
+
+//////////////////////////////////////////////////////////////////////
+// NAMESPACE IMPORTS
+//////////////////////////////////////////////////////////////////////
+open Cake.Common
+open Cake.Common.Diagnostics
+open Cake.Common.IO
+open Cake.Common.Tools.DotNetCore
+open Cake.Common.Tools.DotNetCore.Build
+open Cake.Common.Tools.DotNetCore.Pack
+open Cake.Core
+open Cake.Core.IO
+open System
+
+open CakeAdapter.CakeModule
+
+// Execute script with: fsi build.fsx
+
+//////////////////////////////////////////////////////////////////////
+// ARGUMENTS
+//////////////////////////////////////////////////////////////////////
+let target        = context.Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;)
+let configuration = context.Argument(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;)
+
+//////////////////////////////////////////////////////////////////////
+// GLOBALS
+//////////////////////////////////////////////////////////////////////
+let directoryPath           = !&amp;gt; (context.Directory &amp;quot;./nuget&amp;quot;)
+let nugetRoot               = context.MakeAbsolute directoryPath
+
+type ProjectInfo =
+  {
+    AssemblyVersion : string
+    FileVersion     : string
+    SemVersion      : string
+    Solution        : FilePath
+  }
+
+let mutable projectInfo     = None
+
+let argumentCustomizer      = Func&amp;lt;ProcessArgumentBuilder,ProcessArgumentBuilder&amp;gt; (fun args -&amp;gt;
+                                let p = projectInfo.Value
+                                args
+                                  .Append(&amp;quot;/p:Version={0}&amp;quot;        , p.SemVersion      )
+                                  .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, p.AssemblyVersion )
+                                  .Append(&amp;quot;/p:FileVersion={0}&amp;quot;    , p.FileVersion     ))
+
+//////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+//////////////////////////////////////////////////////////////////////
+setup (fun context -&amp;gt;
+    context.Information &amp;quot;Setting up...&amp;quot;
+
+    let solution        =
+      match context.GetFiles &amp;quot;./src/*.sln&amp;quot; |&amp;gt; Seq.tryHead with
+      | Some solution -&amp;gt; solution
+      | None          -&amp;gt; failwith &amp;quot;Failed to find solution&amp;quot;
+
+    let releaseNotes    = context.ParseReleaseNotes(!&amp;gt; &amp;quot;./ReleaseNotes.md&amp;quot;)
+    let assemblyVersion = string releaseNotes.Version
+    let fileVersion     = assemblyVersion
+    let semVersion      = assemblyVersion + &amp;quot;-alpha&amp;quot;
+
+    projectInfo &amp;lt;- Some {
+        AssemblyVersion = assemblyVersion
+        FileVersion     = fileVersion
+        SemVersion      = semVersion
+        Solution        = solution
+      }
+
+    context.Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion)
+  )
+
+tearDown (fun context -&amp;gt;
+    context.Information &amp;quot;Tearing down...&amp;quot;
+  )
+//////////////////////////////////////////////////////////////////////
+// TASKS
+//////////////////////////////////////////////////////////////////////
+let clean =
+  task &amp;quot;Clean&amp;quot;
+  |&amp;gt; does (fun () -&amp;gt;
+    context.CleanDirectories(&amp;quot;./src/**/bin/&amp;quot; + configuration)
+    context.CleanDirectories(&amp;quot;./src/**/obj/&amp;quot; + configuration)
+    context.CleanDirectory nugetRoot
+  )
+
+let restore =
+  task &amp;quot;Restore&amp;quot;
+  |&amp;gt; isDependentOn clean
+  |&amp;gt; does (fun () -&amp;gt;
+    context.DotNetCoreRestore projectInfo.Value.Solution.FullPath
+  )
+
+let build =
+  task &amp;quot;Build&amp;quot;
+  |&amp;gt; isDependentOn restore
+  |&amp;gt; does (fun () -&amp;gt;
+    context.DotNetCoreBuild(
+      projectInfo.Value.Solution.FullPath         ,
+      DotNetCoreBuildSettings(
+        Configuration         = configuration     ,
+        ArgumentCustomization = argumentCustomizer))
+  )
+
+let pack =
+  task &amp;quot;Pack&amp;quot;
+  |&amp;gt; isDependentOn build
+  |&amp;gt; does (fun () -&amp;gt;
+    if context.DirectoryExists nugetRoot |&amp;gt; not then context.CreateDirectory nugetRoot
+
+    let projectFiles =
+      context.GetFiles &amp;quot;./src/**/*.fsproj&amp;quot;
+      |&amp;gt; Seq.filter (fun file -&amp;gt; file.FullPath.EndsWith &amp;quot;Tests&amp;quot; |&amp;gt; not)
+      |&amp;gt; Seq.toArray
+
+    for project in projectFiles do
+        context.DotNetCorePack(
+          project.FullPath                            ,
+          DotNetCorePackSettings(
+            Configuration         = configuration     ,
+            OutputDirectory       = nugetRoot         ,
+            NoBuild               = true              ,
+            ArgumentCustomization = argumentCustomizer))
+  )
+
+task &amp;quot;Default&amp;quot;
+  |&amp;gt; isDependentOn pack
+
+//////////////////////////////////////////////////////////////////////
+// EXECUTION
+//////////////////////////////////////////////////////////////////////
+runTarget target
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="cake-c"&gt;Cake / C#&lt;/h2&gt;
+&lt;p&gt;For reference below is the script that was used for inspiration when porting to other languages/runtimes, there’s a little less bootstrapping involved but besides that they’re very similar:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;//////////////////////////////////////////////////////////////////////
+// ARGUMENTS
+//////////////////////////////////////////////////////////////////////
+var target = Argument&amp;lt;string&amp;gt;(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;);
+var configuration = Argument&amp;lt;string&amp;gt;(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;);
+
+//////////////////////////////////////////////////////////////////////
+// GLOBALS
+//////////////////////////////////////////////////////////////////////
+DirectoryPath nugetRoot = MakeAbsolute(Directory(&amp;quot;./nuget&amp;quot;));
+FilePath solution = null;
+string  semVersion,
+        assemblyVersion,
+        fileVersion;
+
+//////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+//////////////////////////////////////////////////////////////////////
+
+Setup(context =&amp;gt;
+{
+    Information(&amp;quot;Setting up...&amp;quot;);
+    solution = GetFiles(&amp;quot;./src/*.sln&amp;quot;)
+                .FirstOrDefault();
+    if (solution == null)
+        throw new Exception(&amp;quot;Failed to find solution&amp;quot;);
+
+
+    var releaseNotes = ParseReleaseNotes(&amp;quot;./ReleaseNotes.md&amp;quot;);
+    assemblyVersion =releaseNotes.Version.ToString();
+    fileVersion = assemblyVersion;
+    semVersion = assemblyVersion + &amp;quot;-alpha&amp;quot;;
+
+    Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion);
+});
+
+Teardown(context =&amp;gt;
+{
+    Information(&amp;quot;Tearing down...&amp;quot;);
+});
+
+//////////////////////////////////////////////////////////////////////
+// TASKS
+//////////////////////////////////////////////////////////////////////
+
+var clean = Task(&amp;quot;Clean&amp;quot;)
+    .Does(() =&amp;gt;
+    {
+        CleanDirectories(&amp;quot;./src/**/bin/&amp;quot; + configuration);
+        CleanDirectories(&amp;quot;./src/**/obj/&amp;quot; + configuration);
+        CleanDirectory(nugetRoot);
+    });
+
+var restore = Task(&amp;quot;Restore&amp;quot;)
+    .IsDependentOn(clean)
+    .Does(() =&amp;gt;
+    {
+        DotNetCoreRestore(solution.FullPath);
+    });
+
+var build = Task(&amp;quot;Build&amp;quot;)
+    .IsDependentOn(restore)
+    .Does(() =&amp;gt;
+    {
+        DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings {
+            Configuration = configuration,
+            ArgumentCustomization = args =&amp;gt; args
+                .Append(&amp;quot;/p:Version={0}&amp;quot;, semVersion)
+                .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion)
+                .Append(&amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion)
+        });
+    });
+
+var pack = Task(&amp;quot;Pack&amp;quot;)
+    .IsDependentOn(build)
+    .Does(() =&amp;gt;
+    {
+        if (!DirectoryExists(nugetRoot))
+        {
+            CreateDirectory(nugetRoot);
+        }
+
+        foreach(var project in GetFiles(&amp;quot;./src/**/*.csproj&amp;quot;)
+                                .Where(file=&amp;gt;!file.FullPath.EndsWith(&amp;quot;Tests&amp;quot;)))
+        {
+            DotNetCorePack(project.FullPath, new DotNetCorePackSettings {
+                Configuration = configuration,
+                OutputDirectory = nugetRoot,
+                NoBuild = true,
+                ArgumentCustomization = args =&amp;gt; args
+                    .Append(&amp;quot;/p:Version={0}&amp;quot;, semVersion)
+                    .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion)
+                    .Append(&amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion)
+            });
+        }
+    });
+
+Task(&amp;quot;Default&amp;quot;)
+    .IsDependentOn(pack);
+
+//////////////////////////////////////////////////////////////////////
+// EXECUTION
+//////////////////////////////////////////////////////////////////////
+RunTarget(target);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Even though there might seem to be some Magic around Cake and it’s DSL it’s mostly just .NET and C#, having skills in those areas — are skills you can use with Cake scripts or when using Cake assemblies in some other way. If you have a different need from what the official supported way offers, you could still have a piece of the Cake.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;h3 id="cake.bridge"&gt;Cake.Bridge&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/devlead/Cake.Bridge"&gt;github.com/devlead/Cake.Bridge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;NuGet: &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;www.nuget.org/packages/Cake.Bridge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="powershell-proof-of-concept"&gt;PowerShell proof of concept&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/PsPoC"&gt;github.com/devlead/PsPoC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="visual-basic-proof-of-concept"&gt;Visual Basic proof of concept&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/VBPoC"&gt;github.com/devlead/VBPoC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="f-interactive-script-proof-of-concept"&gt;F# interactive script proof of concept&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/FsxPoC"&gt;github.com/devlead/FsxPoC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="c-interactive-proof-of-concept"&gt;C# interactive proof of concept&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/CsxPoC"&gt;github.com/devlead/CsxPoC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cake"&gt;Cake&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Website: &lt;a href="https://cakebuild.net"&gt;cakebuild.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/cake-build/cake"&gt;github.com/cake-build/cake&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;NuGet: &lt;a href="https://www.nuget.org/profiles/cake-build"&gt;www.nuget.org/profiles/cake-build&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>The layers and pieces of Cake</summary>
+	</entry>
+	<entry>
+		<id>https://www.devlead.se/posts/2017/2017-03-30-azure-sql-transient-errors</id>
+		<title>Azure SQL transient errors</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2017/2017-03-30-azure-sql-transient-errors" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
+		<updated>2017-03-30T00:00:00Z</updated>
+		<content>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/e8cee4c8-d521-c835-71f6-23b18c0b210d.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A02%3A39Z&amp;amp;se=2031-01-11T14%3A02%3A39Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=uJ6SYGXiqheSG%2BHTludvAA71m%2F9O36lFlmSZMa6%2BN3o%3D" alt="Transient extension methods" /&gt;&lt;/p&gt;
+&lt;p&gt;One thing people will notice when migrating to using cloud services are intermittent errors occur at a higher rate than you’re used to when running on premise.&lt;/p&gt;
+&lt;p&gt;These errors are often called transient errors and can be mitigated by just retrying the operation. While some operations might be fine to retry in all cases i.e. fetching data, others like creating orders, deducting money, etc. might not or at least need a little more fine grain control. Also, some errors makes no sense to retry and as a result it’s better to fail fast.&lt;/p&gt;
+&lt;p&gt;Writing the code to handle can easy turn to spaghetti code and it isn’t code you want to copy paste as it’s easy to get wrong and hard to maintain — so you really do want a framework to assist you with these scenarios.&lt;/p&gt;
+&lt;h1 id="introducing-polly"&gt;Introducing Polly&lt;/h1&gt;
+&lt;p&gt;This is how the authors describe Polly:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Polly is a .NET resilience and transient-fault-handling library that allows developers to express policies such as Retry, Circuit Breaker, Timeout, Bulkhead Isolation, and Fallback in a fluent and thread-safe manner&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Which really sums up what it does, it lets you create policies using a fluent API, policies which then can be reused and can range from being generic to target very specific scenarios.&lt;/p&gt;
+&lt;p&gt;Polly is available as &lt;a href="https://www.nuget.org/packages/Polly"&gt;NuGet&lt;/a&gt; package and works with both old .NET and shiny .NET Core, which will be what I’m using in this post.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/59b16711-011f-b854-27a1-da29029d5150.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A04%3A00Z&amp;amp;se=2031-01-11T14%3A04%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=g60K%2FZg3ZagWIVlNy8YsBmRC9K5Fw5MvItx1dFEidcM%3D" alt="Polly in Package manager" /&gt;&lt;/p&gt;
+&lt;p&gt;Also worth noting Polly is open source available on &lt;a href="https://github.com/App-vNext/Polly"&gt;GitHub&lt;/a&gt;.
+Polly’s also member of the [].NET Foundation](&lt;a href="https://dotnetfoundation.org/"&gt;https://dotnetfoundation.org/&lt;/a&gt;).&lt;/p&gt;
+&lt;h2 id="creating-policies"&gt;Creating policies&lt;/h2&gt;
+&lt;p&gt;Defining a policy with Polly is really straightforward in the Polly namespace you Policy class which is what you utilize to create your policies&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
+    .Handle&amp;lt;TimeoutException&amp;gt;()
+    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(3))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Above we’ve via the &lt;code&gt;Handle&amp;lt;TException&amp;gt;method&lt;/code&gt; defined a policy that if a &lt;code&gt;TimeoutException&lt;/code&gt; occurs it’ll wait 3 seconds and retry the operation 5 times before failing on the 6th time which is defined using the &lt;code&gt;WaitAndRetry&lt;/code&gt; method.&lt;/p&gt;
+&lt;p&gt;Because the delay of each retry attempt in this case is retrieved using a &lt;code&gt;Func&amp;lt;int, TimeSpan&amp;gt;&lt;/code&gt; delegate it’s really easy to implement more advanced scenarios like a sliding delay&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
+    .Handle&amp;lt;TimeoutException&amp;gt;()
+    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to let our policy handle more exceptions we can use one to many &lt;code&gt;Or&amp;lt;TException&amp;gt;&lt;/code&gt; method after the &lt;code&gt;Handle&amp;lt;TException&amp;gt;&lt;/code&gt; call&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
+    .Handle&amp;lt;TimeoutException&amp;gt;()
+    .Or&amp;lt;FileNotFoundException&amp;gt;()
+    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;you can also make your policy even more granular by inspecting the exception with an exception predicate&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
+    .Handle&amp;lt;TimeoutException&amp;gt;()
+    .Or&amp;lt;System.IO.FileNotFoundException&amp;gt;(
+      exceptionPredicate =&amp;gt; !exceptionPredicate
+                              .FileName
+                              .EndsWith(&amp;quot;.tmp&amp;quot;, StringComparison.OrdinalIgnoreCase)
+      )
+    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In this case we’ll fail fast if it’s a &lt;code&gt;.tmp&lt;/code&gt; file that’s not found. You can also set policies based on result values, besides retries there’s also support for circuit-breaker, timeout, fallback, composing policies together and more, so the policy “engine” is very flexible.&lt;/p&gt;
+&lt;h2 id="using-policies"&gt;Using policies&lt;/h2&gt;
+&lt;p&gt;We now have our policy in place and want to put it into good use, here the policies &lt;code&gt;Execute&lt;/code&gt; method comes in play&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var intput = /* some input value */
+
+var result = retryPolicy.Execute(() =&amp;gt; MyRetryableMethod(input));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s almost too good to be true, there’s a lot happening under the hood — but in my opinion “hidden” under a very easy to understand and maintainable API.&lt;/p&gt;
+&lt;h2 id="azure-sql-policies"&gt;Azure SQL policies&lt;/h2&gt;
+&lt;p&gt;When is comes to SQL server there’s a few errors known to be safe to retry, so we explicitly look for those, so if we begin with it could look something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;private static readonly Policy SqlRetryPolicy = Policy
+    .Handle&amp;lt;TimeoutException&amp;gt;()
+    .Or&amp;lt;SqlException&amp;gt;(AnyRetryableError)
+    .WaitAndRetry(SqlRetryCount, ExponentialBackoff);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;where &lt;code&gt;SqlRetryCount&lt;/code&gt; is just a constant for how many retries to do and &lt;code&gt;ExponetialBackoff&lt;/code&gt; is a method that exponentially increases the delay between each attempt&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;private const int SqlRetryCount = 4;
+private static TimeSpan ExponentialBackoff(int attempt)
+{
+  return TimeSpan.FromSeconds(Math.Pow(2, attempt));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;TimeoutException:s&lt;/code&gt; will always be retried but SqlExceptions will be passed to &lt;code&gt;AnyRetryableError&lt;/code&gt; method for assessment if it’s retryable or not&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;private static bool AnyRetryableError(SqlException exception)
+{
+    return exception.Errors.OfType&amp;lt;SqlError&amp;gt;().Any(RetryableError);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;AnyRetryableError&lt;/code&gt; will iterate all errors and with the &lt;code&gt;RetryableError&lt;/code&gt; method check if it’s an error known to be retriable and here is where the magic happens&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;private static bool RetryableError(SqlError error)
+{
+  switch (error.Number)
+  {
+    case SqlErrorOperationInProgress:
+    case SqlErrorDatabaseUnavailable:
+    case SqlErrorServiceExperiencingAProblem:
+    case SqlErrorServiceRequestProcessFail:
+    case SqlErrorServiceBusy:
+    case SqlErrorServiceErrorEncountered:
+    case SqlErrorResourceLimitReached:
+    case SqlErrorDatabaseLimitReached:
+    case SqlErrorNetworkReleatedErrorDuringConnect:
+    case SqlErrorTransportLevelErrorWhenSendingRequestToServer:
+    case SqlErrorTransportLevelErrorReceivingResult:
+    case SqlErrorUnableToEstablishConnection:
+    case SqlErrorConnectedButLoginFailed:
+    case SqlErrorInstanceDoesNotSupportEncryption:
+        return true;
+
+    default:
+        return false;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;we will switch on SqlException error number and use a few known constants to determine if it should fail fast or retry.&lt;/p&gt;
+&lt;h2 id="taking-the-policy-for-a-spin"&gt;Taking the policy for a spin&lt;/h2&gt;
+&lt;p&gt;In this case, I’m going to do a simple API that extends &lt;code&gt;SqlCOnnection&lt;/code&gt; with &lt;code&gt;WithRetry&lt;/code&gt; methods, i.e. open SQL connection&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public static SqlConnection OpenWithRetry(this SqlConnection conn)
+{
+  SqlRetryPolicy.Execute(conn.Open);
+  return conn;
+}
+
+public static async Task&amp;lt;SqlConnection&amp;gt; OpenWithRetryAsync(this SqlConnection conn)
+{
+  await SqlRetryAsyncPolicy.ExecuteAsync(conn.OpenAsync);
+  return conn;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;giving us an open sync and async method, which in its simplest form usage could look something like this&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
+{
+  connection.OpenWithRetry();
+}
+
+using (var connection = new SqlConnection(SampleDBConnectionString))
+{
+  await connection.OpenWithRetryAsync();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;combining with a simple SQL to .NET object mapper like [Dapper])(&lt;a href="https://github.com/StackExchange/Dapper"&gt;https://github.com/StackExchange/Dapper&lt;/a&gt;) results in pretty clean code&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
+{
+  var customer = connection
+                  .OpenWithRetry()
+                  .Query&amp;lt;Customer&amp;gt;(SelectCustomerStatement, new { CustomerId = 1})
+                  .FirstOrDefault();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;the above code will open the sql connection using the retry policy, but the query will be executed without retry, which could be what you want for some operations, but for a select it’s often safe/what you want to retry the whole operation. For that we add an overload that lets us execute code within the policy boundary&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public static TResult OpenWithRetry&amp;lt;TResult&amp;gt;(
+  this SqlConnection conn,
+  Func&amp;lt;SqlConnection, TResult&amp;gt; process
+  )
+{
+  return SqlRetryPolicy.Execute(() =&amp;gt;
+  {
+      conn.Open();
+      return process(conn);
+  }
+  );
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;this will open the connection and then invoke and return the result of Func you pass to it all within the scope of policy and just small refactoring of the calling code&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
+{
+    var customer = connection
+                    .OpenWithRetry(
+                        conn=&amp;gt;conn.Query&amp;lt;Customer&amp;gt;(
+                            SelectCustomerStatement,
+                            new { CustomerId = 1 })
+                    ).FirstOrDefault();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and async variant usage could look something like this&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
+{
+  await connection.OpenWithRetryAsync();
+  var customer = (await connection.QueryAsync&amp;lt;Customer&amp;gt;(
+                                          SelectCustomerStatement,
+                                          new { CustomerId = 1 }
+                                      )
+                  ).FirstOrDefault();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Polly is really powerful, yet really easy to get started with and also fairly easy to retrofit into an existing application — so I definitely think you should take it for a spin.&lt;/p&gt;
+&lt;p&gt;I’ve created a complete sample repository on GitHub with the code from this post, thanks for reading! ❤&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/azurevoodoo/AzureSQLTransientHandling"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/eee8a88a-0769-f1bd-e95e-ab14a8a539e6.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A31%3A58Z&amp;amp;se=2031-01-11T14%3A31%3A58Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=Ci6FKYOZ%2BRhvWzVFoMC4HjZ2TItYL9XZZ3c9OkXR0pA%3D" alt="Code samples" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+		<summary>Handling Azure SQL transient errors in .NET Core using Polly</summary>
+	</entry>
+</feed>

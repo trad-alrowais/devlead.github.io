@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sending notifications to Microsoft Teams from your Cake build scripts">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - &#x1F370;Bringing Cake to Microsoft Teams&#x1F4E3;</title>
+
+  <link rel="canonical" href="https://medium.com/hackernoon/bringing-cake-to-microsoft-teams-b49848981d5d">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - &#x1F370;Bringing Cake to Microsoft Teams&#x1F4E3;" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2017/2017-02-22-bringing-cake-to-microsoft-teams" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            &#x1F370;Bringing Cake to Microsoft Teams&#x1F4E3;
+          </h1>
+            <h2 class="subheading">Sending notifications to Microsoft Teams from your Cake build scripts</h2>
+              <div class="meta">Published on Wednesday, 22 February 2017</div>
+                <div class="mt-3">
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/microsoft-teams" class="badge badge-light"> Microsoft Teams</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+        <div id="content" class="col-md-12">
+        <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/951390f9-0c34-4f66-bd22-ddb9e8ad6810.png?sv=2019-12-12&amp;st=2021-01-10T14%3A35%3A12Z&amp;se=2031-01-11T14%3A35%3A12Z&amp;sr=b&amp;sp=r&amp;sig=aOrx%2FnFtHtbsqHd3SVonTweauFt3w%2FqAoJwNRQVq0R4%3D" alt="Microsoft Teams message from Cake" /></p>
+<p>Even though Teams at Microsoft would appreciate you bringing them that’s not what this post is about, but notifications to the Microsoft Teams collaboration / team chat product.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53899274-3404-8df9-4c59-85cb29b5a673.png?sv=2019-12-12&amp;st=2021-01-10T13%3A16%3A42Z&amp;se=2031-01-11T13%3A16%3A42Z&amp;sr=b&amp;sp=r&amp;sig=1vvUx7y%2FZV2df%2FQdO04t6h6SE3eM9J%2B4OB2gSqQCyvY%3D" alt="Cake logo" /></p>
+<p>And Cake? <a href="https://cakebuild.net/">Cake</a> is an open source build system, which lets you in an unintrusive way with a C# DSL both cross platform and environment orchestrate everything around your build process — all using existing skills if you’re a .NET developer.
+( <em>read more at <a href="https://cakebuild.net/">cakebuild.net</a></em> )</p>
+<p>So that settled, wouldn’t it be great if you could send notifications from your Cake scripts to a Microsoft Teams channel? Guess what — there is!</p>
+<h2 id="the-addin">The Addin</h2>
+<p>Cake can be extended through addins, Cake addins can be any .NET assembly available as a NuGet package on any nuget feed, where nuget.org is the most well known package source. However you can by using a couple of attributes (<em>i.e. <a href="http://cakebuild.net/api/Cake.Core.Annotations/CakeAliasAttribute/">CakeMethodAliasAttribute</a> and <a href="http://cakebuild.net/api/Cake.Core.Annotations/CakeNamespaceImportAttribute/">CakeNamespaceImportAttribute</a></em>) become a more “native” Cake addin, in the sense that they lets you extend the DSL and import namespaces using an <a href="http://cakebuild.net/docs/fundamentals/preprocessor-directives">#addin</a> preprocessor directive.</p>
+<p>I’ve created such an addin which makes it easy for you to communicate with a Microsoft Teams channel</p>
+<pre><code class="language-csharp">#addin nuget:?package=Cake.MicrosoftTeams
+
+MicrosoftTeamsPostMessage(&quot;Hello from Cake!&quot;,
+    new MicrosoftTeamsSettings {
+        IncomingWebhookUrl = EnvironmentVariable(&quot;MicrosoftTeamsWebHook&quot;)
+    });
+</code></pre>
+<p>The <code>#addin</code>directive fetches the assembly from nuget, references it, finds any Cake extension methods and imports namespaces — making them conveniently globally available for you in your Cake scripts.</p>
+<h2 id="setup-teardown">Setup / Teardown</h2>
+<p>Reporting when script started and when it succeeded / failed can be achieved by registering actions on the <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/9CF7C412">Setup</a> and <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/E94DA692">Teardown</a> methods on the Cake script host, Setup is executed before Cake tasks are executed and Teardown is always executed post task execution.</p>
+<pre><code class="language-csharp">var teamsSettings = new MicrosoftTeamsSettings {
+        IncomingWebhookUrl = EnvironmentVariable(&quot;MicrosoftTeamsWebHook&quot;)
+    };
+
+Setup(context =&gt; {
+    context.MicrosoftTeamsPostMessage(&quot;Starting build...&quot;, teamsSettings);
+});
+
+Teardown(context =&gt; {
+    context.MicrosoftTeamsPostMessage(context.Successful ? &quot;Build completed successfully.&quot;
+        : string.Format(&quot;Build failed.\r\n({0})&quot;, context.ThrownException),
+        teamsSettings);
+})
+</code></pre>
+<p>As you can see the teardown <a href="http://cakebuild.net/api/Cake.Core/ITeardownContext/">context</a> has an <a href="http://cakebuild.net/api/Cake.Core/ITeardownContext/64379305">Successful</a> property indicating build success/failure and <a href="http://cakebuild.net/api/Cake.Core/ITeardownContext/246CAB42">ThrownException</a> property containing exception on failure. A successful build would look something like this:</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/ca72898d-0a3d-c95f-1fb3-d1ba523c0ece.png?sv=2019-12-12&amp;st=2021-01-10T14%3A40%3A41Z&amp;se=2031-01-11T14%3A40%3A41Z&amp;sr=b&amp;sp=r&amp;sig=a8tBO3bj%2FA0O2%2Bvq1kkxFtR7yvPC789GDOp5FakHc9c%3D" alt="Cake Microsoft Teams Build started &amp; succeeded messages" /></p>
+<p>And a failed build would contain the exception / stack trace like this:</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a8eaec61-11b3-5391-f3ee-e578542926e4.png?sv=2019-12-12&amp;st=2021-01-10T14%3A41%3A09Z&amp;se=2031-01-11T14%3A41%3A09Z&amp;sr=b&amp;sp=r&amp;sig=SKH42BXm7trle1GaZpthvQt3oCa9avN4fU0HcG0L3aE%3D" alt="Cake Microsoft Teams Build started and failed messages" /></p>
+<h2 id="task-setup-teardown">Task Setup / Teardown</h2>
+<p>If you want to track the progress of individual tasks that’s possible using the TaskSetup and TaskTeardown, which lets you register actions executed before and after task is executed.</p>
+<pre><code class="language-csharp">TaskSetup(context =&gt; {
+    context.MicrosoftTeamsPostMessage(string.Format(&quot;Starting task {0}...&quot;, context.Task.Name),
+        teamsSettings);
+});
+
+TaskTeardown(context =&gt; {
+    context.MicrosoftTeamsPostMessage(string.Format(&quot;Task {0} {1} ({2}).&quot;,
+        context.Task.Name,
+        context.Skipped ? &quot;was skipped&quot; : &quot;processed&quot;,
+        context.Duration),
+        teamsSettings);
+});
+</code></pre>
+<p>Both <a href="http://cakebuild.net/api/Cake.Core/ITaskSetupContext/">setup</a> and <a href="http://cakebuild.net/api/Cake.Core/ITaskTeardownContext/">teardown</a> context provides a <a href="http://cakebuild.net/api/Cake.Core/ITaskTeardownContext/EDEBEFE1">Task</a> property which gives you meta data about the task, the <a href="http://cakebuild.net/api/Cake.Core/ITaskTeardownContext/">teardown</a> context also provides <a href="http://cakebuild.net/api/Cake.Core/ITaskTeardownContext/D4FAFF2B">Duration</a> and <a href="http://cakebuild.net/api/Cake.Core/ITaskTeardownContext/685F941C">Skipped</a> properties indicating if task was executed and how long it took to execute the task.</p>
+<h2 id="advanced-formatting">Advanced formatting</h2>
+<p>So besides add in method MicrosoftTeamsPostMessage that just takes a string as message, there’s also a MicrosoftTeamsPostMessage overload that takes an MicrosoftTeamsMessageCard, this gives you more control of the message layout.</p>
+<p>Posting a message for each step of the build can become very chatty, tailoring the message to instead neatly summarize the build in one message like below is probably more sustainable in the long run.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/ca7f994c-7db2-677c-3adb-0abd43d0bd95.png?sv=2019-12-12&amp;st=2021-01-10T14%3A44%3A19Z&amp;se=2031-01-11T14%3A44%3A19Z&amp;sr=b&amp;sp=r&amp;sig=aVZAPsffW22Uorfvl9vztQWSFNyAJgFVEzfeBDA5F5Q%3D" alt="Advanced formatted Teams Message from Cake" /></p>
+<p>Which is very similar to what Cake outputs to the console</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7b304622-3969-f8fa-5d2f-bbe412b1927b.png?sv=2019-12-12&amp;st=2021-01-10T14%3A44%3A36Z&amp;se=2031-01-11T14%3A44%3A36Z&amp;sr=b&amp;sp=r&amp;sig=pNP2m2hDVt9w00Il4U75v8960QfflruxeldnCfSCbDA%3D" alt="Cake task summary" /></p>
+<p>On failure you’ll get the icon clearly indicating failure and steps executed just as on success.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/badfd621-7028-7158-ef22-2a5883041f0a.png?sv=2019-12-12&amp;st=2021-01-10T14%3A44%3A58Z&amp;se=2031-01-11T14%3A44%3A58Z&amp;sr=b&amp;sp=r&amp;sig=IvJfu5GwiKfkHglQYSM%2FLm5hmzyz1jt9RwVqsY7MtRE%3D" alt="Failed task Microsoft Teams Message from Cake" /></p>
+<p>But you also get the full stacktrace from any error when expanding the message</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/873ec4f5-8015-abe7-e318-3ef60f6b6df0.png?sv=2019-12-12&amp;st=2021-01-10T14%3A45%3A29Z&amp;se=2031-01-11T14%3A45%3A29Z&amp;sr=b&amp;sp=r&amp;sig=KAwvBX9dEOges7jNB8Twl9HsNLGTXOx%2FoGZVkL%2FKnd8%3D" alt="Full failed task Microsoft Teams message from Cake" /></p>
+<p>So what could the code for this look like? A complete example you can test below</p>
+<pre><code class="language-csharp">#addin nuget:?package=Cake.MicrosoftTeams
+string projectName = &quot;Example&quot;;
+string microsoftTeamsWebHook = EnvironmentVariable(&quot;MicrosoftTeamsWebHook&quot;);
+DateTime startDate = DateTime.UtcNow;
+
+if (string.IsNullOrEmpty(microsoftTeamsWebHook))
+{
+    throw new Exception(&quot;MicrosoftTeamsWebHook environment variable not specified.&quot;);
+}
+
+var teamsSettings = new MicrosoftTeamsSettings { IncomingWebhookUrl = microsoftTeamsWebHook };
+var facts = new List&lt;MicrosoftTeamsMessageFacts&gt;();
+
+Setup(context =&gt; {
+    facts.Add(new MicrosoftTeamsMessageFacts {
+        name = &quot;Setup&quot;,
+        value = startDate.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)
+    });
+});
+
+TaskTeardown(context =&gt; {
+    facts.Add(new MicrosoftTeamsMessageFacts {
+        name = string.Concat(context.Task.Name),
+        value = context.Skipped ? &quot;skipped&quot; : context.Duration.ToString(&quot;c&quot;)
+    });
+});
+
+Teardown(context =&gt; {
+    var tearDownDate = DateTime.UtcNow;
+    facts.Insert(0,
+        new MicrosoftTeamsMessageFacts {
+            name = &quot;Success&quot;,
+            value = context.Successful ? &quot;Yes&quot; : &quot;No&quot;
+        });
+
+    facts.Add(new MicrosoftTeamsMessageFacts {
+        name = &quot;Teardown&quot;,
+        value = tearDownDate.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;)
+    });
+
+    facts.Add(new MicrosoftTeamsMessageFacts {
+        name = &quot;Total Duration&quot;,
+        value = (tearDownDate - startDate).ToString()
+    });
+
+    if (context.ThrownException!=null)
+    {
+        facts.Add(new MicrosoftTeamsMessageFacts {
+            name = &quot;Exception&quot;,
+            value = context.ThrownException.ToString()
+        });
+    }
+
+    var activityImage = context.Successful  ? &quot;https://cloud.githubusercontent.com/assets/1647294/21986014/cf83fdb0-dbfd-11e6-8d18-617b0fd17597.png&quot;
+                                            : &quot;https://cloud.githubusercontent.com/assets/1647294/21986029/ec3256a0-dbfd-11e6-9300-f183681cee85.png&quot;;
+
+    var messageCard = new MicrosoftTeamsMessageCard {
+                          summary = string.Format(&quot;{0} build {1}.&quot;, projectName, context.Successful ? &quot;succeeded&quot; : &quot;failed&quot;),
+                          title = string.Format(&quot;Build {0}&quot;, projectName),
+                          sections = new []{
+                              new MicrosoftTeamsMessageSection{
+                                  activityTitle = string.Format(&quot;{0} build {1}.&quot;, projectName, context.Successful ? &quot;succeeded&quot; : &quot;failed&quot;),
+                                  activitySubtitle = string.Format(&quot;using Cake version {0} on {1}&quot;,
+                                    Context.Environment.Runtime.CakeVersion,
+                                    Context.Environment.Runtime.TargetFramework),
+                                  activityText = &quot;Build details&quot;,
+                                  activityImage = activityImage,
+                                  facts = facts.ToArray()
+                              }
+                          }
+                        };
+
+    Information(&quot;{0}&quot;, context.MicrosoftTeamsPostMessage(messageCard, teamsSettings));
+});
+
+
+Task(&quot;Restore&quot;)
+    //Imagine actual work being done
+    .Does(()=&gt;System.Threading.Thread.Sleep(8000));
+
+Task(&quot;Build&quot;)
+    .IsDependentOn(&quot;Restore&quot;)
+    //Imagine actual work being done
+    .Does(()=&gt;System.Threading.Thread.Sleep(6000));
+
+Task(&quot;Test&quot;)
+    .IsDependentOn(&quot;Build&quot;)
+    //Imagine actual work being done
+    .Does(()=&gt;System.Threading.Thread.Sleep(15000));
+
+Task(&quot;Package&quot;)
+    .IsDependentOn(&quot;Test&quot;)
+    //Imagine actual work being done
+    .Does(()=&gt;System.Threading.Thread.Sleep(5000));
+
+Task(&quot;Publish&quot;)
+    .IsDependentOn(&quot;Package&quot;)
+    //Imagine actual work being done
+    .Does(()=&gt;System.Threading.Thread.Sleep(11000));
+
+RunTarget(&quot;Publish&quot;);
+</code></pre>
+<p>The above code basically hooks up actions to <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/9CF7C412">Setup</a>, <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/E94DA692">Teardown</a> and <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/3BE7A7EB">TaskTeardown</a>. Only collecting data before <a href="http://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/E94DA692">Teardown</a> is finally called. It’s just C# so you can go as crazy as you want, but above is a good starting point.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Hopefully this post has shown you how to send notifications from your cake scripts and what the extension points Cake provides for this. This could obviously be reused for other messaging platforms and if you check the <a href="http://cakebuild.net/addins/">addins</a> section on Cake’s website you’ll find addins for Slack, HipChat, Gitter, Twitter, etc.</p>
+ 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2017/2017-02-22-bringing-cake-to-microsoft-teams.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/hackernoon/bringing-cake-to-microsoft-teams-b49848981d5d">https://medium.com/hackernoon/bringing-cake-to-microsoft-teams-b49848981d5d</a>.</p>
+                        <br />
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />           
+                    <ul class="list-inline text-center small">                                
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>
