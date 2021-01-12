@@ -5,8 +5,131 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Mon, 11 Jan 2021 23:25:15 GMT</pubDate>
-		<lastBuildDate>Mon, 11 Jan 2021 23:25:15 GMT</lastBuildDate>
+		<pubDate>Tue, 12 Jan 2021 14:38:56 GMT</pubDate>
+		<lastBuildDate>Tue, 12 Jan 2021 14:38:56 GMT</lastBuildDate>
+		<item>
+			<title>Introducing Cake Bridge Dependency Injection</title>
+			<link>https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection</link>
+			<description>Utilize Cake abstractions and addins using Microsoft dependency injection</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/12/c2a643e9-2c63-361b-b458-a647352ebe87.png?sv=2019-12-12&amp;st=2021-01-11T10%253A13%253A57Z&amp;se=2031-01-12T10%253A13%253A57Z&amp;sr=b&amp;sp=r&amp;sig=qInj%252F3o1X2jmpZR1KQIWUgaYF5S8c9zJz0l7zZVYmWg%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection</guid>
+			<pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;A couple of years ago I blogged &lt;a href="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic"&gt;Dispelling the magic!&lt;/a&gt;, a post explaining the internals of the &lt;a href="https://cakebuild.net"&gt;Cake&lt;/a&gt; build orchestration tool, with that post as a proof of concept I created &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;Cake.Bridge&lt;/a&gt; assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.&lt;/p&gt;
+&lt;h2 id="the-need"&gt;The Need&lt;/h2&gt;
+&lt;p&gt;Cake has some real nice testable abstractions around working with the filesystem, processes, tools, etc. and for a .NET project, we had just that need. But a static instance isn't very testable, and for most of our .NET projects (console apps, APIs, Azure Functions, WPF, etc.) we now use dependency injection using &lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;Microsoft.Extensions.DependencyInjection&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;So with that in mind, I created an extension method to &lt;a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-5.0"&gt;IServiceCollection&lt;/a&gt; that easily provided me a way to get a &lt;a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/"&gt;IFileSystem&lt;/a&gt; injected and utilizing the &lt;a href="https://cakebuild.net/api/Cake.Testing/FakeFileSystem/"&gt;FakeFileSystem&lt;/a&gt; provided by &lt;a href="https://www.nuget.org/packages/Cake.Testing"&gt;Cake.Testing&lt;/a&gt; for testing.
+That grew into supporting most core Cake types including the more complex &lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; and &lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="introducing-cake.bridge.dependencyinjection"&gt;Introducing Cake.Bridge.DependencyInjection&lt;/h2&gt;
+&lt;p&gt;If we got a need, chances are someone else has it too, so I've open-sourced the code and made it available as a NuGet &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection/"&gt;package&lt;/a&gt;. It's early bits tailored for a specific need, so you should expect some rough edges, but sharing is caring.&lt;/p&gt;
+&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;h3 id="obtain"&gt;Obtain&lt;/h3&gt;
+&lt;p&gt;The assembly is published at &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection"&gt;NuGet.org/packages/Cake.Bridge.DependencyInjection&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id="net-cli"&gt;.NET CLI&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet add package Cake.Bridge.DependencyInjection
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="packagereference"&gt;PackageReference&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include="Cake.Bridge.DependencyInjection" Version="0.1.0" /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="register"&gt;Register&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
+...
+serviceCollection
+    .AddCakeCore();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="resolve"&gt;Resolve&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Core;
+...
+var cakeContext = serviceProvider.GetRequiredService&amp;lt;ICakeContext&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="use"&gt;Use&lt;/h3&gt;
+&lt;p&gt;Once registered you can now via dependency injection access the majority &lt;a href="https://cakebuild.net/api/Cake.Core/#InterfaceTypes"&gt;Cake.Core&lt;/a&gt; interfaces with ease, i.e:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; - Gives access to Cake built-in and addin aliases, and most Cake abstractions.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt; - Gives access to script/task runner.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.Diagnostics/ICakeLog/"&gt;ICakeLog&lt;/a&gt; - Cake logging implementation.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/"&gt;IFileSystem&lt;/a&gt; - Cake file system abstraction.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="example-icakecontext"&gt;Example ICakeContext&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
+using Cake.Core;
+using Cake.Core.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+
+var serviceCollection = new ServiceCollection()
+    .AddCakeCore();
+
+var serviceProvider = serviceCollection.BuildServiceProvider();
+
+var cakeContext = serviceProvider.GetRequiredService&amp;lt;ICakeContext&amp;gt;();
+
+cakeContext.Log.Write(
+    Verbosity.Normal,
+    LogLevel.Information,
+    "Hello World!");
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;will output&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="example-iscripthost-and-cake.common"&gt;Example IScriptHost and Cake.Common&lt;/h3&gt;
+&lt;p&gt;Cake.Common contains Cake aliases normally ships together with the Cake script runner, when using Cake Bridge you'll need to add it to you project (same for any Cake addin).&lt;/p&gt;
+&lt;h4 id="net-cli-1"&gt;.NET CLI&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet add package Cake.Common --version 1.0.0-rc0002
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="packagereference-1"&gt;PackageReference&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include="Cake.Common" Version="1.0.0-rc0002" /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;then add the appropriate using statements and you can achieve something very similar to a Cake "script"&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
+using Cake.Core;
+using Cake.Common.Diagnostics;
+using Cake.Core.Scripting;
+using Microsoft.Extensions.DependencyInjection;
+
+var serviceCollection = new ServiceCollection()
+    .AddCakeCore();
+
+var serviceProvider = serviceCollection.BuildServiceProvider();
+
+var scriptHost = serviceProvider.GetRequiredService&amp;lt;IScriptHost&amp;gt;();
+
+scriptHost.Task("Hello")
+    .Does(ctx =&amp;gt; ctx.Information("Hello"));
+
+scriptHost.Task("World")
+    .IsDependentOn("Hello")
+    .Does(ctx =&amp;gt; ctx.Information("World"));
+
+await scriptHost.RunTargetAsync("World");
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;will output&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;========================================
+Hello
+========================================
+Hello
+
+========================================
+World
+========================================
+World
+
+Task                          Duration
+--------------------------------------------------
+Hello                         00:00:00.0226275
+World                         00:00:00.0002682
+--------------------------------------------------
+Total:                        00:00:00.0228957
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="complete-example-project"&gt;Complete example project&lt;/h3&gt;
+&lt;p&gt;A full example console application using &lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt; demonstrating usage of both &lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; and &lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt; can be found in project's GitHub &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;repository&lt;/a&gt; at &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection/tree/develop/src/Cake.Bridge.DependencyInjection.Example"&gt;src/Cake.Bridge.DependencyInjection.Example&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub - &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;github.com/devlead/Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;NuGet -  &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection/"&gt;nuget.org/packages/Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Blog migrated to Statiq</title>
 			<link>https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq</link>
@@ -1038,188 +1161,6 @@ RunTarget(target);
 &lt;li&gt;GitHub: &lt;a href="https://github.com/cake-build/cake"&gt;github.com/cake-build/cake&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;NuGet: &lt;a href="https://www.nuget.org/profiles/cake-build"&gt;www.nuget.org/profiles/cake-build&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Azure SQL transient errors</title>
-			<link>https://www.devlead.se/posts/2017/2017-03-30-azure-sql-transient-errors</link>
-			<description>Handling Azure SQL transient errors in .NET Core using Polly</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2017/2017-03-30-azure-sql-transient-errors</guid>
-			<pubDate>Thu, 30 Mar 2017 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/e8cee4c8-d521-c835-71f6-23b18c0b210d.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A02%3A39Z&amp;amp;se=2031-01-11T14%3A02%3A39Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=uJ6SYGXiqheSG%2BHTludvAA71m%2F9O36lFlmSZMa6%2BN3o%3D" alt="Transient extension methods" /&gt;&lt;/p&gt;
-&lt;p&gt;One thing people will notice when migrating to using cloud services are intermittent errors occur at a higher rate than you’re used to when running on premise.&lt;/p&gt;
-&lt;p&gt;These errors are often called transient errors and can be mitigated by just retrying the operation. While some operations might be fine to retry in all cases i.e. fetching data, others like creating orders, deducting money, etc. might not or at least need a little more fine grain control. Also, some errors makes no sense to retry and as a result it’s better to fail fast.&lt;/p&gt;
-&lt;p&gt;Writing the code to handle can easy turn to spaghetti code and it isn’t code you want to copy paste as it’s easy to get wrong and hard to maintain — so you really do want a framework to assist you with these scenarios.&lt;/p&gt;
-&lt;h1 id="introducing-polly"&gt;Introducing Polly&lt;/h1&gt;
-&lt;p&gt;This is how the authors describe Polly:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Polly is a .NET resilience and transient-fault-handling library that allows developers to express policies such as Retry, Circuit Breaker, Timeout, Bulkhead Isolation, and Fallback in a fluent and thread-safe manner&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Which really sums up what it does, it lets you create policies using a fluent API, policies which then can be reused and can range from being generic to target very specific scenarios.&lt;/p&gt;
-&lt;p&gt;Polly is available as &lt;a href="https://www.nuget.org/packages/Polly"&gt;NuGet&lt;/a&gt; package and works with both old .NET and shiny .NET Core, which will be what I’m using in this post.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/59b16711-011f-b854-27a1-da29029d5150.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A04%3A00Z&amp;amp;se=2031-01-11T14%3A04%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=g60K%2FZg3ZagWIVlNy8YsBmRC9K5Fw5MvItx1dFEidcM%3D" alt="Polly in Package manager" /&gt;&lt;/p&gt;
-&lt;p&gt;Also worth noting Polly is open source available on &lt;a href="https://github.com/App-vNext/Polly"&gt;GitHub&lt;/a&gt;.
-Polly’s also member of the [].NET Foundation](&lt;a href="https://dotnetfoundation.org/"&gt;https://dotnetfoundation.org/&lt;/a&gt;).&lt;/p&gt;
-&lt;h2 id="creating-policies"&gt;Creating policies&lt;/h2&gt;
-&lt;p&gt;Defining a policy with Polly is really straightforward in the Polly namespace you Policy class which is what you utilize to create your policies&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
-    .Handle&amp;lt;TimeoutException&amp;gt;()
-    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(3))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Above we’ve via the &lt;code&gt;Handle&amp;lt;TException&amp;gt;method&lt;/code&gt; defined a policy that if a &lt;code&gt;TimeoutException&lt;/code&gt; occurs it’ll wait 3 seconds and retry the operation 5 times before failing on the 6th time which is defined using the &lt;code&gt;WaitAndRetry&lt;/code&gt; method.&lt;/p&gt;
-&lt;p&gt;Because the delay of each retry attempt in this case is retrieved using a &lt;code&gt;Func&amp;lt;int, TimeSpan&amp;gt;&lt;/code&gt; delegate it’s really easy to implement more advanced scenarios like a sliding delay&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
-    .Handle&amp;lt;TimeoutException&amp;gt;()
-    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;to let our policy handle more exceptions we can use one to many &lt;code&gt;Or&amp;lt;TException&amp;gt;&lt;/code&gt; method after the &lt;code&gt;Handle&amp;lt;TException&amp;gt;&lt;/code&gt; call&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
-    .Handle&amp;lt;TimeoutException&amp;gt;()
-    .Or&amp;lt;FileNotFoundException&amp;gt;()
-    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;you can also make your policy even more granular by inspecting the exception with an exception predicate&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var retryPolicy = Policy
-    .Handle&amp;lt;TimeoutException&amp;gt;()
-    .Or&amp;lt;System.IO.FileNotFoundException&amp;gt;(
-      exceptionPredicate =&amp;gt; !exceptionPredicate
-                              .FileName
-                              .EndsWith(&amp;quot;.tmp&amp;quot;, StringComparison.OrdinalIgnoreCase)
-      )
-    .WaitAndRetry(5, attempt =&amp;gt; TimeSpan.FromSeconds(Math.Pow(2, attempt));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In this case we’ll fail fast if it’s a &lt;code&gt;.tmp&lt;/code&gt; file that’s not found. You can also set policies based on result values, besides retries there’s also support for circuit-breaker, timeout, fallback, composing policies together and more, so the policy “engine” is very flexible.&lt;/p&gt;
-&lt;h2 id="using-policies"&gt;Using policies&lt;/h2&gt;
-&lt;p&gt;We now have our policy in place and want to put it into good use, here the policies &lt;code&gt;Execute&lt;/code&gt; method comes in play&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var intput = /* some input value */
-
-var result = retryPolicy.Execute(() =&amp;gt; MyRetryableMethod(input));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It’s almost too good to be true, there’s a lot happening under the hood — but in my opinion “hidden” under a very easy to understand and maintainable API.&lt;/p&gt;
-&lt;h2 id="azure-sql-policies"&gt;Azure SQL policies&lt;/h2&gt;
-&lt;p&gt;When is comes to SQL server there’s a few errors known to be safe to retry, so we explicitly look for those, so if we begin with it could look something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;private static readonly Policy SqlRetryPolicy = Policy
-    .Handle&amp;lt;TimeoutException&amp;gt;()
-    .Or&amp;lt;SqlException&amp;gt;(AnyRetryableError)
-    .WaitAndRetry(SqlRetryCount, ExponentialBackoff);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;where &lt;code&gt;SqlRetryCount&lt;/code&gt; is just a constant for how many retries to do and &lt;code&gt;ExponetialBackoff&lt;/code&gt; is a method that exponentially increases the delay between each attempt&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;private const int SqlRetryCount = 4;
-private static TimeSpan ExponentialBackoff(int attempt)
-{
-  return TimeSpan.FromSeconds(Math.Pow(2, attempt));
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;TimeoutException:s&lt;/code&gt; will always be retried but SqlExceptions will be passed to &lt;code&gt;AnyRetryableError&lt;/code&gt; method for assessment if it’s retryable or not&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;private static bool AnyRetryableError(SqlException exception)
-{
-    return exception.Errors.OfType&amp;lt;SqlError&amp;gt;().Any(RetryableError);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;AnyRetryableError&lt;/code&gt; will iterate all errors and with the &lt;code&gt;RetryableError&lt;/code&gt; method check if it’s an error known to be retriable and here is where the magic happens&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;private static bool RetryableError(SqlError error)
-{
-  switch (error.Number)
-  {
-    case SqlErrorOperationInProgress:
-    case SqlErrorDatabaseUnavailable:
-    case SqlErrorServiceExperiencingAProblem:
-    case SqlErrorServiceRequestProcessFail:
-    case SqlErrorServiceBusy:
-    case SqlErrorServiceErrorEncountered:
-    case SqlErrorResourceLimitReached:
-    case SqlErrorDatabaseLimitReached:
-    case SqlErrorNetworkReleatedErrorDuringConnect:
-    case SqlErrorTransportLevelErrorWhenSendingRequestToServer:
-    case SqlErrorTransportLevelErrorReceivingResult:
-    case SqlErrorUnableToEstablishConnection:
-    case SqlErrorConnectedButLoginFailed:
-    case SqlErrorInstanceDoesNotSupportEncryption:
-        return true;
-
-    default:
-        return false;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;we will switch on SqlException error number and use a few known constants to determine if it should fail fast or retry.&lt;/p&gt;
-&lt;h2 id="taking-the-policy-for-a-spin"&gt;Taking the policy for a spin&lt;/h2&gt;
-&lt;p&gt;In this case, I’m going to do a simple API that extends &lt;code&gt;SqlCOnnection&lt;/code&gt; with &lt;code&gt;WithRetry&lt;/code&gt; methods, i.e. open SQL connection&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;public static SqlConnection OpenWithRetry(this SqlConnection conn)
-{
-  SqlRetryPolicy.Execute(conn.Open);
-  return conn;
-}
-
-public static async Task&amp;lt;SqlConnection&amp;gt; OpenWithRetryAsync(this SqlConnection conn)
-{
-  await SqlRetryAsyncPolicy.ExecuteAsync(conn.OpenAsync);
-  return conn;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;giving us an open sync and async method, which in its simplest form usage could look something like this&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
-{
-  connection.OpenWithRetry();
-}
-
-using (var connection = new SqlConnection(SampleDBConnectionString))
-{
-  await connection.OpenWithRetryAsync();
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;combining with a simple SQL to .NET object mapper like [Dapper])(&lt;a href="https://github.com/StackExchange/Dapper"&gt;https://github.com/StackExchange/Dapper&lt;/a&gt;) results in pretty clean code&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
-{
-  var customer = connection
-                  .OpenWithRetry()
-                  .Query&amp;lt;Customer&amp;gt;(SelectCustomerStatement, new { CustomerId = 1})
-                  .FirstOrDefault();
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;the above code will open the sql connection using the retry policy, but the query will be executed without retry, which could be what you want for some operations, but for a select it’s often safe/what you want to retry the whole operation. For that we add an overload that lets us execute code within the policy boundary&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;public static TResult OpenWithRetry&amp;lt;TResult&amp;gt;(
-  this SqlConnection conn,
-  Func&amp;lt;SqlConnection, TResult&amp;gt; process
-  )
-{
-  return SqlRetryPolicy.Execute(() =&amp;gt;
-  {
-      conn.Open();
-      return process(conn);
-  }
-  );
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;this will open the connection and then invoke and return the result of Func you pass to it all within the scope of policy and just small refactoring of the calling code&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
-{
-    var customer = connection
-                    .OpenWithRetry(
-                        conn=&amp;gt;conn.Query&amp;lt;Customer&amp;gt;(
-                            SelectCustomerStatement,
-                            new { CustomerId = 1 })
-                    ).FirstOrDefault();
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and async variant usage could look something like this&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using (var connection = new SqlConnection(SampleDBConnectionString))
-{
-  await connection.OpenWithRetryAsync();
-  var customer = (await connection.QueryAsync&amp;lt;Customer&amp;gt;(
-                                          SelectCustomerStatement,
-                                          new { CustomerId = 1 }
-                                      )
-                  ).FirstOrDefault();
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Polly is really powerful, yet really easy to get started with and also fairly easy to retrofit into an existing application — so I definitely think you should take it for a spin.&lt;/p&gt;
-&lt;p&gt;I’ve created a complete sample repository on GitHub with the code from this post, thanks for reading! ❤&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://github.com/azurevoodoo/AzureSQLTransientHandling"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/eee8a88a-0769-f1bd-e95e-ab14a8a539e6.png?sv=2019-12-12&amp;amp;st=2021-01-10T14%3A31%3A58Z&amp;amp;se=2031-01-11T14%3A31%3A58Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=Ci6FKYOZ%2BRhvWzVFoMC4HjZ2TItYL9XZZ3c9OkXR0pA%3D" alt="Code samples" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>
