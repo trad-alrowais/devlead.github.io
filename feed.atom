@@ -4,7 +4,7 @@
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2021</rights>
-	<updated>2021-01-15T11:05:32Z</updated>
+	<updated>2021-01-15T11:14:26Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
 	<entry>
 		<id>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</id>
@@ -15,7 +15,7 @@
 		<link href="https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack" />
 		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/14/e02ce155-5ff2-8a7b-e306-8c486f23f864.png?sv=2019-12-12&amp;st=2021-01-13T20%253A33%253A10Z&amp;se=2031-01-14T20%253A33%253A10Z&amp;sr=b&amp;sp=r&amp;sig=fdANWdytZGRdgDMxN%252B%252BTNSCAbz%252Bzg6R0iAvtvYWYoKw%253D" />
 		<updated>2021-01-15T00:00:00Z</updated>
-		<content>&lt;p&gt;One type of application has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a &lt;code&gt;Main(string[] args)&lt;/code&gt; and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll do through what today is my alternative starting point to &lt;code&gt;dotnet new console&lt;/code&gt;, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.&lt;/p&gt;
+		<content>&lt;p&gt;There's type of application that has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a &lt;code&gt;Main(string[] args)&lt;/code&gt; and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll do through what today is my alternative starting point to &lt;code&gt;dotnet new console&lt;/code&gt;, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.&lt;/p&gt;
 &lt;h2 id="templates"&gt;Templates&lt;/h2&gt;
 &lt;p&gt;A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like &lt;code&gt;console&lt;/code&gt;, &lt;code&gt;classlib&lt;/code&gt;, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given &lt;a href="https://dotnet.microsoft.com/download/dotnet/5.0"&gt;.NET 5 SDK&lt;/a&gt; installed, easily yourself can try and take a look at everything discussed in this post.&lt;/p&gt;
 &lt;h2 id="devlead-console-template"&gt;Devlead Console Template&lt;/h2&gt;
