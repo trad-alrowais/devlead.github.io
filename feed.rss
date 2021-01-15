@@ -5,8 +5,219 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Tue, 12 Jan 2021 14:38:56 GMT</pubDate>
-		<lastBuildDate>Tue, 12 Jan 2021 14:38:56 GMT</lastBuildDate>
+		<pubDate>Fri, 15 Jan 2021 11:05:32 GMT</pubDate>
+		<lastBuildDate>Fri, 15 Jan 2021 11:05:32 GMT</lastBuildDate>
+		<item>
+			<title>My preferred .NET console stack</title>
+			<link>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</link>
+			<description>An opinionated view on the boilerplate starting point of any .NET console application</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/14/e02ce155-5ff2-8a7b-e306-8c486f23f864.png?sv=2019-12-12&amp;st=2021-01-13T20%253A33%253A10Z&amp;se=2031-01-14T20%253A33%253A10Z&amp;sr=b&amp;sp=r&amp;sig=fdANWdytZGRdgDMxN%252B%252BTNSCAbz%252Bzg6R0iAvtvYWYoKw%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</guid>
+			<pubDate>Fri, 15 Jan 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;One type of application has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a &lt;code&gt;Main(string[] args)&lt;/code&gt; and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll do through what today is my alternative starting point to &lt;code&gt;dotnet new console&lt;/code&gt;, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.&lt;/p&gt;
+&lt;h2 id="templates"&gt;Templates&lt;/h2&gt;
+&lt;p&gt;A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like &lt;code&gt;console&lt;/code&gt;, &lt;code&gt;classlib&lt;/code&gt;, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given &lt;a href="https://dotnet.microsoft.com/download/dotnet/5.0"&gt;.NET 5 SDK&lt;/a&gt; installed, easily yourself can try and take a look at everything discussed in this post.&lt;/p&gt;
+&lt;h2 id="devlead-console-template"&gt;Devlead Console Template&lt;/h2&gt;
+&lt;p&gt;So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is &lt;a href="https://www.nuget.org"&gt;NuGet.org&lt;/a&gt;, where I've published my template as &lt;a href="https://www.nuget.org/packages/Devlead.Console.Template/"&gt;Devlead.Console.Template&lt;/a&gt;. Templates are installed using the &lt;code&gt;dotnet new&lt;/code&gt; command with &lt;code&gt;--install packageId&lt;/code&gt; parameter, in this case:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new --install Devlead.Console.Template
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="dotnet-new-devleadconsole"&gt;dotnet new devleadconsole&lt;/h2&gt;
+&lt;p&gt;With the template installed locally, we now have a new &lt;code&gt;devleadconsole&lt;/code&gt; template at our disposal, to create our new console applications with according to me, essential dependencies and boilerplate code:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new devleadconsole -n MyConsoleApp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The above command will in the current directory result in the below folder structure&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;MyConsoleApp
+    │   MyConsoleApp.csproj
+    │   Program.cs
+    │
+    └───Commands
+        │   ConsoleCommand.cs
+        │
+        ├───Settings
+        │       ConsoleSettings.cs
+        │
+        └───Validation
+                ValidateStringAttribute.cs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="myconsoleapp.csproj"&gt;MyConsoleApp.csproj&lt;/h2&gt;
+&lt;p&gt;The created project file will look something like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Project Sdk=&amp;quot;Microsoft.NET.Sdk&amp;quot;&amp;gt;
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt;
+    &amp;lt;TargetFramework&amp;gt;net5.0&amp;lt;/TargetFramework&amp;gt;
+    &amp;lt;Nullable&amp;gt;enable&amp;lt;/Nullable&amp;gt;
+    &amp;lt;TreatWarningsAsErrors&amp;gt;true&amp;lt;/TreatWarningsAsErrors&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Spectre.Console&amp;quot; Version=&amp;quot;0.37.0&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Spectre.Cli.Extensions.DependencyInjection&amp;quot; Version=&amp;quot;0.3.0&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Extensions.Logging&amp;quot; Version=&amp;quot;5.0.0&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Extensions.Logging.Console&amp;quot; Version=&amp;quot;5.0.0&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Microsoft.SourceLink.GitHub&amp;quot; Version=&amp;quot;1.0.0&amp;quot; PrivateAssets=&amp;quot;All&amp;quot;/&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+&amp;lt;/Project&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;let's step for step break it down&lt;/p&gt;
+&lt;h3 id="outputtype"&gt;OutputType&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;OutputType&lt;/code&gt; with the value &lt;code&gt;exe&lt;/code&gt;, indicates that this will be an executable.&lt;/p&gt;
+&lt;h3 id="targetframework"&gt;TargetFramework&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;TargetFramework&lt;/code&gt; with the value &lt;code&gt;net5.0&lt;/code&gt;, means that this will be compiled for/targeting .NET 5.&lt;/p&gt;
+&lt;h3 id="nullable"&gt;Nullable&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Nullable&lt;/code&gt; with the value &lt;code&gt;enable&lt;/code&gt;, enables the &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references"&gt;nullable reference types&lt;/a&gt; feature that was introduced with C# 8, making reference types non-nullable by default, basically moving many errors from being caught late at runtime, to be caught early at compile time.&lt;/p&gt;
+&lt;h3 id="treatwarningsaserrors"&gt;TreatWarningsAsErrors&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;TreatWarningsAsErrors&lt;/code&gt; with the value &lt;code&gt;true&lt;/code&gt; makes the compiler grumpier, it won't just break the build for compiler errors, but also for compiler warnings, combined with &lt;code&gt;Nullable&lt;/code&gt; I personally believe code quality gets better from the start.&lt;/p&gt;
+&lt;h3 id="packagereferences"&gt;PackageReference(s)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt;&lt;/strong&gt; is a lot of things, a true swiss army for anyone doing console applications, but in this template, it's foremost an extremely opinionated command-line parser.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Spectre.Cli.Extensions.DependencyInjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt;&lt;/strong&gt; makes it easy for &lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt; to interop with standard &lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;Microsoft DependencyInjection&lt;/a&gt;&lt;/strong&gt;, same as used by default for dependency injection with i.e. ASP .NET and Azure Functions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging"&gt;Microsoft.Extensions.Logging&lt;/a&gt;&lt;/strong&gt; simplified provides standard logging abstractions and &lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging.Console"&gt;Microsoft.Extensions.Logging.Console&lt;/a&gt;&lt;/strong&gt; provides an implementation for logging to the console.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.SourceLink.GitHub"&gt;Microsoft.SourceLink.GitHub&lt;/a&gt;&lt;/strong&gt; enables automatic tracking between artifact and source control, providing a better debugging and traceability experience.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="program.cs"&gt;Program.cs&lt;/h2&gt;
+&lt;p&gt;The generated &lt;code&gt;Program.cs&lt;/code&gt; uses the new C#9 &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#top-level-statements"&gt;Top-level statement&lt;/a&gt; pattern removing unnecessary ceremony code from the application, but what it does contain:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;using statements&lt;/li&gt;
+&lt;li&gt;Creating dependency injection container&lt;/li&gt;
+&lt;li&gt;Console logger registration&lt;/li&gt;
+&lt;li&gt;Hooking up dependency injection container with Spectre.Console&lt;/li&gt;
+&lt;li&gt;Spectre.Console command declaration&lt;/li&gt;
+&lt;li&gt;Execute the application&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#top-level-statements"&gt;Top-level statement&lt;/a&gt;  means as &lt;code&gt;RunAsync&lt;/code&gt; returns a &lt;code&gt;Task&amp;lt;int&amp;gt;&lt;/code&gt;, .NET 5 will automatically generate &amp;quot;&lt;code&gt;Program&lt;/code&gt;&amp;quot; class and &lt;code&gt;async Task&amp;lt;int&amp;gt; Main(string args)&lt;/code&gt; for you, removing the need to write a lot of boilerplate code.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Devlead.Console.Commands;
+using Spectre.Console.Cli;
+using Spectre.Cli.Extensions.DependencyInjection;
+
+var serviceCollection = new ServiceCollection()
+    .AddLogging(configure =&amp;gt;
+            configure
+                .AddSimpleConsole(opts =&amp;gt; {
+                    opts.TimestampFormat = &amp;quot;yyyy-MM-dd HH:mm:ss &amp;quot;;
+                })
+    );
+
+using var registrar = new DependencyInjectionRegistrar(serviceCollection);
+var app = new CommandApp(registrar);
+
+app.Configure(
+    config =&amp;gt;
+    {
+        config.ValidateExamples();
+
+        config.AddCommand&amp;lt;ConsoleCommand&amp;gt;(&amp;quot;console&amp;quot;)
+                .WithDescription(&amp;quot;Example console command.&amp;quot;)
+                .WithExample(new[] { &amp;quot;console&amp;quot; });
+    });
+
+return await app.RunAsync(args);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="consolecommand.cs"&gt;ConsoleCommand.cs&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ConsoleCommand.cs&lt;/code&gt; contains &amp;quot;just&amp;quot; your business code, &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; handles the heavy lifting of parsing and validating command-line arguments (&lt;em&gt;based on provided settings class, more on that later in the post.&lt;/em&gt;), resolving constructor parameters using dependency injection, etc. Letting you focus on the domain and not the boilerplate code, resulting in a very similar experience to i.e. Azure Function or .NET Workers, enabling reuse of both patterns and code. &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; has support for both async and sync commands.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MyConsoleApp.Commands.Setting;
+using Spectre.Console.Cli;
+
+namespace MyConsoleApp.Commands
+{
+    public class ConsoleCommand : AsyncCommand&amp;lt;ConsoleSettings&amp;gt;
+    {
+        private ILogger Logger { get; }
+
+        public override async Task&amp;lt;int&amp;gt; ExecuteAsync(CommandContext context, ConsoleSettings settings)
+        {
+            Logger.LogInformation(&amp;quot;Mandatory: {Mandatory}&amp;quot;, settings.Mandatory);
+            Logger.LogInformation(&amp;quot;Optional: {Optional}&amp;quot;, settings.Optional);
+            Logger.LogInformation(&amp;quot;CommandOptionFlag: {CommandOptionFlag}&amp;quot;, settings.CommandOptionFlag);
+            Logger.LogInformation(&amp;quot;CommandOptionValue: {CommandOptionValue}&amp;quot;, settings.CommandOptionValue);
+            return await Task.FromResult(0);
+        }
+
+        public ConsoleCommand(ILogger&amp;lt;ConsoleCommand&amp;gt; logger)
+        {
+            Logger = logger;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="consolesettings.cs"&gt;ConsoleSettings.cs&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ConsoleSettings.cs&lt;/code&gt; contains the definition of what parameters each command has, if they're are mandatory/optional, positional and how they validated. It also contains metadata used for automatically generating help and error messages.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System.ComponentModel;
+using Devlead.Console.Commands.Validate;
+using Spectre.Console.Cli;
+
+namespace Devlead.Console.Commands.Setting
+{
+    public class ConsoleSettings : CommandSettings
+    {
+        [CommandArgument(0, &amp;quot;&amp;lt;mandatory&amp;gt;&amp;quot;)]
+        [Description(&amp;quot;Mandatory argument&amp;quot;)]
+        public string Mandatory { get; set; } = string.Empty;
+
+        [CommandArgument(1, &amp;quot;[optional]&amp;quot;)]
+        [Description(&amp;quot;Optional argument&amp;quot;)]
+        public string? Optional { get; set; }
+
+        [CommandOption(&amp;quot;--command-option-flag&amp;quot;)]
+        [Description(&amp;quot;Command option flag.&amp;quot;)]
+        public bool CommandOptionFlag { get; set; }
+
+        [CommandOption(&amp;quot;--command-option-value &amp;lt;value&amp;gt;&amp;quot;)]
+        [Description(&amp;quot;Command option value.&amp;quot;)]
+        [ValidateString]
+        public string? CommandOptionValue { get; set; }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="validatestringattribute.cs"&gt;ValidateStringAttribute.cs&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; can validate either by custom attributes on properties (&lt;em&gt;see &lt;code&gt;ConsoleSettings.CommandOptionValue&lt;/code&gt; for an example of that&lt;/em&gt;) or globally by overriding &lt;code&gt;Validate()&lt;/code&gt; method on &lt;code&gt;CommandSettings&lt;/code&gt;. The template ships with a sample &lt;code&gt;ValidateStringAttribute&lt;/code&gt; that just validates the length of a string, but you can make it as advanced as you want.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Spectre.Console;
+using Spectre.Console.Cli;
+
+namespace MyConsoleApp.Commands.Validation
+{
+    public class ValidateStringAttribute : ParameterValidationAttribute
+    {
+        public const int MinimumLength = 3;
+
+        public ValidateStringAttribute() : base(errorMessage: null)
+        {
+        }
+
+        public override ValidationResult Validate(ICommandParameterInfo parameterInfo, object? value)
+            =&amp;gt; (value as string) switch {
+                { Length: &amp;gt;= MinimumLength }
+                    =&amp;gt; ValidationResult.Success(),
+
+                { Length: &amp;lt; MinimumLength }
+                    =&amp;gt; ValidationResult.Error($&amp;quot;{parameterInfo?.PropertyName} ({value}) needs to be at least {MinimumLength} characters long.&amp;quot;),
+
+                _ =&amp;gt; ValidationResult.Error($&amp;quot;Invalid {parameterInfo?.PropertyName} ({value}) specified.&amp;quot;)
+            };
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="result"&gt;Result&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/15/devleadmyconsoleapp.gif?sp=rl&amp;amp;st=2021-01-15T09:33:29Z&amp;amp;se=2031-01-16T09:33:00Z&amp;amp;sv=2019-12-12&amp;amp;sr=b&amp;amp;sig=fp8lXgfDwOgGkdK3cYm0fFojddT8ZEx7SJuiIMkIOW8%3D" alt="GIF animation of Console experience" /&gt;&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This is my opinionated happy path for doing .NET Console applications, feel free to let me know if you've got your own recipe for success, but must say I'm really happy how this combination lets me write console applications in the same way as I do my .NET workers, Azure Functions, ASP .NET Core, etc. ensuring consistency, less duplication and good reuse of both patterns and code. There's a LOT more to &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; than command-line parsing, to I hight recommend you check out all the other features it has to offer.&lt;/p&gt;
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Console.Template"&gt;Devlead.Console.Template&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Devlead.Console.Template"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/agc93/spectre.cli.extensions.dependencyinjection#spectrecliextensionsdependencyinjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Spectre.Cli.Extensions.DependencyInjection"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0"&gt;Dependency injection in ASP.NET Core&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/dotnet/sourcelink#source-link"&gt;Source Link&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.SourceLink.GitHub"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0"&gt;Logging in .NET Core and ASP.NET Core&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging.Console"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Introducing Cake Bridge Dependency Injection</title>
 			<link>https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection</link>
@@ -568,599 +779,6 @@ Such a polyfill could look something like below:&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a5d64ad8-64c9-b05c-37cd-ab487c32e480.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A10%3A11Z&amp;amp;se=2031-01-11T13%3A10%3A11Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=3n1GdorjYDsMbGzCcsGY3ng%2B7lmLZk2IBMdhk9KC9WY%3D" alt="ngrok web interface" /&gt;&lt;/p&gt;
 &lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Using a service like ngrok is really powerful and can ultimately speed up the development process.&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Dispelling the magic!</title>
-			<link>https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic</link>
-			<description>The layers and pieces of Cake</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic</guid>
-			<pubDate>Sun, 09 Jul 2017 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9a556e23-9df5-b80b-edce-8103ba73bcea.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A15%3A19Z&amp;amp;se=2031-01-11T13%3A15%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=bY%2FrcHwH0ULHLyo0Gh00lXcpdE3XXE1S5ZF84AQ7B08%3D" alt="build.cake -&amp;gt; magic - Build success/fail" /&gt;&lt;/p&gt;
-&lt;p&gt;When you don’t know the details behind a technology, it’s easy to dismiss it as magic, but if you dare to look behind the curtain — it might not be that complicated or foreign to what you already know.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53899274-3404-8df9-4c59-85cb29b5a673.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A16%3A42Z&amp;amp;se=2031-01-11T13%3A16%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=1vvUx7y%2FZV2df%2FQdO04t6h6SE3eM9J%2B4OB2gSqQCyvY%3D" alt="Cake logo" /&gt;&lt;/p&gt;
-&lt;p&gt;In this blog post, I’ll go through some of the pieces that make up the open source build orchestration tool &lt;a href="http://cakebuild.net/"&gt;Cake&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I’ll show you how you can reuse pieces of Cake with different environments and even languages, I’ll go into detail on some parts and glance over others.&lt;/p&gt;
-&lt;p&gt;If there’s any part you would want me to go into more detail with please let me now! I will provide links to the examples and resources at the end of this blog post.&lt;/p&gt;
-&lt;h2 id="its-just-c-and.net"&gt;“It’s just C# and .Net”&lt;/h2&gt;
-&lt;p&gt;This is a statement I have often made as Cake scripts provide a superset of C# — which means anything you can do in C# you can do Cake. The Cake DSL via its aliases merely provide a shortcut to make APIs and tools easier to consume, but you can always opt to like “regular” code reference assemblies, write methods and classes.&lt;/p&gt;
-&lt;p&gt;An example of this could be working with JSON, in your console or MVC app it’s likely that you would use JSON.Net to serialize/deserialize your JSON from/to .NET objects and doing the same with a Cake script doesn’t differ much from plain vanilla C#&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin &amp;quot;Newtonsoft.Json&amp;quot;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-public class MyDto
-{
-    public string Name { get; set; }
-}
-
-var dto = new MyDto {
-    Name = &amp;quot;John Doe&amp;quot;
-};
-
-var json = JsonConvert.SerializeObject(dto, Formatting.Indented);
-
-var dto2 = JsonConvert.DeserializeObject&amp;lt;MyDto&amp;gt;(json);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Basically, only difference is the &lt;code&gt;#addin&lt;/code&gt; preprocessor, which fetches and references an assembly from NuGet and the lack of need to wrap in the code in a namespace/class/method.&lt;/p&gt;
-&lt;p&gt;Being “just” C# and .NET truly means that you’ll always have the safety net of .NET, C# and the vast number of resources available for those pieces of technology.&lt;/p&gt;
-&lt;h2 id="the-pieces-of-cake"&gt;The pieces of Cake&lt;/h2&gt;
-&lt;p&gt;Cake is distributed in two flavors, one for the full classic .NET which also works with Mono and a version for .NET Core — the new cross platform framework/runtime from Microsoft.&lt;/p&gt;
-&lt;p&gt;The most common way to obtain the Cake tool is via the &lt;code&gt;Cake&lt;/code&gt; and &lt;code&gt;Cake.CoreCLR&lt;/code&gt;NuGet packages (Cake is also available via Chocolatey, Homebrew, GitHub and official docker containers are on their way).&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/46ed3f51-6cba-3f11-8cb7-04f729fb5877.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A25%3A17Z&amp;amp;se=2031-01-11T13%3A25%3A17Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=QIFKVh4SEpjHISyoO%2F9eMwFiUARNHuHCXB0lfjk9x5w%3D" alt=".NET Full/Desktop vs .NET Core" /&gt;&lt;/p&gt;
-&lt;p&gt;The NuGet packages contain all dependencies needed to execute under respective runtime, but the “Magic” is in three assemblies and a console application.&lt;/p&gt;
-&lt;h2 id="cake.exe-cake.dll-the-tool"&gt;Cake.exe / Cake.dll — “The Tool”&lt;/h2&gt;
-&lt;p&gt;To name a few things it handles&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Compilation of scripts&lt;/li&gt;
-&lt;li&gt;Argument parsing&lt;/li&gt;
-&lt;li&gt;Console logging&lt;/li&gt;
-&lt;li&gt;Composition of modules/assemblies&lt;/li&gt;
-&lt;li&gt;Basically, it’s what glues everything together and provides the “Cake experience”&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="cake.core-the-heart"&gt;Cake.Core — “The heart”&lt;/h2&gt;
-&lt;p&gt;Provides things like&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Core abstractions/interfaces/attributes used by Cake Tool/Addins/Modules (&lt;em&gt;this is the only assembly needed to reference when creating a Cake addin/module&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;DSL Parsing and transpiling/codegen to C# that Roslyn understands and can compile&lt;/li&gt;
-&lt;li&gt;Base tool implementation (&lt;em&gt;tool resolution, execution, settings etc.&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;Cake Task runtime (&lt;em&gt;task runner/dependency graph/setup &amp;amp; teardown etc.&lt;/em&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="cake.common-the-doer"&gt;Cake.Common — “The doer”&lt;/h2&gt;
-&lt;p&gt;This assembly provides almost 400 convenient aliases/extension methods for things like&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Tools (MSBuild, NuGet, .NET Core CLI, code signing, etc.)&lt;/li&gt;
-&lt;li&gt;APIs (compression, project file parsing, text templating, HTTP, etc.)&lt;/li&gt;
-&lt;li&gt;Build system support (AppVeyor, VSTS, Jenkins, TeamCity, MyGet, etc.)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="cake.nuget-the-fetcher"&gt;Cake.NuGet — “The Fetcher”&lt;/h2&gt;
-&lt;p&gt;Cake module that enables fetching dependencies from NuGet for i.e. preprocessor directives like &lt;code&gt;#addin&lt;/code&gt;, &lt;code&gt;#tool&lt;/code&gt; and &lt;code&gt;#load&lt;/code&gt;.&lt;/p&gt;
-&lt;h2 id="cake-composition-its-just-c-and.net-part-deux"&gt;Cake composition — “It’s just C# and .Net part deux”&lt;/h2&gt;
-&lt;p&gt;The assemblies &lt;code&gt;Cake.Core&lt;/code&gt;, &lt;code&gt;Cake.Common&lt;/code&gt; and &lt;code&gt;Cake.NuGet&lt;/code&gt; are all available up on NuGet.org targeting both .NET Full/Desktop and .NET Core.&lt;/p&gt;
-&lt;p&gt;This means you can reference and leverage parts/most of the work and effort that’s been put into Cake with almost any .NET application, environment or platform — it’s just standard C# code and assemblies!&lt;/p&gt;
-&lt;p&gt;That said Cake relies heavily on dependency injection and has over time been refactored into custom modules — so how it all fits together can be a bit daunting for someone that’s new to the project. A rough basic example of doing this using an Inversion of Control container like AutoFac could look something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;var builder = new ContainerBuilder();
-// Core services.
-builder.RegisterType&amp;lt;CakeEngine&amp;gt;().As&amp;lt;ICakeEngine&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;FileSystem&amp;gt;().As&amp;lt;IFileSystem&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CakeEnvironment&amp;gt;().As&amp;lt;ICakeEnvironment&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;Globber&amp;gt;().As&amp;lt;IGlobber&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;ProcessRunner&amp;gt;().As&amp;lt;IProcessRunner&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;WindowsRegistry&amp;gt;().As&amp;lt;IRegistry&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;ToolLocator&amp;gt;().As&amp;lt;IToolLocator&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;ToolResolutionStrategy&amp;gt;().As&amp;lt;IToolResolutionStrategy&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;ToolRepository&amp;gt;().As&amp;lt;IToolRepository&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;DefaultExecutionStrategy&amp;gt;().As&amp;lt;IExecutionStrategy&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CakePlatform&amp;gt;().As&amp;lt;ICakePlatform&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CakeRuntime&amp;gt;().As&amp;lt;ICakeRuntime&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CakeContext&amp;gt;().As&amp;lt;ICakeContext&amp;gt;().SingleInstance();
-
-// Script Host Services - these are currently part of Cake.exe/dll and
-// not publicly available and need to be provided by any custom host
-builder.RegisterType&amp;lt;CustomArguments&amp;gt;().As&amp;lt;ICakeArguments&amp;gt;();
-builder.RegisterType&amp;lt;CustomConfiguration&amp;gt;().As&amp;lt;ICakeConfiguration&amp;gt;();
-builder.RegisterType&amp;lt;CustomLog&amp;gt;().As&amp;lt;ICakeLog&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CustomReportPrinter&amp;gt;().As&amp;lt;ICakeReportPrinter&amp;gt;().SingleInstance();
-builder.RegisterType&amp;lt;CustomScriptHost&amp;gt;().As&amp;lt;IScriptHost&amp;gt;().SingleInstance();
-
-// Script Host
-IScriptHost ScriptHost = builder.Build().Resolve&amp;lt;IScriptHost&amp;gt;();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;As the observant might see from the comment there’s a few cases where the implementation currently resides in &lt;code&gt;Cake.exe/Cake.dll&lt;/code&gt; (&lt;em&gt;this might be something we’ll look at refactoring in the future&lt;/em&gt;), the interfaces they implement exist in Core so you can implement and provide your own implementation or depending on what parts of Cake you reuse you might not need them (&lt;em&gt;for unit testing we provide Cake.Testing which provides fake context and file system, environment abstractions for tool testing, etc. Unit testing Cake addins / modules might be a good topic for another blog post — please let me know if you reckon that’s the case&lt;/em&gt;).&lt;/p&gt;
-&lt;h2 id="proof-of-concept-custom-script-host"&gt;Proof of concept custom script host&lt;/h2&gt;
-&lt;p&gt;So, to do your own custom host for your own “build script” implementation, you currently need to implement a few interfaces: &lt;code&gt;ICakeArguments&lt;/code&gt;, &lt;code&gt;ICakeConfiguration&lt;/code&gt;, &lt;code&gt;ICakeLog&lt;/code&gt;, &lt;code&gt;ICakeReportPrinter&lt;/code&gt; and &lt;code&gt;IScriptHost&lt;/code&gt;, because these implementations as mentioned earlier currently resides in &lt;code&gt;Cake.exe/Cake&lt;/code&gt;.dll, but all other are available in &lt;code&gt;Cake.Core&lt;/code&gt; ready for reuse in any .NET project.&lt;/p&gt;
-&lt;p&gt;To demonstrate this, I’ve created the &lt;em&gt;“Proof of concept, in no way official, don’t use in production, just to see how the sausage is made, etc.”&lt;/em&gt; assembly called &lt;code&gt;Cake.Bridge&lt;/code&gt;, compiled for both .NET and .NET Core, which means it could be used most places .NET is available today (&lt;em&gt;binary is up on NuGet and source on GitHub, I’ll provide links to all resources at end of this post&lt;/em&gt;).&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;Cake.Bridge&lt;/code&gt; provides a static &lt;code&gt;CakeBridge&lt;/code&gt;class which provides easy access to working with the Cake task runner and the &lt;code&gt;ICakeContext&lt;/code&gt; (&lt;em&gt;which is what all Cake aliases/methods extend&lt;/em&gt;), created with the goal to demonstrate an easy way to reuse Cake assemblies from any .NET language and not only with C# which is what Cake supports out of the box.&lt;/p&gt;
-&lt;p&gt;What you won’t get is anything the Cake DSL provides and no addin nor module support.&lt;/p&gt;
-&lt;p&gt;To illustrate this I’ve authored a few code snippets on how using Cake from a few different .NET languages using the &lt;code&gt;Cake.Bridge&lt;/code&gt; assembly, &lt;em&gt;&lt;strong&gt;disclaimer&lt;/strong&gt;&lt;/em&gt; the code snippets are quick and rough proof of concepts to mostly prove it can be done and obviously more refinement needs to be done for them to be more idiomatically correct.&lt;/p&gt;
-&lt;p&gt;There often exist more native, prominent and widely used build systems already.&lt;/p&gt;
-&lt;h2 id="powershell"&gt;PowerShell&lt;/h2&gt;
-&lt;p&gt;Even if perhaps mainly the sysadmin language of choice — PowerShell still is a .NET based language and its ability to utilize .NET makes it a very powerful scripting language as anything not provided native by the language often can be solved by reaching out to the framework it’s running on. It also means that you can use Cake from it:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;[string] $cakeBootstrapper      = './v0.0.5-alpha-cake.ps1'
-[string] $cakeBootstrapperUrl   = 'https://raw.githubusercontent.com/devlead/Cake.Bridge/v0.0.5-alpha/src/cake.ps1'
-if (!(Test-Path $cakeBootstrapper))
-{
-    Invoke-RestMethod $cakeBootstrapperUrl -OutFile $cakeBootstrapper
-}
-. $cakeBootstrapper
-
-######################################################################
-## GLOBALS
-######################################################################
-[FilePath]      $solution      = [Enumerable]::FirstOrDefault([GlobbingAliases]::GetFiles($context, &amp;quot;./src/*.sln&amp;quot;))
-[string]        $configuration = &amp;quot;Release&amp;quot;
-[DirectoryPath] $nugetRoot     = [DirectoryAliases]::MakeAbsolute($context, &amp;quot;./nuget&amp;quot;);
-
-######################################################################
-## SETUP / TEARDOWN
-######################################################################
-Setup([Action[ICakeContext]]{
-    param([ICakeContext] $ctx)
-})
-
-Teardown([Action[ITeardownContext]]{
-    param([ITeardownContext] $ctx)
-})
-
-######################################################################
-## TASKS
-######################################################################
-$cleanTask      = &amp;quot;Clean&amp;quot; |`
-                    Task |`
-                    Does -Action ({
-                        [DirectoryAliases]::CleanDirectories($context, &amp;quot;./src/**/bin/$configuration&amp;quot;)
-                        [DirectoryAliases]::CleanDirectories($context, &amp;quot;./src/**/obj/$configuration&amp;quot;)
-                        [DirectoryAliases]::CleanDirectory($context, $nugetRoot)
-                    })
-
-$restoreTask    = &amp;quot;Restore&amp;quot; |`
-                    Task |`
-                    IsDependentOn -Dependency $cleanTask |`
-                    Does -Action ({
-                        [DotNetCoreAliases]::DotNetCoreRestore($context, $solution.FullPath)
-                    })
-
-$buildTask      = &amp;quot;Build&amp;quot; |`
-                    Task |`
-                    IsDependentOn -Dependency $restoreTask |`
-                    Does -Action ({
-                        [DotNetCoreAliases]::DotNetCoreBuild($context, $solution.FullPath)
-                    })
-
-$packTask       = &amp;quot;Pack&amp;quot; |`
-                    Task |`
-                    IsDependentOn -Dependency $buildTask |`
-                    Does -Action ({
-                        [DotNetCorePackSettings]   $packSettings = [DotNetCorePackSettings]::new()
-                        $packSettings.OutputDirectory = $nugetRoot
-
-                        [DotNetCoreAliases]::DotNetCorePack(
-                            $context,
-                            $solution.FullPath,
-                            $packSettings
-                        )
-                    })
-
-######################################################################
-## EXECUTION
-######################################################################
-$packTask | RunTarget
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="visual-basic"&gt;Visual Basic&lt;/h2&gt;
-&lt;p&gt;You can’t talk about .NET languages without mentioning Visual Basic and now when it’s also joining the .NET Core party too it’s getting up to date with the times. And obviously you can &lt;strong&gt;Bake&lt;/strong&gt; with &lt;strong&gt;Cake&lt;/strong&gt; using some Basic (&lt;em&gt;there’s no VB.NET interactive console that I know of so I created a simple VB.NET Core console app&lt;/em&gt;).&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-vb"&gt;Imports System
-Imports System.Linq
-Imports CakeBridge
-Imports Cake.Core
-Imports Cake.Core.Diagnostics
-Imports Cake.Core.IO
-Imports Cake.Common
-Imports Cake.Common.IO
-Imports Cake.Common.Diagnostics
-Imports Cake.Common.Tools.DotNetCore
-Imports Cake.Common.Tools.DotNetCore.Build
-Imports Cake.Common.Tools.DotNetCore.Pack
-Imports Cake.Common.Tools.DotNetCore.Restore
-Imports Cake.Common.Tools.DotNetCore.Test
-
-Module Program
-    Sub Main()
-        '//////////////////////////////////////////////////////////////////////
-        '// ARGUMENTS
-        '//////////////////////////////////////////////////////////////////////
-        Dim target          = Context.Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;),
-            configuration   = Context.Argument(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;)
-
-        '//////////////////////////////////////////////////////////////////////
-        '// GLOBALS
-        '//////////////////////////////////////////////////////////////////////
-        Dim nugetRoot       As DirectoryPath    = Nothing,
-            solution        As FilePath         = Nothing,
-            solutionDir     As DirectoryPath    = Nothing,
-            semVersion      As String           = Nothing,
-            assemblyVersion As String           = Nothing,
-            fileVersion     As String           = Nothing
-
-        '//////////////////////////////////////////////////////////////////////
-        '// SETUP / TEARDOWN
-        '//////////////////////////////////////////////////////////////////////
-        Setup(
-            Sub(ctx As ICakeContext)
-                ctx.Information(&amp;quot;Setting up...&amp;quot;)
-
-                solution = ctx.GetFiles(&amp;quot;./src/*.sln&amp;quot;).Select(Function(file as FilePath) ctx.MakeAbsolute(file)).FirstOrDefault()
-
-                If solution Is Nothing Then
-                    Throw New Exception(&amp;quot;Failed to find solution&amp;quot;)
-                End If
-
-                solutionDir = solution.GetDirectory()
-                nugetRoot = ctx.MakeAbsolute(ctx.Directory(&amp;quot;./nuget&amp;quot;))
-
-                Dim releaseNotes    = ctx.ParseReleaseNotes(&amp;quot;./ReleaseNotes.md&amp;quot;)
-                assemblyVersion     = releaseNotes.Version.ToString()
-                fileVersion         = assemblyVersion
-                semVersion          = $&amp;quot;{assemblyVersion}-alpha&amp;quot;
-
-                ctx.Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion)
-            End Sub
-        )
-
-        Teardown(
-            Sub(ctx As ITeardownContext) ctx.Information(&amp;quot;Tearing down...&amp;quot;)
-        )
-
-        '//////////////////////////////////////////////////////////////////////
-        '// TASKS
-        '//////////////////////////////////////////////////////////////////////
-        Dim cleanTask = Task(&amp;quot;Clean&amp;quot;).Does(
-            Sub()
-                Context.CleanDirectories($&amp;quot;{solutionDir.FullPath}/**/bin/{configuration}&amp;quot;)
-                Context.CleanDirectories($&amp;quot;{solutionDir.FullPath}/**/obj/{configuration}&amp;quot;)
-                Context.CleanDirectory(nugetRoot)
-            End Sub
-            )
-
-        Dim restoreTask = Task(&amp;quot;Restore&amp;quot;).Does(
-            Sub() Context.DotNetCoreRestore(solution.FullPath,
-                                  New DotNetCoreRestoreSettings With {
-                                  .Sources = {&amp;quot;https://api.nuget.org/v3/index.json&amp;quot;}
-                                  })
-            ).IsDependentOn(cleanTask)
-
-        Dim buildTask = Task(&amp;quot;Build&amp;quot;).Does(
-            Sub() Context.DotNetCoreBuild(solution.FullPath,
-                                  New DotNetCoreBuildSettings With {
-                                  .Configuration = configuration,
-                                  .ArgumentCustomization = Function(args) args.Append(
-                                                                                &amp;quot;/p:Version={0}&amp;quot;, semVersion
-                                                                            ).Append(
-                                                                                &amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion
-                                                                            ).Append(
-                                                                                &amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion
-                                                                            )
-                                  })
-            ).IsDependentOn(restoreTask)
-
-        Dim testTask = Task(&amp;quot;Test&amp;quot;).Does(
-            Sub()
-                For Each project In Context.GetFiles(&amp;quot;./src/**/*.Tests.vbproj&amp;quot;)
-                    Context.DotNetCoreTest(project.FullPath,
-                                    New DotNetCoreTestSettings With {
-                                        .Configuration = configuration,
-                                        .NoBuild = True
-                                        })
-                Next
-            End Sub
-            ).IsDependentOn(buildTask)
-
-        Dim packTask = Task(&amp;quot;Pack&amp;quot;).Does(
-            Sub()
-                For Each project In (Context.GetFiles(&amp;quot;./src/**/*.vbproj&amp;quot;) - Context.GetFiles(&amp;quot;./src/**/*.Tests.vbproj&amp;quot;))
-                    Context.DotNetCorePack(project.FullPath,
-                                    New DotNetCorePackSettings With {
-                                        .Configuration = configuration,
-                                        .OutputDirectory = nugetRoot,
-                                        .NoBuild = True,
-                                        .ArgumentCustomization = Function(args) args.Append(
-                                                                                        &amp;quot;/p:Version={0}&amp;quot;, semVersion
-                                                                                    ).Append(
-                                                                                        &amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion
-                                                                                    ).Append(
-                                                                                        &amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion
-                                                                                    )
-                                        })
-                Next
-            End Sub
-            ).IsDependentOn(testTask)
-
-        Task(&amp;quot;Default&amp;quot;).IsDependentOn(packTask)
-
-        '//////////////////////////////////////////////////////////////////////
-        '// EXECUTION
-        '//////////////////////////////////////////////////////////////////////
-        RunTarget(target)
-    End Sub
-End Module¨
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="f"&gt;F#&lt;/h2&gt;
-&lt;p&gt;F# is a .NET language which makes it fully possible to use Cake with F#.
-Full disclaimer though, as I’m not very proficient with the F# language and wanted something that somewhat looked like F# I called on the help and assistance of my friend &lt;a href="https://github.com/mrange"&gt;Mårten Rånge&lt;/a&gt; to do a quick port from C# to F# and this was the result:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-fsharp"&gt;#load &amp;quot;tools/Cake.Bridge.0.0.4-alpha/content/cake.fsx&amp;quot;
-
-//////////////////////////////////////////////////////////////////////
-// NAMESPACE IMPORTS
-//////////////////////////////////////////////////////////////////////
-open Cake.Common
-open Cake.Common.Diagnostics
-open Cake.Common.IO
-open Cake.Common.Tools.DotNetCore
-open Cake.Common.Tools.DotNetCore.Build
-open Cake.Common.Tools.DotNetCore.Pack
-open Cake.Core
-open Cake.Core.IO
-open System
-
-open CakeAdapter.CakeModule
-
-// Execute script with: fsi build.fsx
-
-//////////////////////////////////////////////////////////////////////
-// ARGUMENTS
-//////////////////////////////////////////////////////////////////////
-let target        = context.Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;)
-let configuration = context.Argument(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;)
-
-//////////////////////////////////////////////////////////////////////
-// GLOBALS
-//////////////////////////////////////////////////////////////////////
-let directoryPath           = !&amp;gt; (context.Directory &amp;quot;./nuget&amp;quot;)
-let nugetRoot               = context.MakeAbsolute directoryPath
-
-type ProjectInfo =
-  {
-    AssemblyVersion : string
-    FileVersion     : string
-    SemVersion      : string
-    Solution        : FilePath
-  }
-
-let mutable projectInfo     = None
-
-let argumentCustomizer      = Func&amp;lt;ProcessArgumentBuilder,ProcessArgumentBuilder&amp;gt; (fun args -&amp;gt;
-                                let p = projectInfo.Value
-                                args
-                                  .Append(&amp;quot;/p:Version={0}&amp;quot;        , p.SemVersion      )
-                                  .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, p.AssemblyVersion )
-                                  .Append(&amp;quot;/p:FileVersion={0}&amp;quot;    , p.FileVersion     ))
-
-//////////////////////////////////////////////////////////////////////
-// SETUP / TEARDOWN
-//////////////////////////////////////////////////////////////////////
-setup (fun context -&amp;gt;
-    context.Information &amp;quot;Setting up...&amp;quot;
-
-    let solution        =
-      match context.GetFiles &amp;quot;./src/*.sln&amp;quot; |&amp;gt; Seq.tryHead with
-      | Some solution -&amp;gt; solution
-      | None          -&amp;gt; failwith &amp;quot;Failed to find solution&amp;quot;
-
-    let releaseNotes    = context.ParseReleaseNotes(!&amp;gt; &amp;quot;./ReleaseNotes.md&amp;quot;)
-    let assemblyVersion = string releaseNotes.Version
-    let fileVersion     = assemblyVersion
-    let semVersion      = assemblyVersion + &amp;quot;-alpha&amp;quot;
-
-    projectInfo &amp;lt;- Some {
-        AssemblyVersion = assemblyVersion
-        FileVersion     = fileVersion
-        SemVersion      = semVersion
-        Solution        = solution
-      }
-
-    context.Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion)
-  )
-
-tearDown (fun context -&amp;gt;
-    context.Information &amp;quot;Tearing down...&amp;quot;
-  )
-//////////////////////////////////////////////////////////////////////
-// TASKS
-//////////////////////////////////////////////////////////////////////
-let clean =
-  task &amp;quot;Clean&amp;quot;
-  |&amp;gt; does (fun () -&amp;gt;
-    context.CleanDirectories(&amp;quot;./src/**/bin/&amp;quot; + configuration)
-    context.CleanDirectories(&amp;quot;./src/**/obj/&amp;quot; + configuration)
-    context.CleanDirectory nugetRoot
-  )
-
-let restore =
-  task &amp;quot;Restore&amp;quot;
-  |&amp;gt; isDependentOn clean
-  |&amp;gt; does (fun () -&amp;gt;
-    context.DotNetCoreRestore projectInfo.Value.Solution.FullPath
-  )
-
-let build =
-  task &amp;quot;Build&amp;quot;
-  |&amp;gt; isDependentOn restore
-  |&amp;gt; does (fun () -&amp;gt;
-    context.DotNetCoreBuild(
-      projectInfo.Value.Solution.FullPath         ,
-      DotNetCoreBuildSettings(
-        Configuration         = configuration     ,
-        ArgumentCustomization = argumentCustomizer))
-  )
-
-let pack =
-  task &amp;quot;Pack&amp;quot;
-  |&amp;gt; isDependentOn build
-  |&amp;gt; does (fun () -&amp;gt;
-    if context.DirectoryExists nugetRoot |&amp;gt; not then context.CreateDirectory nugetRoot
-
-    let projectFiles =
-      context.GetFiles &amp;quot;./src/**/*.fsproj&amp;quot;
-      |&amp;gt; Seq.filter (fun file -&amp;gt; file.FullPath.EndsWith &amp;quot;Tests&amp;quot; |&amp;gt; not)
-      |&amp;gt; Seq.toArray
-
-    for project in projectFiles do
-        context.DotNetCorePack(
-          project.FullPath                            ,
-          DotNetCorePackSettings(
-            Configuration         = configuration     ,
-            OutputDirectory       = nugetRoot         ,
-            NoBuild               = true              ,
-            ArgumentCustomization = argumentCustomizer))
-  )
-
-task &amp;quot;Default&amp;quot;
-  |&amp;gt; isDependentOn pack
-
-//////////////////////////////////////////////////////////////////////
-// EXECUTION
-//////////////////////////////////////////////////////////////////////
-runTarget target
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="cake-c"&gt;Cake / C#&lt;/h2&gt;
-&lt;p&gt;For reference below is the script that was used for inspiration when porting to other languages/runtimes, there’s a little less bootstrapping involved but besides that they’re very similar:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;//////////////////////////////////////////////////////////////////////
-// ARGUMENTS
-//////////////////////////////////////////////////////////////////////
-var target = Argument&amp;lt;string&amp;gt;(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;);
-var configuration = Argument&amp;lt;string&amp;gt;(&amp;quot;configuration&amp;quot;, &amp;quot;Release&amp;quot;);
-
-//////////////////////////////////////////////////////////////////////
-// GLOBALS
-//////////////////////////////////////////////////////////////////////
-DirectoryPath nugetRoot = MakeAbsolute(Directory(&amp;quot;./nuget&amp;quot;));
-FilePath solution = null;
-string  semVersion,
-        assemblyVersion,
-        fileVersion;
-
-//////////////////////////////////////////////////////////////////////
-// SETUP / TEARDOWN
-//////////////////////////////////////////////////////////////////////
-
-Setup(context =&amp;gt;
-{
-    Information(&amp;quot;Setting up...&amp;quot;);
-    solution = GetFiles(&amp;quot;./src/*.sln&amp;quot;)
-                .FirstOrDefault();
-    if (solution == null)
-        throw new Exception(&amp;quot;Failed to find solution&amp;quot;);
-
-
-    var releaseNotes = ParseReleaseNotes(&amp;quot;./ReleaseNotes.md&amp;quot;);
-    assemblyVersion =releaseNotes.Version.ToString();
-    fileVersion = assemblyVersion;
-    semVersion = assemblyVersion + &amp;quot;-alpha&amp;quot;;
-
-    Information(&amp;quot;Executing build {0}...&amp;quot;, semVersion);
-});
-
-Teardown(context =&amp;gt;
-{
-    Information(&amp;quot;Tearing down...&amp;quot;);
-});
-
-//////////////////////////////////////////////////////////////////////
-// TASKS
-//////////////////////////////////////////////////////////////////////
-
-var clean = Task(&amp;quot;Clean&amp;quot;)
-    .Does(() =&amp;gt;
-    {
-        CleanDirectories(&amp;quot;./src/**/bin/&amp;quot; + configuration);
-        CleanDirectories(&amp;quot;./src/**/obj/&amp;quot; + configuration);
-        CleanDirectory(nugetRoot);
-    });
-
-var restore = Task(&amp;quot;Restore&amp;quot;)
-    .IsDependentOn(clean)
-    .Does(() =&amp;gt;
-    {
-        DotNetCoreRestore(solution.FullPath);
-    });
-
-var build = Task(&amp;quot;Build&amp;quot;)
-    .IsDependentOn(restore)
-    .Does(() =&amp;gt;
-    {
-        DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings {
-            Configuration = configuration,
-            ArgumentCustomization = args =&amp;gt; args
-                .Append(&amp;quot;/p:Version={0}&amp;quot;, semVersion)
-                .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion)
-                .Append(&amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion)
-        });
-    });
-
-var pack = Task(&amp;quot;Pack&amp;quot;)
-    .IsDependentOn(build)
-    .Does(() =&amp;gt;
-    {
-        if (!DirectoryExists(nugetRoot))
-        {
-            CreateDirectory(nugetRoot);
-        }
-
-        foreach(var project in GetFiles(&amp;quot;./src/**/*.csproj&amp;quot;)
-                                .Where(file=&amp;gt;!file.FullPath.EndsWith(&amp;quot;Tests&amp;quot;)))
-        {
-            DotNetCorePack(project.FullPath, new DotNetCorePackSettings {
-                Configuration = configuration,
-                OutputDirectory = nugetRoot,
-                NoBuild = true,
-                ArgumentCustomization = args =&amp;gt; args
-                    .Append(&amp;quot;/p:Version={0}&amp;quot;, semVersion)
-                    .Append(&amp;quot;/p:AssemblyVersion={0}&amp;quot;, assemblyVersion)
-                    .Append(&amp;quot;/p:FileVersion={0}&amp;quot;, fileVersion)
-            });
-        }
-    });
-
-Task(&amp;quot;Default&amp;quot;)
-    .IsDependentOn(pack);
-
-//////////////////////////////////////////////////////////////////////
-// EXECUTION
-//////////////////////////////////////////////////////////////////////
-RunTarget(target);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Even though there might seem to be some Magic around Cake and it’s DSL it’s mostly just .NET and C#, having skills in those areas — are skills you can use with Cake scripts or when using Cake assemblies in some other way. If you have a different need from what the official supported way offers, you could still have a piece of the Cake.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;h3 id="cake.bridge"&gt;Cake.Bridge&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;GitHub: &lt;a href="https://github.com/devlead/Cake.Bridge"&gt;github.com/devlead/Cake.Bridge&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;NuGet: &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;www.nuget.org/packages/Cake.Bridge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="powershell-proof-of-concept"&gt;PowerShell proof of concept&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/PsPoC"&gt;github.com/devlead/PsPoC&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="visual-basic-proof-of-concept"&gt;Visual Basic proof of concept&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/VBPoC"&gt;github.com/devlead/VBPoC&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="f-interactive-script-proof-of-concept"&gt;F# interactive script proof of concept&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/FsxPoC"&gt;github.com/devlead/FsxPoC&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="c-interactive-proof-of-concept"&gt;C# interactive proof of concept&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/CsxPoC"&gt;github.com/devlead/CsxPoC&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="cake"&gt;Cake&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Website: &lt;a href="https://cakebuild.net"&gt;cakebuild.net&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;GitHub: &lt;a href="https://github.com/cake-build/cake"&gt;github.com/cake-build/cake&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;NuGet: &lt;a href="https://www.nuget.org/profiles/cake-build"&gt;www.nuget.org/profiles/cake-build&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>
