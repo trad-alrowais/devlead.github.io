@@ -88,7 +88,7 @@
           <h1>
             Just an environment variable away from sleep
           </h1>
-              <div class="meta">Published on Friday, 6 December 2019</div>
+              <div class="meta">Published on Friday, December 6, 2019</div>
                 <div class="mt-3">
                       <a href="/tags/net" class="badge badge-light"> .NET</a>
                       <a href="/tags/azure" class="badge badge-light"> Azure</a>
@@ -105,7 +105,7 @@
   <!-- Main Content -->
   <div class="container"> 
     <div class="row">
-        <div id="content" class="col-md-12">
+      <div id="content" class="col-md-12">  
         <p>It’s a quarter past midnight, you should be going to sleep, but there’s that one unit test that fails only on GitHub Action macOS build agent — it’s mocking you so you stay awake just a bit longer…</p>
 <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/002a2a50-81cb-491e-145e-bc8ef7ceb2bd.png?sv=2019-12-12&amp;st=2021-01-10T09%3A13%3A54Z&amp;se=2031-01-11T09%3A13%3A54Z&amp;sr=b&amp;sp=r&amp;sig=QDRIJM%2FTAGDrRbSk7zA%2FrdfRBNBxhZoIZuIkrmbWEQg%3D" alt="Failed MacOS build on GitHub PR" /></p>
 <p>You bring out you Mac and execute tests, fortunately we can reproduce — the test fails on your machine too! A quick inspection of test output informs you that error only occurs on .NET Core.</p>
@@ -138,7 +138,7 @@ Process Id: 32723, Name: dotnet
 <p>Fairly quickly found the issue added a commit and builds were green and I could go to sleep.</p>
 <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f94d4dea-7f34-2d6b-2b98-b78a727ebe35.png?sv=2019-12-12&amp;st=2021-01-10T09%3A47%3A48Z&amp;se=2031-01-11T09%3A47%3A48Z&amp;sr=b&amp;sp=r&amp;sig=tgplc9XhXuY5qBJLd%2FCSU4ZUKaz%2BgorxGG%2B9h0%2F2C60%3D" alt="macOS build passes" /></p>
 <p>Sometimes you just want to attack the problem and not debug tooling, then attacking the problem from another direction might get you there quicker, today it was setting <code>VSTEST_HOST_DEBUG</code> to <code>1</code>.</p>
- 
+
 
         <div class="container">
             <div class="row">
@@ -166,8 +166,8 @@ Process Id: 32723, Name: dotnet
                         <p class="text-center small text-muted">Originally published at <a href="https://medium.com/@devlead/just-an-environment-variable-away-from-sleep-15013adc8cb6">https://medium.com/@devlead/just-an-environment-variable-away-from-sleep-15013adc8cb6</a>.</p>
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
-                    <br />           
-                    <ul class="list-inline text-center small">                                
+                    <br />
+                    <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
                             </li>

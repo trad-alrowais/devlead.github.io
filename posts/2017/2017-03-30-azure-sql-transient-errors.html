@@ -90,7 +90,7 @@
             Azure SQL transient errors
           </h1>
             <h2 class="subheading">Handling Azure SQL transient errors in .NET Core using Polly</h2>
-              <div class="meta">Published on Thursday, 30 March 2017</div>
+              <div class="meta">Published on Thursday, March 30, 2017</div>
                 <div class="mt-3">
                       <a href="/tags/net" class="badge badge-light"> .NET</a>
                       <a href="/tags/azure" class="badge badge-light"> Azure</a>
@@ -107,7 +107,7 @@
   <!-- Main Content -->
   <div class="container"> 
     <div class="row">
-        <div id="content" class="col-md-12">
+      <div id="content" class="col-md-12">  
         <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/e8cee4c8-d521-c835-71f6-23b18c0b210d.png?sv=2019-12-12&amp;st=2021-01-10T14%3A02%3A39Z&amp;se=2031-01-11T14%3A02%3A39Z&amp;sr=b&amp;sp=r&amp;sig=uJ6SYGXiqheSG%2BHTludvAA71m%2F9O36lFlmSZMa6%2BN3o%3D" alt="Transient extension methods" /></p>
 <p>One thing people will notice when migrating to using cloud services are intermittent errors occur at a higher rate than you’re used to when running on premise.</p>
 <p>These errors are often called transient errors and can be mitigated by just retrying the operation. While some operations might be fine to retry in all cases i.e. fetching data, others like creating orders, deducting money, etc. might not or at least need a little more fine grain control. Also, some errors makes no sense to retry and as a result it’s better to fail fast.</p>
@@ -279,7 +279,7 @@ using (var connection = new SqlConnection(SampleDBConnectionString))
 <p>Polly is really powerful, yet really easy to get started with and also fairly easy to retrofit into an existing application — so I definitely think you should take it for a spin.</p>
 <p>I’ve created a complete sample repository on GitHub with the code from this post, thanks for reading! ❤</p>
 <p><a href="https://github.com/azurevoodoo/AzureSQLTransientHandling"><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/eee8a88a-0769-f1bd-e95e-ab14a8a539e6.png?sv=2019-12-12&amp;st=2021-01-10T14%3A31%3A58Z&amp;se=2031-01-11T14%3A31%3A58Z&amp;sr=b&amp;sp=r&amp;sig=Ci6FKYOZ%2BRhvWzVFoMC4HjZ2TItYL9XZZ3c9OkXR0pA%3D" alt="Code samples" /></a></p>
- 
+
 
         <div class="container">
             <div class="row">
@@ -307,8 +307,8 @@ using (var connection = new SqlConnection(SampleDBConnectionString))
                         <p class="text-center small text-muted">Originally published at <a href="https://medium.com/hackernoon/azure-sql-transient-errors-7625ad6e0a06">https://medium.com/hackernoon/azure-sql-transient-errors-7625ad6e0a06</a>.</p>
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
-                    <br />           
-                    <ul class="list-inline text-center small">                                
+                    <br />
+                    <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
                             </li>
