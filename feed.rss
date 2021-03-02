@@ -5,8 +5,223 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Mon, 18 Jan 2021 12:30:33 GMT</pubDate>
-		<lastBuildDate>Mon, 18 Jan 2021 12:30:33 GMT</lastBuildDate>
+		<pubDate>Tue, 02 Mar 2021 23:44:42 GMT</pubDate>
+		<lastBuildDate>Tue, 02 Mar 2021 23:44:42 GMT</lastBuildDate>
+		<item>
+			<title>Introducing Cake ClickOnce Recipe</title>
+			<link>https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe</link>
+			<description>An opinionated recipe for building and publishing .NET 5 Windows apps</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/31/efaa9de4-9e5c-e66b-8b35-3f6b3475b8d3.png?sv=2019-12-12&amp;st=2021-01-30T15%253A03%253A52Z&amp;se=2031-01-31T15%253A03%253A52Z&amp;sr=b&amp;sp=r&amp;sig=wSUYJRdZjnHt0AZ86nc06YeF5eKqwXWAH%252F5525wyiAk%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe</guid>
+			<pubDate>Wed, 03 Mar 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;A little over a decade ago I did a lot of business applications with .NET Framework WPF and ClickOnce was in many cases used as a convenient way to deploy and update Windows applications. ClickOnce hasn't gotten much love over the years, and when .NET Core 3 introduced support for WPF applications ClickOnce support was nowhere to be found. But guess what, that's changed with .NET 5 and in this post, I'll go through my recipe for simplifying the building and publishing .NET 5 Windows application using GitHub Actions, Cake, and ClickOnce to Azure Blob Storage.&lt;/p&gt;
+&lt;h2 id="cake-recipe"&gt;Cake Recipe?&lt;/h2&gt;
+&lt;p&gt;So what is a Cake recipe? Regardless of what it sounds like, it in this case has nothing to do with baking, but it's a set of &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; scripts packaged as NuGet package and published on NuGet.org, providing a highly reusable way to with just a few lines of code get access to rich functionality.&lt;/p&gt;
+&lt;p&gt;For example this recipe will for a .NET 5 based Windows application, in a very optioned way&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Version application&lt;/li&gt;
+&lt;li&gt;Build application&lt;/li&gt;
+&lt;li&gt;Create ClickOnce assets&lt;/li&gt;
+&lt;li&gt;Deploy to Azure Blob storage&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="sample-application"&gt;Sample application&lt;/h2&gt;
+&lt;p&gt;For simplicity I'm here going to use the standard .NET 5 WPF template, using .NET CLI that would look something like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new wpf -n MyApp
+dotnet new sln -n MyApp
+dotnet sln add MyApp/MyApp.csproj
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Which essentially:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Creates project&lt;/li&gt;
+&lt;li&gt;Creates solution&lt;/li&gt;
+&lt;li&gt;Adds project to solution&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Which is similar to &lt;em&gt;New Project -&amp;gt; WPF Application (C# / Windows / Desktop .NET Core)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/9348f210-84a6-74b2-5f9f-6f31e20b1877.png?sv=2019-12-12&amp;amp;st=2021-01-30T17%3A12%3A36Z&amp;amp;se=2031-01-31T17%3A12%3A36Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=YnOmvtwboOr30u0v1EnSsdpBpJnHl%2FcwEIKr9p%2FAQ1Y%3D" alt="Create new project in Visual Studio 2019" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/6dadc800-fcc0-31ab-f4f3-9446b5f5c411.png?sv=2019-12-12&amp;amp;st=2021-01-30T17%3A13%3A34Z&amp;amp;se=2031-01-31T17%3A13%3A34Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=jdfRM7ANfxT8XyzhzfXKZfv2U8JV%2B%2Bl%2BREX4ALUpdiM%3D" alt=".NET Core WPF Application Template" /&gt;&lt;/p&gt;
+&lt;p&gt;Resulting in a bare minimum folder/file structure like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;src
+ │    MyApp.sln
+ │
+ └─── MyApp
+        App.xaml
+        App.xaml.cs
+        AssemblyInfo.cs
+        MainWindow.xaml
+        MainWindow.xaml.cs
+        MyApp.csproj
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="adding-cake.clickonce.recipe"&gt;Adding Cake.ClickOnce.Recipe&lt;/h2&gt;
+&lt;p&gt;Now that we have our sample application, let's rub some DevOps on it using Cake.ClickOnce.Recipe.&lt;/p&gt;
+&lt;h3 id="prerequisites"&gt;Prerequisites&lt;/h3&gt;
+&lt;h4 id="tools"&gt;Tools&lt;/h4&gt;
+&lt;p&gt;To run our recipe we need one .NET tool installed&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Cake.Tool 1.0.0 or newer&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;My preferred way is to install using a .NET tool manifest in repo root, so the tools are versioned and restored within the repo, a manifest is easiest created using the .NET CLI template &lt;code&gt;tool-manifest&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and then install the tool&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install Cake.Tool
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="azure"&gt;Azure&lt;/h4&gt;
+&lt;p&gt;The recipe uses Azure Blob Storage to distribute the application and ClickOnce manifest, so you'll need to create:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Azure Storage Account&lt;/li&gt;
+&lt;li&gt;Container with anonymous read access for blobs only&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/2afa2bbc-0d9a-7898-d056-d9a221d8dc1d.png?sv=2019-12-12&amp;amp;st=2021-01-30T20%3A42%3A16Z&amp;amp;se=2031-01-31T20%3A42%3A16Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=Kx6eIPJh9ZHdOvWEeP6GJl%2BChVgyrR21%2FO7qlEJ7us4%3D" alt="New Storage Collage" /&gt;&lt;/p&gt;
+&lt;h3 id="adding-recipe"&gt;Adding recipe&lt;/h3&gt;
+&lt;p&gt;In repo root create a &lt;code&gt;build.cake&lt;/code&gt; file containing&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#load &amp;quot;nuget:?package=Cake.ClickOnce.Recipe&amp;amp;version=0.2.0&amp;quot;
+
+ClickOnce.ApplicationName = &amp;quot;MyApp&amp;quot;;
+ClickOnce.Publisher = &amp;quot;devlead&amp;quot;;
+ClickOnce.PublishUrl = &amp;quot;https://cakeclickonceexample.blob.core.windows.net/publish&amp;quot;;
+ClickOnce.RunBuild();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The Recipe has three required settings&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;ApplicationName&lt;/code&gt; - in general same as project name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Publisher&lt;/code&gt; - name of publisher&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PublishUrl&lt;/code&gt; - base url for where application is installed from, in this case Azure Blob Storage container url&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="local-build"&gt;Local build&lt;/h2&gt;
+&lt;p&gt;We're now all set to kick of a local build using Cake&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet cake
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and if all goes well you should see something like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;Task                           Duration
+---------------------------------------------------
+Setup                          00:00:00.0070864
+Clean                          00:00:00.0114975
+Restore                        00:00:01.0136714
+Build                          00:00:02.6537503
+Publish                        00:00:00.9728737
+ClickOnce-Launcher             00:00:00.3629962
+ClickOnce-Application-Manifest 00:00:00.5536790
+ClickOnce-Deployment-Manifest  00:00:00.5924181
+---------------------------------------------------
+Total:                         00:00:06.1730701
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and a new folder in repo root called artifacts containing application ClickOnce manifest and a date versioned folder (you can override the generated version using &lt;code&gt;ClickOnce.Version&lt;/code&gt; property).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;artifacts
+ │   MyApp.application
+ │
+ └───MyApp.2021.01.31.25014
+        Launcher.exe
+        MyApp.deps.json
+        MyApp.dll
+        MyApp.exe
+        MyApp.manifest
+        MyApp.pdb
+        MyApp.runtimeconfig.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="github-actions"&gt;GitHub Actions&lt;/h2&gt;
+&lt;p&gt;A fairly minimal GitHub Actions could essentially be&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Checkout source&lt;/li&gt;
+&lt;li&gt;Install .NET SDK&lt;/li&gt;
+&lt;li&gt;Install &amp;amp; Execute Cake&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="build-definition"&gt;Build definition&lt;/h3&gt;
+&lt;p&gt;The yaml build definition could look something like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;name: Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - name: Get the sources
+        uses: actions/checkout&amp;#64;v2
+
+      - name: Install .NET Core SDK
+        uses: actions/setup-dotnet&amp;#64;v1
+
+      - name: Run Cake script
+        env:
+          PUBLISH_STORAGE_ACCOUNT: ${{ secrets.PUBLISH_STORAGE_ACCOUNT }}
+          PUBLISH_STORAGE_CONTAINER: ${{ secrets.PUBLISH_STORAGE_CONTAINER }}
+          PUBLISH_STORAGE_KEY: ${{ secrets.PUBLISH_STORAGE_KEY }}
+        run: |
+          dotnet tool restore
+          dotnet cake
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;Run Cake script&lt;/code&gt; step has three environment variables defined&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_ACCOUNT&lt;/code&gt; - Azure storage account name i.e. &lt;code&gt;cakeclickonceexample&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_CONTAINER&lt;/code&gt; - Azure storage container name i.e. &lt;code&gt;publish&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_KEY&lt;/code&gt; - Azure storage account secondary or primary key.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These are fetched from your GitHub repo settings Secrets section, which means they're not publicly stored anywhere in the repo and also not available from pull requests.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/8ebf213e-1f0d-8d68-d12d-58ceafe6d728.png?sv=2019-12-12&amp;amp;st=2021-03-01T21%3A51%3A01Z&amp;amp;se=2031-03-02T21%3A51%3A01Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=U%2BCyMGwq5x66LcKonxmi%2FjD52btWXph5Ku2P33T8rGE%3D" alt="GitHub Repo Secrets settings" /&gt;&lt;/p&gt;
+&lt;h3 id="output-example-on-github-actions"&gt;Output Example on GitHub Actions&lt;/h3&gt;
+&lt;p&gt;The recipe will automatically identify that it's executing on GitHub Actions, and execute a few extra steps to upload and point the ClickOnce manifest to the new version.&lt;/p&gt;
+&lt;p&gt;If all goes well GitHub Actions output would look something like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;
+----------------------------------------
+Setup
+----------------------------------------
+Setting up version 2021.01.27.18139
+▶ &amp;quot;Clean&amp;quot;
+▶ &amp;quot;Restore&amp;quot;
+▶ &amp;quot;Build&amp;quot;
+▶ &amp;quot;Publish&amp;quot;
+▶ &amp;quot;ClickOnce-Launcher&amp;quot;
+▶ &amp;quot;ClickOnce-Application-Manifest&amp;quot;
+▶ &amp;quot;ClickOnce-Deployment-Manifest&amp;quot;
+▶ &amp;quot;ClickOnce-Deployment-UpdateManifest&amp;quot;
+▶ &amp;quot;ClickOnce-Deployment-CreateAppRef&amp;quot;
+▶ &amp;quot;ClickOnce-Upload-Version&amp;quot;
+▶ &amp;quot;ClickOnce-Upload-Application&amp;quot;
+▶ &amp;quot;Publish-ClickOnce&amp;quot;
+
+Task                                Duration
+--------------------------------------------------------
+Setup                               00:00:00.0160939
+Clean                               00:00:00.0084806
+Restore                             00:00:02.1274733
+Build                               00:00:03.3076849
+Publish                             00:00:01.2192429
+ClickOnce-Launcher                  00:00:00.4506914
+ClickOnce-Application-Manifest      00:00:00.6510728
+ClickOnce-Deployment-Manifest       00:00:00.9086913
+ClickOnce-Deployment-UpdateManifest 00:00:00.6800874
+ClickOnce-Deployment-CreateAppRef   00:00:00.0112772
+ClickOnce-Upload-Version            00:00:02.1736495
+ClickOnce-Upload-Application        00:00:00.6269294
+--------------------------------------------------------
+Total:                              00:00:12.1814083
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and you now have a fully automated build and release of your ClickOnce application.&lt;/p&gt;
+&lt;h2 id="installing-application"&gt;Installing application&lt;/h2&gt;
+&lt;p&gt;The recipe will automatically generate an &lt;code&gt;appref-ms&lt;/code&gt; file, downloading and opening this file from blob storage is enough to trigger the ClickOnce runtime and install the application.&lt;/p&gt;
+&lt;p&gt;Example: &lt;a href="https://cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms"&gt;cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/installclickonce.gif?sp=r&amp;amp;st=2021-03-01T23:03:03Z&amp;amp;se=2031-03-03T07:03:03Z&amp;amp;spr=https&amp;amp;sv=2020-02-10&amp;amp;sr=b&amp;amp;sig=hSBI7hfdtkWR0SqdX5yiHDeE9E%2FwZzWCEHTZqp518Ls%3D" alt="ClickOnce installation example" /&gt;&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Long story short, the recipe greatly simplifies the automation of building a WPF application, getting it published and deployed using ClickOnce technologies - achieving this only configuring the bare minimum what's needed to do so.&lt;/p&gt;
+&lt;p&gt;There's still a lot of work to do with the recipe especially around signing, icons, etc.&lt;/p&gt;
+&lt;p&gt;That said it's fully functional and a good starting point.
+The recipe is open source, so I'll happily take feedback and contributions to improve it.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Recipe source on GitHub - &lt;a href="https://github.com/devlead/Cake.ClickOnce.Recipe"&gt;github.com/devlead/Cake.ClickOnce.Recipe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Recipe on NuGet.org - &lt;a href="https://www.nuget.org/packages/Cake.ClickOnce.Recipe/"&gt;nuget.org/packages/Cake.ClickOnce.Recipe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Example repository on GitHub - &lt;a href="https://github.com/devlead/Cake.ClickOnce.Recipe.Example"&gt;github.com/devlead/Cake.ClickOnce.Recipe.Example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Cake - &lt;a href="https://cakebuild.net/"&gt;cakebuild.net&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>My preferred .NET console stack</title>
 			<link>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</link>
@@ -735,50 +950,6 @@ Such a polyfill could look something like below:&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/02fd4235-bed7-d9ea-299b-4cbb38ec58b8.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A59%3A43Z&amp;amp;se=2031-01-11T12%3A59%3A43Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=DMrIzL%2FATJBZdm7cb6kkCKU7DZrKbTGJzTAycjgKO0k%3D" alt="Demonstrating usage of the polyfilled command" /&gt;&lt;/p&gt;
 &lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Polyfilling is a very neat way having more homogenous and maintainable scripts, while also letting you adopt new commands and features, even if you have one or two old servers in the closet ;)&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Using ngrok with Azure Functions⚡</title>
-			<link>https://www.devlead.se/posts/2017/2017-08-26-using-ngrok-with-azure-functions</link>
-			<description>Serverless debugging on steroids💪</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2017/2017-08-26-using-ngrok-with-azure-functions</guid>
-			<pubDate>Sun, 20 Aug 2017 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;With things like the Azure Functions Cli and Azure Functions tools for Visual Studio you get the full development and debugging story locally on your machine. This is great as you can iterate and test quickly without the need to push the code to the cloud first, the drawback of this is that you can’t do incoming webhooks from. 3:rd party services, i.e. GitHub can’t access your locally running function.&lt;/p&gt;
-&lt;p&gt;But what if I said there’s a way you have your cake and eat it, wouldn’t that be great?&lt;/p&gt;
-&lt;h2 id="ngrok"&gt;ngrok&lt;/h2&gt;
-&lt;p&gt;Introducing ngrok, ngrok is a tool and a service that will let you securely inspect and tunnel traffic to your local computer. It’s a free service with paid plans that will give you extra features like custom and reserved domains, IP address whitelisting etc.&lt;/p&gt;
-&lt;h2 id="obtaining-the-tool"&gt;Obtaining the tool&lt;/h2&gt;
-&lt;p&gt;ngrok is available cross platform for MacOS, Windows, Linux and FreeBSD and it’s just a single binary you can download and unzip from &lt;a href="https://ngrok.com/download"&gt;ngrok.com/download&lt;/a&gt;. If you’re running Chocolatey on Windows like me, then it’s just a simple command way to get it installed:
-&lt;code&gt;choco install -y ngrok.portable&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id="using-ngrok"&gt;Using ngrok&lt;/h2&gt;
-&lt;p&gt;Using ngrok is very straightforward, in general you launch the tool with which protocol and port your local service is listening on.
-&lt;code&gt;ngrok http 8080&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/75ba557b-50d3-94cc-39a6-e330a127244c.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A04%3A11Z&amp;amp;se=2031-01-11T13%3A04%3A11Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=MJNZ3xMphCitS5%2FwHM3yUcBrHAcf2W%2BG8SWt1xLjSz8%3D" alt="ngrok running" /&gt;&lt;/p&gt;
-&lt;p&gt;ngrok will launch and the forwarding urls is what you use to access your local service from the Internet.&lt;/p&gt;
-&lt;h2 id="using-ngrok-with-azure-functions"&gt;Using ngrok with Azure Functions&lt;/h2&gt;
-&lt;p&gt;You can find out which local port your Azure Functions by looking at the output of when the host starts, you can also specify the port using the port switch when launching the functions host
-&lt;code&gt;func host -p 8080&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3cc00ea9-6f20-c435-c5eb-85ed3c08804d.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A05%3A19Z&amp;amp;se=2031-01-11T13%3A05%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=sbfyFtGZwwBnqMDpi%2FiU4QyJ9oweCeb5cU6URfbaYG8%3D" alt="Azure Functions Host port" /&gt;&lt;/p&gt;
-&lt;p&gt;By default, ngrok will forward it’s temporary domain as host header to the locally running service, but as The Azure Functions host only listens to the hostname “localhost” we’ll need to override the default behavior using the host header switch
-&lt;code&gt;ngrok http 8080 --host-header localhost&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id="externally-calling-local-function"&gt;Externally calling local function&lt;/h2&gt;
-&lt;p&gt;To use your locally running function externally you just replace the base url provided by the function host to the temporary url provided by ngrok i.e.
-&lt;code&gt;http://localhost:8080&lt;/code&gt; becomes &lt;code&gt;https://tempsubdomain.ngrok.io&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;So say you have a GitHub webhook called &lt;code&gt;GithubWebhookCSharp&lt;/code&gt; its local url will be &lt;code&gt;http://localhost:8080/api/GithubWebhookCSharp&lt;/code&gt; and it’s external url will be &lt;code&gt;https://tempsubdomain.ngrok.io/api/GithubWebhookCSharp&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Which you then could set up as i.e. a GitHub webhook&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/fd80337f-d020-ae4f-e2fd-b60f60843b74.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A06%3A49Z&amp;amp;se=2031-01-11T13%3A06%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=nRjbhYTdQuW0%2BGbz8RvZUbX6PI0OdLsyUaLw%2BDBWYfo%3D" alt="Setting up webhook on GitHub" /&gt;&lt;/p&gt;
-&lt;p&gt;now when GitHub webhook triggers it’ll tunnel through ngrok and its payload will be delivered to your locally otherwise externally inaccessible function&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/03bb2043-2dcf-d789-ffa3-fe26079537b9.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A09%3A19Z&amp;amp;se=2031-01-11T13%3A09%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=aAtxSvy0er9zBq5q0s3Vl6JXzxUn3s7lh0PQGtkl0tw%3D" alt="ngrok / Azure function host serving local function" /&gt;&lt;/p&gt;
-&lt;h2 id="inspecting-traffic"&gt;Inspecting traffic&lt;/h2&gt;
-&lt;p&gt;On off the real killer features of ngrok is that it provides a local web interface, you’ll find it’s url in the tool’s output&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/c4c98d7a-a7c6-e009-ebe1-0e2e0d85f036.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A09%3A48Z&amp;amp;se=2031-01-11T13%3A09%3A48Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=0emxBg1Jsllf974MaJ7dVZXrYM3ll2qyhPS%2BOoAfJUY%3D" alt="ngrok web interface url" /&gt;&lt;/p&gt;
-&lt;p&gt;This interface provides deep insight of all traffic that travels through the ngrok tunnel, you can see the response/request body and headers, it also lets you replay a request as many times as you like without needing to trigger an event on the external service, which is really useful when debugging, iterating over an implementation and fixing bugs!&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a5d64ad8-64c9-b05c-37cd-ab487c32e480.png?sv=2019-12-12&amp;amp;st=2021-01-10T13%3A10%3A11Z&amp;amp;se=2031-01-11T13%3A10%3A11Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=3n1GdorjYDsMbGzCcsGY3ng%2B7lmLZk2IBMdhk9KC9WY%3D" alt="ngrok web interface" /&gt;&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Using a service like ngrok is really powerful and can ultimately speed up the development process.&lt;/p&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>

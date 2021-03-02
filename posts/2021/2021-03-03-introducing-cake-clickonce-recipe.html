@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="An opinionated recipe for building and publishing .NET 5 Windows apps">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing Cake ClickOnce Recipe</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing Cake ClickOnce Recipe" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/31/efaa9de4-9e5c-e66b-8b35-3f6b3475b8d3.png?sv=2019-12-12&amp;st=2021-01-30T15%3A03%3A52Z&amp;se=2031-01-31T15%3A03%3A52Z&amp;sr=b&amp;sp=r&amp;sig=wSUYJRdZjnHt0AZ86nc06YeF5eKqwXWAH%2F5525wyiAk%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/31/efaa9de4-9e5c-e66b-8b35-3f6b3475b8d3.png?sv=2019-12-12&amp;st=2021-01-30T15%3A03%3A52Z&amp;se=2031-01-31T15%3A03%3A52Z&amp;sr=b&amp;sp=r&amp;sig=wSUYJRdZjnHt0AZ86nc06YeF5eKqwXWAH%2F5525wyiAk%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Introducing Cake ClickOnce Recipe
+          </h1>
+            <h2 class="subheading">An opinionated recipe for building and publishing .NET 5 Windows apps</h2>
+              <div class="meta">Published on Wednesday, March 3, 2021</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
+                      <a href="/tags/wpf" class="badge badge-light"> WPF</a>
+                      <a href="/tags/oss" class="badge badge-light"> OSS</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>A little over a decade ago I did a lot of business applications with .NET Framework WPF and ClickOnce was in many cases used as a convenient way to deploy and update Windows applications. ClickOnce hasn't gotten much love over the years, and when .NET Core 3 introduced support for WPF applications ClickOnce support was nowhere to be found. But guess what, that's changed with .NET 5 and in this post, I'll go through my recipe for simplifying the building and publishing .NET 5 Windows application using GitHub Actions, Cake, and ClickOnce to Azure Blob Storage.</p>
+<h2 id="cake-recipe">Cake Recipe?</h2>
+<p>So what is a Cake recipe? Regardless of what it sounds like, it in this case has nothing to do with baking, but it's a set of <a href="https://cakebuild.net/">Cake</a> scripts packaged as NuGet package and published on NuGet.org, providing a highly reusable way to with just a few lines of code get access to rich functionality.</p>
+<p>For example this recipe will for a .NET 5 based Windows application, in a very optioned way</p>
+<ol>
+<li>Version application</li>
+<li>Build application</li>
+<li>Create ClickOnce assets</li>
+<li>Deploy to Azure Blob storage</li>
+</ol>
+<h2 id="sample-application">Sample application</h2>
+<p>For simplicity I'm here going to use the standard .NET 5 WPF template, using .NET CLI that would look something like below</p>
+<pre><code class="language-bash">dotnet new wpf -n MyApp
+dotnet new sln -n MyApp
+dotnet sln add MyApp/MyApp.csproj
+</code></pre>
+<p>Which essentially:</p>
+<ol>
+<li>Creates project</li>
+<li>Creates solution</li>
+<li>Adds project to solution</li>
+</ol>
+<p>Which is similar to <em>New Project -&gt; WPF Application (C# / Windows / Desktop .NET Core)</em></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/9348f210-84a6-74b2-5f9f-6f31e20b1877.png?sv=2019-12-12&amp;st=2021-01-30T17%3A12%3A36Z&amp;se=2031-01-31T17%3A12%3A36Z&amp;sr=b&amp;sp=r&amp;sig=YnOmvtwboOr30u0v1EnSsdpBpJnHl%2FcwEIKr9p%2FAQ1Y%3D" alt="Create new project in Visual Studio 2019" /></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/6dadc800-fcc0-31ab-f4f3-9446b5f5c411.png?sv=2019-12-12&amp;st=2021-01-30T17%3A13%3A34Z&amp;se=2031-01-31T17%3A13%3A34Z&amp;sr=b&amp;sp=r&amp;sig=jdfRM7ANfxT8XyzhzfXKZfv2U8JV%2B%2Bl%2BREX4ALUpdiM%3D" alt=".NET Core WPF Application Template" /></p>
+<p>Resulting in a bare minimum folder/file structure like below</p>
+<pre><code class="language-text">src
+ │    MyApp.sln
+ │
+ └─── MyApp
+        App.xaml
+        App.xaml.cs
+        AssemblyInfo.cs
+        MainWindow.xaml
+        MainWindow.xaml.cs
+        MyApp.csproj
+</code></pre>
+<h2 id="adding-cake.clickonce.recipe">Adding Cake.ClickOnce.Recipe</h2>
+<p>Now that we have our sample application, let's rub some DevOps on it using Cake.ClickOnce.Recipe.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<h4 id="tools">Tools</h4>
+<p>To run our recipe we need one .NET tool installed</p>
+<ol>
+<li>Cake.Tool 1.0.0 or newer</li>
+</ol>
+<p>My preferred way is to install using a .NET tool manifest in repo root, so the tools are versioned and restored within the repo, a manifest is easiest created using the .NET CLI template <code>tool-manifest</code>:</p>
+<pre><code class="language-bash">dotnet new tool-manifest
+</code></pre>
+<p>and then install the tool</p>
+<pre><code class="language-bash">dotnet tool install Cake.Tool
+</code></pre>
+<h4 id="azure">Azure</h4>
+<p>The recipe uses Azure Blob Storage to distribute the application and ClickOnce manifest, so you'll need to create:</p>
+<ol>
+<li>Azure Storage Account</li>
+<li>Container with anonymous read access for blobs only</li>
+</ol>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/2afa2bbc-0d9a-7898-d056-d9a221d8dc1d.png?sv=2019-12-12&amp;st=2021-01-30T20%3A42%3A16Z&amp;se=2031-01-31T20%3A42%3A16Z&amp;sr=b&amp;sp=r&amp;sig=Kx6eIPJh9ZHdOvWEeP6GJl%2BChVgyrR21%2FO7qlEJ7us4%3D" alt="New Storage Collage" /></p>
+<h3 id="adding-recipe">Adding recipe</h3>
+<p>In repo root create a <code>build.cake</code> file containing</p>
+<pre><code class="language-csharp">#load &quot;nuget:?package=Cake.ClickOnce.Recipe&amp;version=0.2.0&quot;
+
+ClickOnce.ApplicationName = &quot;MyApp&quot;;
+ClickOnce.Publisher = &quot;devlead&quot;;
+ClickOnce.PublishUrl = &quot;https://cakeclickonceexample.blob.core.windows.net/publish&quot;;
+ClickOnce.RunBuild();
+</code></pre>
+<p>The Recipe has three required settings</p>
+<ol>
+<li><code>ApplicationName</code> - in general same as project name</li>
+<li><code>Publisher</code> - name of publisher</li>
+<li><code>PublishUrl</code> - base url for where application is installed from, in this case Azure Blob Storage container url</li>
+</ol>
+<h2 id="local-build">Local build</h2>
+<p>We're now all set to kick of a local build using Cake</p>
+<pre><code class="language-bash">dotnet cake
+</code></pre>
+<p>and if all goes well you should see something like below</p>
+<pre><code class="language-text">Task                           Duration
+---------------------------------------------------
+Setup                          00:00:00.0070864
+Clean                          00:00:00.0114975
+Restore                        00:00:01.0136714
+Build                          00:00:02.6537503
+Publish                        00:00:00.9728737
+ClickOnce-Launcher             00:00:00.3629962
+ClickOnce-Application-Manifest 00:00:00.5536790
+ClickOnce-Deployment-Manifest  00:00:00.5924181
+---------------------------------------------------
+Total:                         00:00:06.1730701
+</code></pre>
+<p>and a new folder in repo root called artifacts containing application ClickOnce manifest and a date versioned folder (you can override the generated version using <code>ClickOnce.Version</code> property).</p>
+<pre><code class="language-text">artifacts
+ │   MyApp.application
+ │
+ └───MyApp.2021.01.31.25014
+        Launcher.exe
+        MyApp.deps.json
+        MyApp.dll
+        MyApp.exe
+        MyApp.manifest
+        MyApp.pdb
+        MyApp.runtimeconfig.json
+</code></pre>
+<h2 id="github-actions">GitHub Actions</h2>
+<p>A fairly minimal GitHub Actions could essentially be</p>
+<ol>
+<li>Checkout source</li>
+<li>Install .NET SDK</li>
+<li>Install &amp; Execute Cake</li>
+</ol>
+<h3 id="build-definition">Build definition</h3>
+<p>The yaml build definition could look something like below</p>
+<pre><code class="language-yaml">name: Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - name: Get the sources
+        uses: actions/checkout&#64;v2
+
+      - name: Install .NET Core SDK
+        uses: actions/setup-dotnet&#64;v1
+
+      - name: Run Cake script
+        env:
+          PUBLISH_STORAGE_ACCOUNT: ${{ secrets.PUBLISH_STORAGE_ACCOUNT }}
+          PUBLISH_STORAGE_CONTAINER: ${{ secrets.PUBLISH_STORAGE_CONTAINER }}
+          PUBLISH_STORAGE_KEY: ${{ secrets.PUBLISH_STORAGE_KEY }}
+        run: |
+          dotnet tool restore
+          dotnet cake
+</code></pre>
+<p>The <code>Run Cake script</code> step has three environment variables defined</p>
+<ul>
+<li><code>PUBLISH_STORAGE_ACCOUNT</code> - Azure storage account name i.e. <code>cakeclickonceexample</code></li>
+<li><code>PUBLISH_STORAGE_CONTAINER</code> - Azure storage container name i.e. <code>publish</code></li>
+<li><code>PUBLISH_STORAGE_KEY</code> - Azure storage account secondary or primary key.</li>
+</ul>
+<p>These are fetched from your GitHub repo settings Secrets section, which means they're not publicly stored anywhere in the repo and also not available from pull requests.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/8ebf213e-1f0d-8d68-d12d-58ceafe6d728.png?sv=2019-12-12&amp;st=2021-03-01T21%3A51%3A01Z&amp;se=2031-03-02T21%3A51%3A01Z&amp;sr=b&amp;sp=r&amp;sig=U%2BCyMGwq5x66LcKonxmi%2FjD52btWXph5Ku2P33T8rGE%3D" alt="GitHub Repo Secrets settings" /></p>
+<h3 id="output-example-on-github-actions">Output Example on GitHub Actions</h3>
+<p>The recipe will automatically identify that it's executing on GitHub Actions, and execute a few extra steps to upload and point the ClickOnce manifest to the new version.</p>
+<p>If all goes well GitHub Actions output would look something like below</p>
+<pre><code class="language-bash">
+----------------------------------------
+Setup
+----------------------------------------
+Setting up version 2021.01.27.18139
+▶ &quot;Clean&quot;
+▶ &quot;Restore&quot;
+▶ &quot;Build&quot;
+▶ &quot;Publish&quot;
+▶ &quot;ClickOnce-Launcher&quot;
+▶ &quot;ClickOnce-Application-Manifest&quot;
+▶ &quot;ClickOnce-Deployment-Manifest&quot;
+▶ &quot;ClickOnce-Deployment-UpdateManifest&quot;
+▶ &quot;ClickOnce-Deployment-CreateAppRef&quot;
+▶ &quot;ClickOnce-Upload-Version&quot;
+▶ &quot;ClickOnce-Upload-Application&quot;
+▶ &quot;Publish-ClickOnce&quot;
+
+Task                                Duration
+--------------------------------------------------------
+Setup                               00:00:00.0160939
+Clean                               00:00:00.0084806
+Restore                             00:00:02.1274733
+Build                               00:00:03.3076849
+Publish                             00:00:01.2192429
+ClickOnce-Launcher                  00:00:00.4506914
+ClickOnce-Application-Manifest      00:00:00.6510728
+ClickOnce-Deployment-Manifest       00:00:00.9086913
+ClickOnce-Deployment-UpdateManifest 00:00:00.6800874
+ClickOnce-Deployment-CreateAppRef   00:00:00.0112772
+ClickOnce-Upload-Version            00:00:02.1736495
+ClickOnce-Upload-Application        00:00:00.6269294
+--------------------------------------------------------
+Total:                              00:00:12.1814083
+</code></pre>
+<p>and you now have a fully automated build and release of your ClickOnce application.</p>
+<h2 id="installing-application">Installing application</h2>
+<p>The recipe will automatically generate an <code>appref-ms</code> file, downloading and opening this file from blob storage is enough to trigger the ClickOnce runtime and install the application.</p>
+<p>Example: <a href="https://cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms">cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms</a></p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/installclickonce.gif?sp=r&amp;st=2021-03-01T23:03:03Z&amp;se=2031-03-03T07:03:03Z&amp;spr=https&amp;sv=2020-02-10&amp;sr=b&amp;sig=hSBI7hfdtkWR0SqdX5yiHDeE9E%2FwZzWCEHTZqp518Ls%3D" alt="ClickOnce installation example" /></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Long story short, the recipe greatly simplifies the automation of building a WPF application, getting it published and deployed using ClickOnce technologies - achieving this only configuring the bare minimum what's needed to do so.</p>
+<p>There's still a lot of work to do with the recipe especially around signing, icons, etc.</p>
+<p>That said it's fully functional and a good starting point.
+The recipe is open source, so I'll happily take feedback and contributions to improve it.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>Recipe source on GitHub - <a href="https://github.com/devlead/Cake.ClickOnce.Recipe">github.com/devlead/Cake.ClickOnce.Recipe</a></li>
+<li>Recipe on NuGet.org - <a href="https://www.nuget.org/packages/Cake.ClickOnce.Recipe/">nuget.org/packages/Cake.ClickOnce.Recipe</a></li>
+<li>Example repository on GitHub - <a href="https://github.com/devlead/Cake.ClickOnce.Recipe.Example">github.com/devlead/Cake.ClickOnce.Recipe.Example</a></li>
+<li>Cake - <a href="https://cakebuild.net/">cakebuild.net</a></li>
+</ul>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2021/2021-03-03-introducing-cake-clickonce-recipe.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>
