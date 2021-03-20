@@ -66,13 +66,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -108,7 +108,7 @@
   <div class="container"> 
     <div class="row">
       <div id="content" class="col-md-12">  
-        <p>A couple of years ago I blogged <a href="/posts/2017/2017-07-09-dispelling-the-magic">Dispelling the magic!</a>, a post explaining the internals of the <a href="https://cakebuild.net">Cake</a> build orchestration tool, with that post as a proof of concept I created <a href="https://www.nuget.org/packages/Cake.Bridge">Cake.Bridge</a> assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.</p>
+        <p>A couple of years ago I blogged <a href="/posts/2017/2017-07-09-dispelling-the-magic">Dispelling the magic!</a>, a post explaining the internals of the <a href="https://cakebuild.net/">Cake</a> build orchestration tool, with that post as a proof of concept I created <a href="https://www.nuget.org/packages/Cake.Bridge">Cake.Bridge</a> assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.</p>
 <h2 id="the-need">The Need</h2>
 <p>Cake has some real nice testable abstractions around working with the filesystem, processes, tools, etc. and for a .NET project, we had just that need. But a static instance isn't very testable, and for most of our .NET projects (console apps, APIs, Azure Functions, WPF, etc.) we now use dependency injection using <a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/">Microsoft.Extensions.DependencyInjection</a>.</p>
 <p>So with that in mind, I created an extension method to <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-5.0">IServiceCollection</a> that easily provided me a way to get a <a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/">IFileSystem</a> injected and utilizing the <a href="https://cakebuild.net/api/Cake.Testing/FakeFileSystem/">FakeFileSystem</a> provided by <a href="https://www.nuget.org/packages/Cake.Testing">Cake.Testing</a> for testing.

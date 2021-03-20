@@ -5,8 +5,525 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Fri, 19 Mar 2021 08:02:08 GMT</pubDate>
-		<lastBuildDate>Fri, 19 Mar 2021 08:02:08 GMT</lastBuildDate>
+		<pubDate>Sat, 20 Mar 2021 21:41:20 GMT</pubDate>
+		<lastBuildDate>Sat, 20 Mar 2021 21:41:20 GMT</lastBuildDate>
+		<item>
+			<title>Introducing DPI</title>
+			<link>https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi</link>
+			<description>A DevOps tool to inspect dependencies and report to Azure Log Analytics</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/03/16/5e783ec1-b7cf-aaac-bf41-582e4110dfa9.png?sv=2019-12-12&amp;st=2021-03-15T19%253A51%253A42Z&amp;se=2031-03-16T19%253A51%253A42Z&amp;sr=b&amp;sp=r&amp;sig=0jvdk30dmb7ba7dKnLlfNMvY32nKHI1kqCxXzz3VhXo%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi</guid>
+			<pubDate>Sat, 20 Mar 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;When brought in as DevOps consultant or a new employee for that matter, one is often tasked with getting a clear picture of the current state of projects, how they work and fit together.&lt;br /&gt;&lt;br /&gt;
+A big part of this initial and ongoing is to analyze and audit dependencies, which is why I've created &lt;code&gt;dpi&lt;/code&gt; a tool that both locally and as part of your DevOps pipeline can analyze your repository projects dependencies and report to Azure Log Analytics, console, and files.&lt;/p&gt;
+&lt;h2 id="the-tools-initial-scope"&gt;The tool's initial scope&lt;/h2&gt;
+&lt;p&gt;In this initial version, focus has been fairly complete support for C# .NET NuGet package dependencies, and the tool currently supports analyzing and reporting NuGet package dependencies for:&lt;/p&gt;
+&lt;ul class="contains-task-list"&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; C# project files&lt;/li&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; MS Build Project assets&lt;/li&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; NuGet Package config files&lt;/li&gt;
+&lt;li&gt;Cake script
+&lt;ul class="contains-task-list"&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Addins&lt;/li&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Tools&lt;/li&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Modules&lt;/li&gt;
+&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Recipes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="tool-value-proposition"&gt;Tool value proposition?&lt;/h2&gt;
+&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/17/0f47c134-5029-94f4-7a4e-07d4cd5b5d77.png?sv=2019-12-12&amp;st=2021-03-16T20%3A08%3A30Z&amp;se=2031-03-17T20%3A08%3A30Z&amp;sr=b&amp;sp=r&amp;sig=ZXq2a0u1x0ows1MPnkzgCWtLMz8fjvJLXvGtyVeu0dE%3D" alt="KQL Collage" align="right" width="600" height="426" /&gt;
+&lt;p&gt;Analyzing and reporting dependencies to a central place enables you to discover, correlate, and aggregate dependencies across multiple locations. &lt;code&gt;dpi&lt;/code&gt; reports its findings to an Azure Log Analytics workspace, which provides an efficient way to store and query large amounts of tabular data using &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677"&gt;KQL - Kusto Query Language&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This enables you to quickly tackle several scenarios i.e&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Find which repositories have certain dependencies&lt;/li&gt;
+&lt;li&gt;Identify which versions of dependencies used&lt;/li&gt;
+&lt;li&gt;Most / least used dependencies&lt;/li&gt;
+&lt;li&gt;If a dependency is used anywhere&lt;/li&gt;
+&lt;li&gt;Follow dependency usage over time&lt;/li&gt;
+&lt;li&gt;Only limited outbound/one-way http traffic with analytics data to one common endpoint&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br /&gt;
+&lt;h2 id="acquiring-the-tool"&gt;Acquiring the tool&lt;/h2&gt;
+&lt;h3 id="requirements"&gt;Requirements&lt;/h3&gt;
+&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/64b64f7a-9eaa-3753-71e5-781a58a6d188.png?sv=2019-12-12&amp;st=2021-03-17T17%3A08%3A25Z&amp;se=2031-03-18T17%3A08%3A25Z&amp;sr=b&amp;sp=r&amp;sig=1iNd2EAsow19wsG8M2Av69Y52BjqUpzKl13bXiQxZ%2FY%3D" alt="Azure Log Analytics Workspace Agents management" align="right" /&gt;
+&lt;p&gt;&lt;code&gt;dpi&lt;/code&gt; is a .NET 5 Tool, so .NET 5 SDK is required to be installed - you can find the download and install the latest version of the .NET SDK from &lt;a href="https://get.dot.net/"&gt;get.dot.net&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The tool is published to and distributed via &lt;a href="https://www.nuget.org/packages/DPI/"&gt;NuGet.org&lt;/a&gt;, but you could also upload it to your internal NuGet feed and have your users and pipelines obtain it from there.&lt;/p&gt;
+&lt;p&gt;To report you also need an Azure Log Analytics workspace, and the tool uses Workspace Id and Key (either primary or secondary, both work), you'll find those under &amp;quot;Agents management&amp;quot;&lt;/p&gt;
+&lt;br /&gt;
+&lt;h3 id="installing-globally"&gt;Installing globally&lt;/h3&gt;
+&lt;p&gt;.NET Tools can be installed globally for the current user using the .NET SDK CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global DPI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once installed the tool will be available anywhere for the current user as &lt;code&gt;dotnet tool run dpi&lt;/code&gt;, &lt;code&gt;dotnet dpi&lt;/code&gt;, or just &lt;code&gt;dpi&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="installing-via-tool-manifest"&gt;Installing via Tool manifest&lt;/h3&gt;
+&lt;p&gt;My preferred way to install and maintain a .NET tool is using a .NET local tool manifest file added to your repository, this means which tools are used and their specific versions is maintained within the repository.&lt;/p&gt;
+&lt;p&gt;If you don't have a manifest in your repository already, the easiest way to create a new manifest is by using the .NET SDK CLI in your repo root.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;then or if you already have a manifest you add the tool&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install DPI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And the tool is now within the repository available as &lt;code&gt;dotnet tool run dpi&lt;/code&gt; or &lt;code&gt;dotnet dpi&lt;/code&gt;, then your pipelines and anyone cloning your repository can obtain all your specified tools with the same versions as you're using by executing&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool restore
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;h3 id="nuget-analyze-command"&gt;NuGet Analyze command&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;dpi nuget [SourcePath] [NUGET OPTIONS] analyze [ANALYZE OPTIONS]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The NuGet analyze command will inventory the specified path recursively for known files containing references to NuGet packages and output its findings to the console, the current directory will be used if no path specified.&lt;/p&gt;
+&lt;h4 id="example-analyzing-current-directory"&gt;Example analyzing current directory&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget analyze
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="example-analyzing-specific-directory"&gt;Example analyzing specific directory&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget ./path/to/folder analyze
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="nuget-report-command"&gt;NuGet Report command&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;dpi nuget [SourcePath] [NUGET OPTIONS] report [REPORT OPTIONS]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The NuGet report command will beyond analyze also report tools findings as a custom log to Azure Log Analytics.&lt;/p&gt;
+&lt;h4 id="example-analyzing-and-reporting-current-directory"&gt;Example analyzing and reporting current directory&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget report --workspace &amp;lt;WORKSPACEID&amp;gt; --sharedkey &amp;lt;SHAREDKEY&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="example-analyzing-and-reporting-specific-directory"&gt;Example analyzing and reporting specific directory&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget ./path/to/folder report --workspace &amp;lt;WORKSPACEID&amp;gt; --sharedkey &amp;lt;SHAREDKEY&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Azure Log Analytics Workspace ID and Key can also be passed as environment variables &lt;code&gt;NuGetReportSettings_WorkspaceId&lt;/code&gt; and &lt;code&gt;NuGetReportSettings_SharedKey&lt;/code&gt;, which is the preferred way when passing secrets in a DevOps pipeline, the result of nuget analyze is reported to custom log &lt;code&gt;NuGetReport_CL&lt;/code&gt; in the specified workspace.&lt;/p&gt;
+&lt;h3 id="console-output-formats"&gt;Console output formats&lt;/h3&gt;
+&lt;p&gt;By using the &lt;code&gt;--output &amp;lt;FORMAT&amp;gt;&lt;/code&gt; option you can change the console output of the tools analyze result, currently, the tool supports the following formats&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;JSON - output in a machine consumable JSON format&lt;/li&gt;
+&lt;li&gt;TABLE - outputs a nicely formatted table format&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(You can use the &lt;code&gt;--file &amp;lt;FILEPATH&amp;gt;&lt;/code&gt; option to output to file instead of console)&lt;/p&gt;
+&lt;h4 id="example-analyzing-and-outputting-as-json"&gt;Example analyzing and outputting as json&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget --output json analyze
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;[
+  {
+    &amp;quot;sessionId&amp;quot;: &amp;quot;b770baf0-8eb7-496f-aa19-770f36838689&amp;quot;,
+    &amp;quot;buildProvider&amp;quot;: &amp;quot;Local&amp;quot;,
+    &amp;quot;platformFamily&amp;quot;: &amp;quot;Windows&amp;quot;,
+    &amp;quot;buildNo&amp;quot;: &amp;quot;202103181806&amp;quot;,
+    &amp;quot;buildSCM&amp;quot;: &amp;quot;dpi&amp;quot;,
+    &amp;quot;buildVersion&amp;quot;: null,
+    &amp;quot;sourceType&amp;quot;: &amp;quot;CSProj&amp;quot;,
+    &amp;quot;source&amp;quot;: &amp;quot;TestProj/TestProj.csproj&amp;quot;,
+    &amp;quot;targetFramework&amp;quot;: &amp;quot;net5.0&amp;quot;,
+    &amp;quot;packageId&amp;quot;: &amp;quot;Microsoft.Extensions.DependencyInjection&amp;quot;,
+    &amp;quot;version&amp;quot;: &amp;quot;5.0.1&amp;quot;,
+    &amp;quot;timestamp&amp;quot;: &amp;quot;2021-03-18T18:06:30.0178489+00:00&amp;quot;,
+    &amp;quot;Computer&amp;quot;: &amp;quot;HAL&amp;quot;
+  },
+  {
+    &amp;quot;sessionId&amp;quot;: &amp;quot;b770baf0-8eb7-496f-aa19-770f36838689&amp;quot;,
+    &amp;quot;buildProvider&amp;quot;: &amp;quot;Local&amp;quot;,
+    &amp;quot;platformFamily&amp;quot;: &amp;quot;Windows&amp;quot;,
+    &amp;quot;buildNo&amp;quot;: &amp;quot;202103181806&amp;quot;,
+    &amp;quot;buildSCM&amp;quot;: &amp;quot;dpi&amp;quot;,
+    &amp;quot;buildVersion&amp;quot;: null,
+    &amp;quot;sourceType&amp;quot;: &amp;quot;CSProj&amp;quot;,
+    &amp;quot;source&amp;quot;: &amp;quot;TestProj/TestProj.csproj&amp;quot;,
+    &amp;quot;targetFramework&amp;quot;: &amp;quot;net5.0&amp;quot;,
+    &amp;quot;packageId&amp;quot;: &amp;quot;Cake.Core&amp;quot;,
+    &amp;quot;version&amp;quot;: &amp;quot;1.1.0&amp;quot;,
+    &amp;quot;timestamp&amp;quot;: &amp;quot;2021-03-18T18:06:30.0178489+00:00&amp;quot;,
+    &amp;quot;Computer&amp;quot;: &amp;quot;HAL&amp;quot;
+  }
+]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This means that you as an example in PowerShell could do something like the below script to get all versions of &lt;code&gt;YamlDotNet&lt;/code&gt; used.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;dotnet dpi nuget --output json analyze `
+  | ConvertFrom-Json `
+  | ForEach-Object { $_ } `
+  | Where-Object { $_.packageId -eq 'YamlDotNet' } `
+  | ForEach-Object version
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="example-analyzing-and-outputting-as-table"&gt;Example analyzing and outputting as table&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget --output table analyze
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/2465161d-a1c7-5401-b67e-8d84cf66911a.png?sv=2019-12-12&amp;amp;st=2021-03-17T18%3A21%3A33Z&amp;amp;se=2031-03-18T18%3A21%3A33Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=hsF2ReevVLx3mEaRmTumGikNQGuAJNGVD3FDB7zEOWM%3D" alt="Console example dpi table format" /&gt;&lt;/p&gt;
+&lt;br /&gt;
+&lt;h2 id="pipeline-examples"&gt;Pipeline examples&lt;/h2&gt;
+&lt;p&gt;As &lt;code&gt;dpi&lt;/code&gt; is just a command-line tool, you can just use the same commands in your build pipeline as you use in your shell of choice locally.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;dotnet tool restore&lt;/code&gt; - Restore .NET Tools (i.e. download and install &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dotnet dpi &amp;lt;COMMAND&amp;gt; [COMMAND OPTIONS] &amp;lt;SUBCOMMAND&amp;gt; [SUB COMMAND OPTIONS]&lt;/code&gt; - Execute &lt;code&gt;dpi&lt;/code&gt; i.e. &lt;code&gt;nuget&lt;/code&gt; &lt;code&gt;analyze&lt;/code&gt; / &lt;code&gt;report&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The below pipeline examples you'll see two options not previously mentioned&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--silent&lt;/code&gt; - Silent removes all console log output except the &lt;code&gt;table&lt;/code&gt; (&lt;code&gt;json&lt;/code&gt; will bet &amp;quot;silent&amp;quot; by default so output can be parsed by another tool.)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--buildversion&lt;/code&gt; - Build version is an option to pass metadata unique to the workflow, in this case, the unique run number from GitHub Action workflow, but could i.e. be asserted version from a tool like GitVersion.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="github-action-workflow-example"&gt;GitHub Action workflow example&lt;/h3&gt;
+&lt;p&gt;Below YAML example will&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Checks out code from the repository&lt;/li&gt;
+&lt;li&gt;Installs .NET SDK based on &lt;a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677"&gt;global.json&lt;/a&gt; in repository&lt;/li&gt;
+&lt;li&gt;Restore .NET Tools (i.e. &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Build project&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Analyze if secrets &lt;strong&gt;aren't&lt;/strong&gt; available (i.e. a fork pull request)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Report if secrets &lt;strong&gt;are&lt;/strong&gt; available (i.e. merged into &lt;code&gt;main&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;name: Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  NuGetReportSettings_SharedKey: ${{ secrets.NUGETREPORTSETTINGS_SHAREDKEY }}
+  NuGetReportSettings_WorkspaceId: ${{ secrets.NUGETREPORTSETTINGS_WORKSPACEID }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Get the sources
+        uses: actions/checkout&amp;#64;v2
+
+      - name: Install .NET Core SDK
+        uses: actions/setup-dotnet&amp;#64;v1
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Build Project
+        run: dotnet build
+
+      - name: Run DPI Analyze
+        if: ${{ env.NuGetReportSettings_SharedKey == null || env.NuGetReportSettings_WorkspaceId == null }}
+        shell: bash
+        run: dotnet dpi nuget --silent --output table analyze --buildversion $GITHUB_RUN_NUMBER
+
+      - name: Run DPI Report
+        if: ${{ env.NuGetReportSettings_SharedKey != null &amp;amp;&amp;amp; env.NuGetReportSettings_WorkspaceId != null }}
+        shell: bash
+        run: dotnet dpi nuget --silent --output table report --buildversion $GITHUB_RUN_NUMBER
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+&lt;h3 id="azure-devops-pipelines-example"&gt;Azure DevOps Pipelines example&lt;/h3&gt;
+&lt;p&gt;Below YAML example will&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Checks out code from the repository&lt;/li&gt;
+&lt;li&gt;Installs .NET SDK based on &lt;a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677"&gt;global.json&lt;/a&gt; in the repository&lt;/li&gt;
+&lt;li&gt;Restore .NET Tools (i.e. &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Build project&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Analyze if it's a pull request&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Report if executing in the &lt;code&gt;main&lt;/code&gt; branch&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: UseDotNet&amp;#64;2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    packageType: sdk
+    useGlobalJson: true
+
+- script: dotnet tool restore
+  displayName: 'Restore .NET Tools'
+
+- script: dotnet build src
+  displayName: 'Build Project'
+
+- script: dotnet dpi nuget --silent --output table analyze --buildversion &amp;quot;$(Build.BuildNumber)&amp;quot;
+  displayName: Run DPI Analyze
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+
+- script: dotnet dpi nuget --silent --output table report --buildversion &amp;quot;$(Build.BuildNumber)&amp;quot;
+  displayName: Run DPI Report
+  env:
+    NuGetReportSettings_SharedKey: $(NUGETREPORTSETTINGS_SHAREDKEY)
+    NuGetReportSettings_WorkspaceId: $(NUGETREPORTSETTINGS_WORKSPACEID)
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/659e0331-59b9-a7b6-1a72-81c04208beaa.png?sv=2019-12-12&amp;st=2021-03-18T12%3A51%3A01Z&amp;se=2031-03-19T12%3A51%3A01Z&amp;sr=b&amp;sp=r&amp;sig=zEkSEyMfWQ5u4lJLxrPQHgooMxD10VmDNijiwnGkax0%3D" alt="Azure Pipelines Secrets" align="right" /&gt;
+&lt;br /&gt;
+&lt;p&gt;In the above example, the Azure Log Analytics Workspace Key and Id are passed as environment variables&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;NuGetReportSettings_SharedKey&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NuGetReportSettings_WorkspaceId&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;which are populated from pipeline secret variables&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;NUGETREPORTSETTINGS_SHAREDKEY&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NUGETREPORTSETTINGS_WORKSPACEID&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pipeline variables are administrated under your Pipeline details -&amp;gt; Edit -&amp;gt; Variables, they're made secrets by checking the &amp;quot;Keep this value secret&amp;quot; checkbox.&lt;/p&gt;
+&lt;p&gt;Secrets need to be explicitly defined in YAML to be accessible from tasks.&lt;/p&gt;
+&lt;br /&gt;
+&lt;h3 id="cake-build-examples"&gt;Cake build examples&lt;/h3&gt;
+&lt;p&gt;There's not yet a Cake addin or built-in support for &lt;code&gt;dpi&lt;/code&gt;, but still, it's fairly straightforward to use &lt;code&gt;dpi&lt;/code&gt; from a Cake script.&lt;/p&gt;
+&lt;h4 id="example-cake-script-dpi-installed-globally-via.net-tool-manifest"&gt;Example Cake script DPI installed globally / via .NET tool manifest&lt;/h4&gt;
+&lt;p&gt;The Cake script below will&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Setup context
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Version&lt;/code&gt; - Date based here but normally fetched from build provider or asserted from a tool (&lt;em&gt;i.e. GitVersion&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Analyze&lt;/code&gt; - flag for if &lt;code&gt;analyze&lt;/code&gt; or &lt;code&gt;report&lt;/code&gt; based on presence of environment variables&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Build project&lt;/li&gt;
+&lt;li&gt;Analyze or Report based on context &lt;code&gt;Analyze&lt;/code&gt; flag&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public record BuildData(string Version, bool Analyze);
+
+Setup(
+  static context =&amp;gt; new BuildData(
+    Version: FormattableString.Invariant(
+                $&amp;quot;{DateTime.UtcNow:yyyy.M.d}&amp;quot;
+              ),
+    Analyze: new[] {
+              &amp;quot;NuGetReportSettings_SharedKey&amp;quot;,
+              &amp;quot;NuGetReportSettings_WorkspaceId&amp;quot;
+            }
+            .Select(key =&amp;gt; context.EnvironmentVariable(key))
+            .Where(string.IsNullOrWhiteSpace)
+            .Any()
+  )
+);
+
+Task(&amp;quot;Build&amp;quot;)
+    .Does&amp;lt;BuildData&amp;gt;(
+        static (context, data) =&amp;gt; context.DotNetCoreBuild(
+          &amp;quot;src&amp;quot;,
+          new DotNetCoreBuildSettings {
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+              .WithProperty(&amp;quot;Version&amp;quot;, data.Version)
+          }
+    )
+  );
+
+Task(&amp;quot;DPI&amp;quot;)
+  .IsDependentOn(&amp;quot;Build&amp;quot;)
+  .Does&amp;lt;BuildData&amp;gt;(
+      static (context, data) =&amp;gt; context.DotNetCoreTool(
+        &amp;quot;dpi&amp;quot;,
+        new DotNetCoreToolSettings {
+            ArgumentCustomization = args =&amp;gt; args
+                                              .Append(&amp;quot;nuget&amp;quot;)
+                                              .Append(&amp;quot;--silent&amp;quot;)
+                                              .AppendSwitchQuoted(&amp;quot;--output&amp;quot;, &amp;quot;table&amp;quot;)
+                                              .Append(data.Analyze ? &amp;quot;analyze&amp;quot; : &amp;quot;report&amp;quot;)
+                                              .AppendSwitchQuoted(&amp;quot;--buildversion&amp;quot;, data.Version)
+        }
+      )
+  );
+
+Task(&amp;quot;Default&amp;quot;)
+  .IsDependentOn(&amp;quot;DPI&amp;quot;);
+
+RunTarget(Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="example-self-contained-cake-script"&gt;Example Self-contained Cake script&lt;/h4&gt;
+&lt;p&gt;The Cake script below will&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install the specified version of &lt;code&gt;dpi&lt;/code&gt; into Cake tool directory from NuGet&lt;/li&gt;
+&lt;li&gt;Setup context
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Version&lt;/code&gt; - Date based here but normally fetched from build provider or asserted from a tool (&lt;em&gt;i.e. GitVersion&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Analyze&lt;/code&gt; - flag for if &lt;code&gt;analyze&lt;/code&gt; or &lt;code&gt;report&lt;/code&gt; based on presence of environment variables&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Build project&lt;/li&gt;
+&lt;li&gt;Analyze or Report based on context &lt;code&gt;Analyze&lt;/code&gt; flag&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#tool dotnet:?package=DPI&amp;amp;version=2021.3.16.28
+
+public record BuildData(string Version, bool Analyze);
+
+Setup(
+  static context =&amp;gt; new BuildData(
+    Version: FormattableString.Invariant(
+                $&amp;quot;{DateTime.UtcNow:yyyy.M.d}&amp;quot;
+              ),
+    Analyze: new[] {
+              &amp;quot;NuGetReportSettings_SharedKey&amp;quot;,
+              &amp;quot;NuGetReportSettings_WorkspaceId&amp;quot;
+            }
+            .Select(key =&amp;gt; context.EnvironmentVariable(key))
+            .Where(string.IsNullOrWhiteSpace)
+            .Any()
+  )
+);
+
+Task(&amp;quot;Build&amp;quot;)
+    .Does&amp;lt;BuildData&amp;gt;(
+        static (context, data) =&amp;gt; context.DotNetCoreBuild(
+          &amp;quot;src&amp;quot;,
+          new DotNetCoreBuildSettings {
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+              .WithProperty(&amp;quot;Version&amp;quot;, data.Version)
+          }
+    )
+  );
+
+Task(&amp;quot;DPI&amp;quot;)
+  .IsDependentOn(&amp;quot;Build&amp;quot;)
+  .Does&amp;lt;BuildData&amp;gt;(
+      static (context, data) =&amp;gt; context.StartProcess(
+        context.Tools.Resolve(&amp;quot;dpi&amp;quot;) ?? context.Tools.Resolve(&amp;quot;dpi.exe&amp;quot;),
+        new ProcessSettings {
+            Arguments = new ProcessArgumentBuilder()
+                                                .Append(&amp;quot;nuget&amp;quot;)
+                                                .Append(&amp;quot;--silent&amp;quot;)
+                                                .AppendSwitchQuoted(&amp;quot;--output&amp;quot;, &amp;quot;table&amp;quot;)
+                                                .Append(data.Analyze ? &amp;quot;analyze&amp;quot; : &amp;quot;report&amp;quot;)
+                                                .AppendSwitchQuoted(&amp;quot;--buildversion&amp;quot;, data.Version)
+        }
+    )
+  );
+
+Task(&amp;quot;Default&amp;quot;)
+  .IsDependentOn(&amp;quot;DPI&amp;quot;);
+
+RunTarget(Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+&lt;h2 id="analyzing-the-data"&gt;Analyzing the data&lt;/h2&gt;
+&lt;p&gt;NuGet package references end up as a custom log named &lt;code&gt;NuGetReport_CL&lt;/code&gt; in your Azure Log Analytics Workspace, it will automatically as data is ingested infer types (&lt;code&gt;dates&lt;/code&gt;,&lt;code&gt;strings&lt;/code&gt;, &lt;code&gt;guids&lt;/code&gt;, etc.) and using &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677"&gt;KQL (Kusto Query Language)&lt;/a&gt; you can now start to explore discover, correlate and aggregate.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/927adaa4-2902-74f1-e587-44377b7131e2.png?sv=2019-12-12&amp;amp;st=2021-03-18T14%3A49%3A47Z&amp;amp;se=2031-03-19T14%3A49%3A47Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=4eUp0%2F4y2jRxH1rCXJbz25%2BteDLSKSuiNv0V9oWti20%3D" alt="Azure Log Analytics Workspace General Logs NuGetReport_CL" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;(Tip there's a &lt;a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677"&gt;Log Analytics tutorial&lt;/a&gt; on &lt;a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677"&gt;Microsoft Docs&lt;/a&gt; if you're new to Azure Log Analytics)&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="top-5-used-packages"&gt;Top 5 used packages&lt;/h3&gt;
+&lt;p&gt;The below query counts unique repositories group by package id and returns the five with the highest package count.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-fsharp"&gt;NuGetReport_CL
+| where TimeGenerated &amp;gt;= ago(2d)
+| summarize Count = dcount(buildSCM_s) by packageId_s
+| order by Count desc, packageId_s asc
+| take 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+&lt;h3 id="top-5-used-packages-by-last-report-per-repository"&gt;Top 5 used packages by last report per repository&lt;/h3&gt;
+&lt;p&gt;When querying you in general just want the latest set of data per repository, to solve this you can use the fact that each report execution has a unique session-id, and each log has a date/time when ingested.&lt;/p&gt;
+&lt;p&gt;By fetching the last session-id we can get a more correct picture of package usage, as a package could have been removed/updated between reports. There are several ways to solve this, in the example below, we use the &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/arg-max-aggfunction?WT.mc_id=AZ-MVP-5002677"&gt;arg_max&lt;/a&gt; aggregation function to get the session id based on the highest time generated grouped by repository name using the &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/summarizeoperator?WT.mc_id=AZ-MVP-5002677"&gt;summarize&lt;/a&gt; operator.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-fsharp"&gt;NuGetReport_CL
+| where TimeGenerated &amp;gt;= ago(2d)
+| summarize arg_max(TimeGenerated, sessionId_g) by buildSCM_s
+| join NuGetReport_CL on $left.sessionId_g == $right.sessionId_g
+| summarize Count = dcount(buildSCM_s) by packageId_s
+| order by Count desc, packageId_s asc
+| take 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br /&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/20/top5packagesquery.gif?sp=r&amp;amp;st=2021-03-19T11:32:00Z&amp;amp;se=2031-03-21T11:32:00Z&amp;amp;sv=2020-02-10&amp;amp;sr=b&amp;amp;sig=hMWNA6rshw2MfQ8WmufiaLcJ%2FaektrDjnhsu6qotrSo%3D" alt="Query Top 5 used packages by last report per repository" /&gt;&lt;/p&gt;
+&lt;br /&gt;
+&lt;h3 id="custom-log-nugetreport_cl-columns"&gt;Custom log NuGetReport_CL columns&lt;/h3&gt;
+&lt;p&gt;Above were just a couple of examples of NuGet package references queries, but there are almost endless possibilities, and the columns to your disposable are&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;Example value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;TimeGenerated&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Date/time &lt;strong&gt;UTC&lt;/strong&gt; data ingested&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2021-03-18T15:07:06.46Z&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Computer&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Machine name log generated on&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;fv-az68-89&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;buildVersion_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Value passed using &lt;code&gt;--buildversion&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2021.03.18.18138&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;buildNo_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Build number from build provider&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;664953123-3544&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;timestamp_t&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Date/time &lt;strong&gt;UTC&lt;/strong&gt; data reported&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2021-03-18T15:07:04.798Z&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;platformFamily_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Operating system reported from&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Linux&lt;/code&gt;, &lt;code&gt;OSX&lt;/code&gt;, &lt;code&gt;Window&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;buildSCM_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Source control reference&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;devlead/DPI&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;buildProvider_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Build provider&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;GitHubActions&lt;/code&gt;, &lt;code&gt;AppVeyor&lt;/code&gt;, &lt;code&gt;AzurePipelinesHosted&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;source_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Relative file path where references found&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;src/DPI/DPI.csproj&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sourceType_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Type of source file&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;CSProj&lt;/code&gt;, &lt;code&gt;Cake&lt;/code&gt;, &lt;code&gt;DotNetToolsManifest&lt;/code&gt;, &lt;code&gt;PackagesConfig&lt;/code&gt;, &lt;code&gt;ProjectAssets&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;packageId_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;NuGet package id&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Cake.Bridge.DependencyInjection&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;version_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;NuGet package version&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0.5.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;sessionId_g&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Unique correlation id for each report&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;b85f687f-9e34-43c6-8a45-f8b803b373ce&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;targetFramework_s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Package .NET target framework&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;net5.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;br /&gt;
+&lt;h2 id="future"&gt;Future&lt;/h2&gt;
+&lt;p&gt;This project was initially done for my own fun and profit, and during that process realized that this can be really useful.&lt;/p&gt;
+&lt;p&gt;There's currently no set roadmap, but there are a few things on my radar that I would like to add support for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker images&lt;/li&gt;
+&lt;li&gt;NPM packages&lt;/li&gt;
+&lt;li&gt;More .NET project types&lt;/li&gt;
+&lt;li&gt;SDK versions&lt;/li&gt;
+&lt;li&gt;Reporting to more services and formats&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And that I would happily take contributions in form of PRs and issues, the code is open-source and available on GitHub at &lt;a href="https://github.com/devlead/DPI"&gt;github.com/devlead/DPI&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;dpi&lt;/code&gt; is starting to become a really versatile tool, it's a bit abstract to explain, and I've struggled with that a bit with this blog post, but hopefully, I've at least somewhat painted a picture of what's possible, and what problems it can help to solve. I've personally found the process of ingesting &amp;quot;raw&amp;quot; data and then querying both powerful and inspirational, some answers have led to going down rabbit holes of answering new questions.&lt;/p&gt;
+&lt;p&gt;Please take it for a spin and if you have any questions, suggestions, or even opinions please feel free to reach out.&lt;/p&gt;
+&lt;h2 id="thanks"&gt;Thanks&lt;/h2&gt;
+&lt;p&gt;This tool was made possible thanks to a couple of excellent open source projects, special thanks go out to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/spectresystems/spectre.console"&gt;Spectre.Console&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/agc93/spectre.cli.extensions.dependencyinjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/dotnet/reactive"&gt;Reactive Extensions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cake-build/cake/"&gt;Cake&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Introducing Cake ClickOnce Recipe</title>
 			<link>https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe</link>
@@ -234,7 +751,7 @@ The recipe is open source, so I'll happily take feedback and contributions to im
 &lt;h2 id="templates"&gt;Templates&lt;/h2&gt;
 &lt;p&gt;A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like &lt;code&gt;console&lt;/code&gt;, &lt;code&gt;classlib&lt;/code&gt;, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given &lt;a href="https://dotnet.microsoft.com/download/dotnet/5.0"&gt;.NET 5 SDK&lt;/a&gt; installed, easily yourself can try and take a look at everything discussed in this post.&lt;/p&gt;
 &lt;h2 id="devlead-console-template"&gt;Devlead Console Template&lt;/h2&gt;
-&lt;p&gt;So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is &lt;a href="https://www.nuget.org"&gt;NuGet.org&lt;/a&gt;, where I've published my template as &lt;a href="https://www.nuget.org/packages/Devlead.Console.Template/"&gt;Devlead.Console.Template&lt;/a&gt;. Templates are installed using the &lt;code&gt;dotnet new&lt;/code&gt; command with &lt;code&gt;--install packageId&lt;/code&gt; parameter, in this case:&lt;/p&gt;
+&lt;p&gt;So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is &lt;a href="https://www.nuget.org/"&gt;NuGet.org&lt;/a&gt;, where I've published my template as &lt;a href="https://www.nuget.org/packages/Devlead.Console.Template/"&gt;Devlead.Console.Template&lt;/a&gt;. Templates are installed using the &lt;code&gt;dotnet new&lt;/code&gt; command with &lt;code&gt;--install packageId&lt;/code&gt; parameter, in this case:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new --install Devlead.Console.Template
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="dotnet-new-devleadconsole"&gt;dotnet new devleadconsole&lt;/h2&gt;
@@ -441,7 +958,7 @@ namespace MyConsoleApp.Commands.Validation
 			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/12/c2a643e9-2c63-361b-b458-a647352ebe87.png?sv=2019-12-12&amp;st=2021-01-11T10%253A13%253A57Z&amp;se=2031-01-12T10%253A13%253A57Z&amp;sr=b&amp;sp=r&amp;sig=qInj%252F3o1X2jmpZR1KQIWUgaYF5S8c9zJz0l7zZVYmWg%253D" length="0" type="image" />
 			<guid>https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection</guid>
 			<pubDate>Tue, 12 Jan 2021 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;A couple of years ago I blogged &lt;a href="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic"&gt;Dispelling the magic!&lt;/a&gt;, a post explaining the internals of the &lt;a href="https://cakebuild.net"&gt;Cake&lt;/a&gt; build orchestration tool, with that post as a proof of concept I created &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;Cake.Bridge&lt;/a&gt; assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.&lt;/p&gt;
+			<content:encoded>&lt;p&gt;A couple of years ago I blogged &lt;a href="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic"&gt;Dispelling the magic!&lt;/a&gt;, a post explaining the internals of the &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; build orchestration tool, with that post as a proof of concept I created &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;Cake.Bridge&lt;/a&gt; assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.&lt;/p&gt;
 &lt;h2 id="the-need"&gt;The Need&lt;/h2&gt;
 &lt;p&gt;Cake has some real nice testable abstractions around working with the filesystem, processes, tools, etc. and for a .NET project, we had just that need. But a static instance isn't very testable, and for most of our .NET projects (console apps, APIs, Azure Functions, WPF, etc.) we now use dependency injection using &lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;Microsoft.Extensions.DependencyInjection&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;So with that in mind, I created an extension method to &lt;a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-5.0"&gt;IServiceCollection&lt;/a&gt; that easily provided me a way to get a &lt;a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/"&gt;IFileSystem&lt;/a&gt; injected and utilizing the &lt;a href="https://cakebuild.net/api/Cake.Testing/FakeFileSystem/"&gt;FakeFileSystem&lt;/a&gt; provided by &lt;a href="https://www.nuget.org/packages/Cake.Testing"&gt;Cake.Testing&lt;/a&gt; for testing.
@@ -908,48 +1425,6 @@ RunTarget(target);
 &lt;p&gt;and more features are planned.&lt;/p&gt;
 &lt;p&gt;You can find the complete list of available methods with examples are available on the Cake web site at:
 &lt;a href="https://cakebuild.net/dsl/kudu/"&gt;cakebuild.net/dsl/kudu/&lt;/a&gt;&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Polyfill with PowerShell</title>
-			<link>https://www.devlead.se/posts/2017/2017-08-27-polyfill-with-powershell</link>
-			<description>Spackle missing pieces on legacy versions of PowerShell</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2017/2017-08-27-polyfill-with-powershell</guid>
-			<pubDate>Sun, 20 Aug 2017 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;When writing scripts, targeting multiple runtime versions can be really painful, scripts can be forked in different files or contain hairy conditional statements to handle differences/missing between versions of PowerShell runtime/modules, resulting in unreadable and unmaintainable spaghetti code.&lt;/p&gt;
-&lt;p&gt;What if you instead detect missing commands and supply an implementation for those when needed? This would allow you to have your scripts look the same and basically be agnostic to the which runtime it’s running on, making code more concise and easier to maintain.&lt;/p&gt;
-&lt;p&gt;The technique for this is called polyfilling and is common practise in web development where things can differ between browser versions and vendors.&lt;/p&gt;
-&lt;p&gt;It turns out it’s fairly simple to do in PowerShell, I’ll demonstrate this using the &lt;a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/expand-archive?view=powershell-5.0"&gt;Expand-Archive&lt;/a&gt; command that was introduced in PowerShell 5, which extracts files from a specified archive&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;Expand-Archive
-      -DestinationPath] &amp;lt;String&amp;gt;
-      -LiteralPath &amp;lt;String&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It’ll obviously fail miserably on previous versions of PowerShell&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6b6ac33f-a389-ab22-e0e7-533d069770ce.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A57%3A25Z&amp;amp;se=2031-01-11T12%3A57%3A25Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=mbq3sabMzSdHFGGntTGEUJ3Ya%2BaalzKv3zX2U2svLXA%3D" alt="Expand-Archive failes on previous versions of PowerShell" /&gt;&lt;/p&gt;
-&lt;p&gt;As PowerShell has the full power of .NET we can utilize the ZipFile class that has been provided since .NET 4.5 (&lt;em&gt;for even older versions of PowerShell we could also potentially just shell out to 7zip or similar command line utility or utilize 3rd party .NET assembly, as we can do anything in our polyfill that’s possible PowerShell&lt;/em&gt;).
-Such a polyfill could look something like below:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;if (-not (Get-Command Expand-Archive -ErrorAction SilentlyContinue))
-{
-  &amp;amp; {
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    function global:Expand-Archive
-    {
-        param([string]$Path, [string]$DestinationPath)
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($Path, $DestinationPath)
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The above script checks if command exists, if it doesn’t it’ll execute a code block which will create a globally available function, with the parameters and functionality we expect. To use it in our scripts we dot source it into our script or shell
-&lt;code&gt;. .\Expand-Archive.Polyfill.ps1&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/32e374ff-3b83-e9eb-a0a7-39cac1d37cca.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A59%3A00Z&amp;amp;se=2031-01-11T12%3A59%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=ZPFzNZQHdnUgbLCeJAf9pfwFGg1N7VdOWHzO9A%2F0Xqs%3D" alt="Demonstraing Expand-Archive available" /&gt;&lt;/p&gt;
-&lt;p&gt;and it’ll be available for us to utilize just like we would have done in a newer version of PowerShell.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/02fd4235-bed7-d9ea-299b-4cbb38ec58b8.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A59%3A43Z&amp;amp;se=2031-01-11T12%3A59%3A43Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=DMrIzL%2FATJBZdm7cb6kkCKU7DZrKbTGJzTAycjgKO0k%3D" alt="Demonstrating usage of the polyfilled command" /&gt;&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Polyfilling is a very neat way having more homogenous and maintainable scripts, while also letting you adopt new commands and features, even if you have one or two old servers in the closet ;)&lt;/p&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A DevOps tool to inspect dependencies and report to Azure Log Analytics">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing DPI</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing DPI" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/03/16/5e783ec1-b7cf-aaac-bf41-582e4110dfa9.png?sv=2019-12-12&amp;st=2021-03-15T19%3A51%3A42Z&amp;se=2031-03-16T19%3A51%3A42Z&amp;sr=b&amp;sp=r&amp;sig=0jvdk30dmb7ba7dKnLlfNMvY32nKHI1kqCxXzz3VhXo%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/03/16/5e783ec1-b7cf-aaac-bf41-582e4110dfa9.png?sv=2019-12-12&amp;st=2021-03-15T19%3A51%3A42Z&amp;se=2031-03-16T19%3A51%3A42Z&amp;sr=b&amp;sp=r&amp;sig=0jvdk30dmb7ba7dKnLlfNMvY32nKHI1kqCxXzz3VhXo%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Introducing DPI
+          </h1>
+            <h2 class="subheading">A DevOps tool to inspect dependencies and report to Azure Log Analytics</h2>
+              <div class="meta">Published on Saturday, March 20, 2021</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/nuget" class="badge badge-light"> NuGet</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/azure-log-analytics" class="badge badge-light"> Azure Log Analytics</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>When brought in as DevOps consultant or a new employee for that matter, one is often tasked with getting a clear picture of the current state of projects, how they work and fit together.<br /><br />
+A big part of this initial and ongoing is to analyze and audit dependencies, which is why I've created <code>dpi</code> a tool that both locally and as part of your DevOps pipeline can analyze your repository projects dependencies and report to Azure Log Analytics, console, and files.</p>
+<h2 id="the-tools-initial-scope">The tool's initial scope</h2>
+<p>In this initial version, focus has been fairly complete support for C# .NET NuGet package dependencies, and the tool currently supports analyzing and reporting NuGet package dependencies for:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> C# project files</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> MS Build Project assets</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> NuGet Package config files</li>
+<li>Cake script
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Addins</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Tools</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Modules</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Recipes</li>
+</ul>
+</li>
+</ul>
+<h2 id="tool-value-proposition">Tool value proposition?</h2>
+<img src="https://cdn.devlead.se/clipimg-vscode/2021/03/17/0f47c134-5029-94f4-7a4e-07d4cd5b5d77.png?sv=2019-12-12&st=2021-03-16T20%3A08%3A30Z&se=2031-03-17T20%3A08%3A30Z&sr=b&sp=r&sig=ZXq2a0u1x0ows1MPnkzgCWtLMz8fjvJLXvGtyVeu0dE%3D" alt="KQL Collage" align="right" width="600" height="426" />
+<p>Analyzing and reporting dependencies to a central place enables you to discover, correlate, and aggregate dependencies across multiple locations. <code>dpi</code> reports its findings to an Azure Log Analytics workspace, which provides an efficient way to store and query large amounts of tabular data using <a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677">KQL - Kusto Query Language</a>.</p>
+<p>This enables you to quickly tackle several scenarios i.e</p>
+<ul>
+<li>Find which repositories have certain dependencies</li>
+<li>Identify which versions of dependencies used</li>
+<li>Most / least used dependencies</li>
+<li>If a dependency is used anywhere</li>
+<li>Follow dependency usage over time</li>
+<li>Only limited outbound/one-way http traffic with analytics data to one common endpoint</li>
+</ul>
+<br />
+<h2 id="acquiring-the-tool">Acquiring the tool</h2>
+<h3 id="requirements">Requirements</h3>
+<img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/64b64f7a-9eaa-3753-71e5-781a58a6d188.png?sv=2019-12-12&st=2021-03-17T17%3A08%3A25Z&se=2031-03-18T17%3A08%3A25Z&sr=b&sp=r&sig=1iNd2EAsow19wsG8M2Av69Y52BjqUpzKl13bXiQxZ%2FY%3D" alt="Azure Log Analytics Workspace Agents management" align="right" />
+<p><code>dpi</code> is a .NET 5 Tool, so .NET 5 SDK is required to be installed - you can find the download and install the latest version of the .NET SDK from <a href="https://get.dot.net/">get.dot.net</a>.</p>
+<p>The tool is published to and distributed via <a href="https://www.nuget.org/packages/DPI/">NuGet.org</a>, but you could also upload it to your internal NuGet feed and have your users and pipelines obtain it from there.</p>
+<p>To report you also need an Azure Log Analytics workspace, and the tool uses Workspace Id and Key (either primary or secondary, both work), you'll find those under &quot;Agents management&quot;</p>
+<br />
+<h3 id="installing-globally">Installing globally</h3>
+<p>.NET Tools can be installed globally for the current user using the .NET SDK CLI</p>
+<pre><code class="language-bash">dotnet tool install --global DPI
+</code></pre>
+<p>Once installed the tool will be available anywhere for the current user as <code>dotnet tool run dpi</code>, <code>dotnet dpi</code>, or just <code>dpi</code>.</p>
+<h3 id="installing-via-tool-manifest">Installing via Tool manifest</h3>
+<p>My preferred way to install and maintain a .NET tool is using a .NET local tool manifest file added to your repository, this means which tools are used and their specific versions is maintained within the repository.</p>
+<p>If you don't have a manifest in your repository already, the easiest way to create a new manifest is by using the .NET SDK CLI in your repo root.</p>
+<pre><code class="language-bash">dotnet new tool-manifest
+</code></pre>
+<p>then or if you already have a manifest you add the tool</p>
+<pre><code class="language-bash">dotnet tool install DPI
+</code></pre>
+<p>And the tool is now within the repository available as <code>dotnet tool run dpi</code> or <code>dotnet dpi</code>, then your pipelines and anyone cloning your repository can obtain all your specified tools with the same versions as you're using by executing</p>
+<pre><code class="language-bash">dotnet tool restore
+</code></pre>
+<br />
+<h2 id="usage">Usage</h2>
+<h3 id="nuget-analyze-command">NuGet Analyze command</h3>
+<p><code>dpi nuget [SourcePath] [NUGET OPTIONS] analyze [ANALYZE OPTIONS]</code></p>
+<p>The NuGet analyze command will inventory the specified path recursively for known files containing references to NuGet packages and output its findings to the console, the current directory will be used if no path specified.</p>
+<h4 id="example-analyzing-current-directory">Example analyzing current directory</h4>
+<pre><code class="language-bash">dotnet dpi nuget analyze
+</code></pre>
+<h4 id="example-analyzing-specific-directory">Example analyzing specific directory</h4>
+<pre><code class="language-bash">dotnet dpi nuget ./path/to/folder analyze
+</code></pre>
+<h3 id="nuget-report-command">NuGet Report command</h3>
+<p><code>dpi nuget [SourcePath] [NUGET OPTIONS] report [REPORT OPTIONS]</code></p>
+<p>The NuGet report command will beyond analyze also report tools findings as a custom log to Azure Log Analytics.</p>
+<h4 id="example-analyzing-and-reporting-current-directory">Example analyzing and reporting current directory</h4>
+<pre><code class="language-bash">dotnet dpi nuget report --workspace &lt;WORKSPACEID&gt; --sharedkey &lt;SHAREDKEY&gt;
+</code></pre>
+<h4 id="example-analyzing-and-reporting-specific-directory">Example analyzing and reporting specific directory</h4>
+<pre><code class="language-bash">dotnet dpi nuget ./path/to/folder report --workspace &lt;WORKSPACEID&gt; --sharedkey &lt;SHAREDKEY&gt;
+</code></pre>
+<p>Azure Log Analytics Workspace ID and Key can also be passed as environment variables <code>NuGetReportSettings_WorkspaceId</code> and <code>NuGetReportSettings_SharedKey</code>, which is the preferred way when passing secrets in a DevOps pipeline, the result of nuget analyze is reported to custom log <code>NuGetReport_CL</code> in the specified workspace.</p>
+<h3 id="console-output-formats">Console output formats</h3>
+<p>By using the <code>--output &lt;FORMAT&gt;</code> option you can change the console output of the tools analyze result, currently, the tool supports the following formats</p>
+<ul>
+<li>JSON - output in a machine consumable JSON format</li>
+<li>TABLE - outputs a nicely formatted table format</li>
+</ul>
+<p>(You can use the <code>--file &lt;FILEPATH&gt;</code> option to output to file instead of console)</p>
+<h4 id="example-analyzing-and-outputting-as-json">Example analyzing and outputting as json</h4>
+<pre><code class="language-bash">dotnet dpi nuget --output json analyze
+</code></pre>
+<pre><code class="language-json">[
+  {
+    &quot;sessionId&quot;: &quot;b770baf0-8eb7-496f-aa19-770f36838689&quot;,
+    &quot;buildProvider&quot;: &quot;Local&quot;,
+    &quot;platformFamily&quot;: &quot;Windows&quot;,
+    &quot;buildNo&quot;: &quot;202103181806&quot;,
+    &quot;buildSCM&quot;: &quot;dpi&quot;,
+    &quot;buildVersion&quot;: null,
+    &quot;sourceType&quot;: &quot;CSProj&quot;,
+    &quot;source&quot;: &quot;TestProj/TestProj.csproj&quot;,
+    &quot;targetFramework&quot;: &quot;net5.0&quot;,
+    &quot;packageId&quot;: &quot;Microsoft.Extensions.DependencyInjection&quot;,
+    &quot;version&quot;: &quot;5.0.1&quot;,
+    &quot;timestamp&quot;: &quot;2021-03-18T18:06:30.0178489+00:00&quot;,
+    &quot;Computer&quot;: &quot;HAL&quot;
+  },
+  {
+    &quot;sessionId&quot;: &quot;b770baf0-8eb7-496f-aa19-770f36838689&quot;,
+    &quot;buildProvider&quot;: &quot;Local&quot;,
+    &quot;platformFamily&quot;: &quot;Windows&quot;,
+    &quot;buildNo&quot;: &quot;202103181806&quot;,
+    &quot;buildSCM&quot;: &quot;dpi&quot;,
+    &quot;buildVersion&quot;: null,
+    &quot;sourceType&quot;: &quot;CSProj&quot;,
+    &quot;source&quot;: &quot;TestProj/TestProj.csproj&quot;,
+    &quot;targetFramework&quot;: &quot;net5.0&quot;,
+    &quot;packageId&quot;: &quot;Cake.Core&quot;,
+    &quot;version&quot;: &quot;1.1.0&quot;,
+    &quot;timestamp&quot;: &quot;2021-03-18T18:06:30.0178489+00:00&quot;,
+    &quot;Computer&quot;: &quot;HAL&quot;
+  }
+]
+</code></pre>
+<p>This means that you as an example in PowerShell could do something like the below script to get all versions of <code>YamlDotNet</code> used.</p>
+<pre><code class="language-powershell">dotnet dpi nuget --output json analyze `
+  | ConvertFrom-Json `
+  | ForEach-Object { $_ } `
+  | Where-Object { $_.packageId -eq 'YamlDotNet' } `
+  | ForEach-Object version
+</code></pre>
+<h4 id="example-analyzing-and-outputting-as-table">Example analyzing and outputting as table</h4>
+<pre><code class="language-bash">dotnet dpi nuget --output table analyze
+</code></pre>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/2465161d-a1c7-5401-b67e-8d84cf66911a.png?sv=2019-12-12&amp;st=2021-03-17T18%3A21%3A33Z&amp;se=2031-03-18T18%3A21%3A33Z&amp;sr=b&amp;sp=r&amp;sig=hsF2ReevVLx3mEaRmTumGikNQGuAJNGVD3FDB7zEOWM%3D" alt="Console example dpi table format" /></p>
+<br />
+<h2 id="pipeline-examples">Pipeline examples</h2>
+<p>As <code>dpi</code> is just a command-line tool, you can just use the same commands in your build pipeline as you use in your shell of choice locally.</p>
+<ol>
+<li><code>dotnet tool restore</code> - Restore .NET Tools (i.e. download and install <code>dpi</code>)</li>
+<li><code>dotnet dpi &lt;COMMAND&gt; [COMMAND OPTIONS] &lt;SUBCOMMAND&gt; [SUB COMMAND OPTIONS]</code> - Execute <code>dpi</code> i.e. <code>nuget</code> <code>analyze</code> / <code>report</code></li>
+</ol>
+<p>The below pipeline examples you'll see two options not previously mentioned</p>
+<ul>
+<li><code>--silent</code> - Silent removes all console log output except the <code>table</code> (<code>json</code> will bet &quot;silent&quot; by default so output can be parsed by another tool.)</li>
+<li><code>--buildversion</code> - Build version is an option to pass metadata unique to the workflow, in this case, the unique run number from GitHub Action workflow, but could i.e. be asserted version from a tool like GitVersion.</li>
+</ul>
+<h3 id="github-action-workflow-example">GitHub Action workflow example</h3>
+<p>Below YAML example will</p>
+<ol>
+<li>Checks out code from the repository</li>
+<li>Installs .NET SDK based on <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677">global.json</a> in repository</li>
+<li>Restore .NET Tools (i.e. <code>dpi</code>)</li>
+<li>Build project</li>
+<li><code>dpi</code> Analyze if secrets <strong>aren't</strong> available (i.e. a fork pull request)</li>
+<li><code>dpi</code> Report if secrets <strong>are</strong> available (i.e. merged into <code>main</code>)</li>
+</ol>
+<pre><code class="language-yaml">name: Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  NuGetReportSettings_SharedKey: ${{ secrets.NUGETREPORTSETTINGS_SHAREDKEY }}
+  NuGetReportSettings_WorkspaceId: ${{ secrets.NUGETREPORTSETTINGS_WORKSPACEID }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Get the sources
+        uses: actions/checkout&#64;v2
+
+      - name: Install .NET Core SDK
+        uses: actions/setup-dotnet&#64;v1
+
+      - name: Restore .NET Tools
+        run: dotnet tool restore
+
+      - name: Build Project
+        run: dotnet build
+
+      - name: Run DPI Analyze
+        if: ${{ env.NuGetReportSettings_SharedKey == null || env.NuGetReportSettings_WorkspaceId == null }}
+        shell: bash
+        run: dotnet dpi nuget --silent --output table analyze --buildversion $GITHUB_RUN_NUMBER
+
+      - name: Run DPI Report
+        if: ${{ env.NuGetReportSettings_SharedKey != null &amp;&amp; env.NuGetReportSettings_WorkspaceId != null }}
+        shell: bash
+        run: dotnet dpi nuget --silent --output table report --buildversion $GITHUB_RUN_NUMBER
+</code></pre>
+<br />
+<h3 id="azure-devops-pipelines-example">Azure DevOps Pipelines example</h3>
+<p>Below YAML example will</p>
+<ol>
+<li>Checks out code from the repository</li>
+<li>Installs .NET SDK based on <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677">global.json</a> in the repository</li>
+<li>Restore .NET Tools (i.e. <code>dpi</code>)</li>
+<li>Build project</li>
+<li><code>dpi</code> Analyze if it's a pull request</li>
+<li><code>dpi</code> Report if executing in the <code>main</code> branch</li>
+</ol>
+<pre><code class="language-yaml">name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: UseDotNet&#64;2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    packageType: sdk
+    useGlobalJson: true
+
+- script: dotnet tool restore
+  displayName: 'Restore .NET Tools'
+
+- script: dotnet build src
+  displayName: 'Build Project'
+
+- script: dotnet dpi nuget --silent --output table analyze --buildversion &quot;$(Build.BuildNumber)&quot;
+  displayName: Run DPI Analyze
+  condition: eq(variables['Build.Reason'], 'PullRequest')
+
+- script: dotnet dpi nuget --silent --output table report --buildversion &quot;$(Build.BuildNumber)&quot;
+  displayName: Run DPI Report
+  env:
+    NuGetReportSettings_SharedKey: $(NUGETREPORTSETTINGS_SHAREDKEY)
+    NuGetReportSettings_WorkspaceId: $(NUGETREPORTSETTINGS_WORKSPACEID)
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+</code></pre>
+<img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/659e0331-59b9-a7b6-1a72-81c04208beaa.png?sv=2019-12-12&st=2021-03-18T12%3A51%3A01Z&se=2031-03-19T12%3A51%3A01Z&sr=b&sp=r&sig=zEkSEyMfWQ5u4lJLxrPQHgooMxD10VmDNijiwnGkax0%3D" alt="Azure Pipelines Secrets" align="right" />
+<br />
+<p>In the above example, the Azure Log Analytics Workspace Key and Id are passed as environment variables</p>
+<ul>
+<li><code>NuGetReportSettings_SharedKey</code></li>
+<li><code>NuGetReportSettings_WorkspaceId</code></li>
+</ul>
+<p>which are populated from pipeline secret variables</p>
+<ul>
+<li><code>NUGETREPORTSETTINGS_SHAREDKEY</code></li>
+<li><code>NUGETREPORTSETTINGS_WORKSPACEID</code></li>
+</ul>
+<p>Pipeline variables are administrated under your Pipeline details -&gt; Edit -&gt; Variables, they're made secrets by checking the &quot;Keep this value secret&quot; checkbox.</p>
+<p>Secrets need to be explicitly defined in YAML to be accessible from tasks.</p>
+<br />
+<h3 id="cake-build-examples">Cake build examples</h3>
+<p>There's not yet a Cake addin or built-in support for <code>dpi</code>, but still, it's fairly straightforward to use <code>dpi</code> from a Cake script.</p>
+<h4 id="example-cake-script-dpi-installed-globally-via.net-tool-manifest">Example Cake script DPI installed globally / via .NET tool manifest</h4>
+<p>The Cake script below will</p>
+<ol>
+<li>Setup context
+<ul>
+<li><code>Version</code> - Date based here but normally fetched from build provider or asserted from a tool (<em>i.e. GitVersion</em>)</li>
+<li><code>Analyze</code> - flag for if <code>analyze</code> or <code>report</code> based on presence of environment variables</li>
+</ul>
+</li>
+<li>Build project</li>
+<li>Analyze or Report based on context <code>Analyze</code> flag</li>
+</ol>
+<pre><code class="language-csharp">public record BuildData(string Version, bool Analyze);
+
+Setup(
+  static context =&gt; new BuildData(
+    Version: FormattableString.Invariant(
+                $&quot;{DateTime.UtcNow:yyyy.M.d}&quot;
+              ),
+    Analyze: new[] {
+              &quot;NuGetReportSettings_SharedKey&quot;,
+              &quot;NuGetReportSettings_WorkspaceId&quot;
+            }
+            .Select(key =&gt; context.EnvironmentVariable(key))
+            .Where(string.IsNullOrWhiteSpace)
+            .Any()
+  )
+);
+
+Task(&quot;Build&quot;)
+    .Does&lt;BuildData&gt;(
+        static (context, data) =&gt; context.DotNetCoreBuild(
+          &quot;src&quot;,
+          new DotNetCoreBuildSettings {
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+              .WithProperty(&quot;Version&quot;, data.Version)
+          }
+    )
+  );
+
+Task(&quot;DPI&quot;)
+  .IsDependentOn(&quot;Build&quot;)
+  .Does&lt;BuildData&gt;(
+      static (context, data) =&gt; context.DotNetCoreTool(
+        &quot;dpi&quot;,
+        new DotNetCoreToolSettings {
+            ArgumentCustomization = args =&gt; args
+                                              .Append(&quot;nuget&quot;)
+                                              .Append(&quot;--silent&quot;)
+                                              .AppendSwitchQuoted(&quot;--output&quot;, &quot;table&quot;)
+                                              .Append(data.Analyze ? &quot;analyze&quot; : &quot;report&quot;)
+                                              .AppendSwitchQuoted(&quot;--buildversion&quot;, data.Version)
+        }
+      )
+  );
+
+Task(&quot;Default&quot;)
+  .IsDependentOn(&quot;DPI&quot;);
+
+RunTarget(Argument(&quot;target&quot;, &quot;Default&quot;));
+</code></pre>
+<h4 id="example-self-contained-cake-script">Example Self-contained Cake script</h4>
+<p>The Cake script below will</p>
+<ol>
+<li>Install the specified version of <code>dpi</code> into Cake tool directory from NuGet</li>
+<li>Setup context
+<ul>
+<li><code>Version</code> - Date based here but normally fetched from build provider or asserted from a tool (<em>i.e. GitVersion</em>)</li>
+<li><code>Analyze</code> - flag for if <code>analyze</code> or <code>report</code> based on presence of environment variables</li>
+</ul>
+</li>
+<li>Build project</li>
+<li>Analyze or Report based on context <code>Analyze</code> flag</li>
+</ol>
+<pre><code class="language-csharp">#tool dotnet:?package=DPI&amp;version=2021.3.16.28
+
+public record BuildData(string Version, bool Analyze);
+
+Setup(
+  static context =&gt; new BuildData(
+    Version: FormattableString.Invariant(
+                $&quot;{DateTime.UtcNow:yyyy.M.d}&quot;
+              ),
+    Analyze: new[] {
+              &quot;NuGetReportSettings_SharedKey&quot;,
+              &quot;NuGetReportSettings_WorkspaceId&quot;
+            }
+            .Select(key =&gt; context.EnvironmentVariable(key))
+            .Where(string.IsNullOrWhiteSpace)
+            .Any()
+  )
+);
+
+Task(&quot;Build&quot;)
+    .Does&lt;BuildData&gt;(
+        static (context, data) =&gt; context.DotNetCoreBuild(
+          &quot;src&quot;,
+          new DotNetCoreBuildSettings {
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+              .WithProperty(&quot;Version&quot;, data.Version)
+          }
+    )
+  );
+
+Task(&quot;DPI&quot;)
+  .IsDependentOn(&quot;Build&quot;)
+  .Does&lt;BuildData&gt;(
+      static (context, data) =&gt; context.StartProcess(
+        context.Tools.Resolve(&quot;dpi&quot;) ?? context.Tools.Resolve(&quot;dpi.exe&quot;),
+        new ProcessSettings {
+            Arguments = new ProcessArgumentBuilder()
+                                                .Append(&quot;nuget&quot;)
+                                                .Append(&quot;--silent&quot;)
+                                                .AppendSwitchQuoted(&quot;--output&quot;, &quot;table&quot;)
+                                                .Append(data.Analyze ? &quot;analyze&quot; : &quot;report&quot;)
+                                                .AppendSwitchQuoted(&quot;--buildversion&quot;, data.Version)
+        }
+    )
+  );
+
+Task(&quot;Default&quot;)
+  .IsDependentOn(&quot;DPI&quot;);
+
+RunTarget(Argument(&quot;target&quot;, &quot;Default&quot;));
+</code></pre>
+<br />
+<h2 id="analyzing-the-data">Analyzing the data</h2>
+<p>NuGet package references end up as a custom log named <code>NuGetReport_CL</code> in your Azure Log Analytics Workspace, it will automatically as data is ingested infer types (<code>dates</code>,<code>strings</code>, <code>guids</code>, etc.) and using <a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677">KQL (Kusto Query Language)</a> you can now start to explore discover, correlate and aggregate.</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/927adaa4-2902-74f1-e587-44377b7131e2.png?sv=2019-12-12&amp;st=2021-03-18T14%3A49%3A47Z&amp;se=2031-03-19T14%3A49%3A47Z&amp;sr=b&amp;sp=r&amp;sig=4eUp0%2F4y2jRxH1rCXJbz25%2BteDLSKSuiNv0V9oWti20%3D" alt="Azure Log Analytics Workspace General Logs NuGetReport_CL" /></p>
+<p><em>(Tip there's a <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677">Log Analytics tutorial</a> on <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677">Microsoft Docs</a> if you're new to Azure Log Analytics)</em></p>
+<h3 id="top-5-used-packages">Top 5 used packages</h3>
+<p>The below query counts unique repositories group by package id and returns the five with the highest package count.</p>
+<pre><code class="language-fsharp">NuGetReport_CL
+| where TimeGenerated &gt;= ago(2d)
+| summarize Count = dcount(buildSCM_s) by packageId_s
+| order by Count desc, packageId_s asc
+| take 5
+</code></pre>
+<br />
+<h3 id="top-5-used-packages-by-last-report-per-repository">Top 5 used packages by last report per repository</h3>
+<p>When querying you in general just want the latest set of data per repository, to solve this you can use the fact that each report execution has a unique session-id, and each log has a date/time when ingested.</p>
+<p>By fetching the last session-id we can get a more correct picture of package usage, as a package could have been removed/updated between reports. There are several ways to solve this, in the example below, we use the <a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/arg-max-aggfunction?WT.mc_id=AZ-MVP-5002677">arg_max</a> aggregation function to get the session id based on the highest time generated grouped by repository name using the <a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/summarizeoperator?WT.mc_id=AZ-MVP-5002677">summarize</a> operator.</p>
+<pre><code class="language-fsharp">NuGetReport_CL
+| where TimeGenerated &gt;= ago(2d)
+| summarize arg_max(TimeGenerated, sessionId_g) by buildSCM_s
+| join NuGetReport_CL on $left.sessionId_g == $right.sessionId_g
+| summarize Count = dcount(buildSCM_s) by packageId_s
+| order by Count desc, packageId_s asc
+| take 5
+</code></pre>
+<br />
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/03/20/top5packagesquery.gif?sp=r&amp;st=2021-03-19T11:32:00Z&amp;se=2031-03-21T11:32:00Z&amp;sv=2020-02-10&amp;sr=b&amp;sig=hMWNA6rshw2MfQ8WmufiaLcJ%2FaektrDjnhsu6qotrSo%3D" alt="Query Top 5 used packages by last report per repository" /></p>
+<br />
+<h3 id="custom-log-nugetreport_cl-columns">Custom log NuGetReport_CL columns</h3>
+<p>Above were just a couple of examples of NuGet package references queries, but there are almost endless possibilities, and the columns to your disposable are</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TimeGenerated</code></td>
+<td>Date/time <strong>UTC</strong> data ingested</td>
+<td><code>2021-03-18T15:07:06.46Z</code></td>
+</tr>
+<tr>
+<td><code>Computer</code></td>
+<td>Machine name log generated on</td>
+<td><code>fv-az68-89</code></td>
+</tr>
+<tr>
+<td><code>buildVersion_s</code></td>
+<td>Value passed using <code>--buildversion</code></td>
+<td><code>2021.03.18.18138</code></td>
+</tr>
+<tr>
+<td><code>buildNo_s</code></td>
+<td>Build number from build provider</td>
+<td><code>664953123-3544</code></td>
+</tr>
+<tr>
+<td><code>timestamp_t</code></td>
+<td>Date/time <strong>UTC</strong> data reported</td>
+<td><code>2021-03-18T15:07:04.798Z</code></td>
+</tr>
+<tr>
+<td><code>platformFamily_s</code></td>
+<td>Operating system reported from</td>
+<td><code>Linux</code>, <code>OSX</code>, <code>Window</code></td>
+</tr>
+<tr>
+<td><code>buildSCM_s</code></td>
+<td>Source control reference</td>
+<td><code>devlead/DPI</code></td>
+</tr>
+<tr>
+<td><code>buildProvider_s</code></td>
+<td>Build provider</td>
+<td><code>GitHubActions</code>, <code>AppVeyor</code>, <code>AzurePipelinesHosted</code></td>
+</tr>
+<tr>
+<td><code>source_s</code></td>
+<td>Relative file path where references found</td>
+<td><code>src/DPI/DPI.csproj</code></td>
+</tr>
+<tr>
+<td><code>sourceType_s</code></td>
+<td>Type of source file</td>
+<td><code>CSProj</code>, <code>Cake</code>, <code>DotNetToolsManifest</code>, <code>PackagesConfig</code>, <code>ProjectAssets</code></td>
+</tr>
+<tr>
+<td><code>packageId_s</code></td>
+<td>NuGet package id</td>
+<td><code>Cake.Bridge.DependencyInjection</code></td>
+</tr>
+<tr>
+<td><code>version_s</code></td>
+<td>NuGet package version</td>
+<td><code>0.5.0</code></td>
+</tr>
+<tr>
+<td><code>sessionId_g</code></td>
+<td>Unique correlation id for each report</td>
+<td><code>b85f687f-9e34-43c6-8a45-f8b803b373ce</code></td>
+</tr>
+<tr>
+<td><code>targetFramework_s</code></td>
+<td>Package .NET target framework</td>
+<td><code>net5.0</code></td>
+</tr>
+</tbody>
+</table>
+<br />
+<h2 id="future">Future</h2>
+<p>This project was initially done for my own fun and profit, and during that process realized that this can be really useful.</p>
+<p>There's currently no set roadmap, but there are a few things on my radar that I would like to add support for:</p>
+<ul>
+<li>Docker images</li>
+<li>NPM packages</li>
+<li>More .NET project types</li>
+<li>SDK versions</li>
+<li>Reporting to more services and formats</li>
+</ul>
+<p>And that I would happily take contributions in form of PRs and issues, the code is open-source and available on GitHub at <a href="https://github.com/devlead/DPI">github.com/devlead/DPI</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p><code>dpi</code> is starting to become a really versatile tool, it's a bit abstract to explain, and I've struggled with that a bit with this blog post, but hopefully, I've at least somewhat painted a picture of what's possible, and what problems it can help to solve. I've personally found the process of ingesting &quot;raw&quot; data and then querying both powerful and inspirational, some answers have led to going down rabbit holes of answering new questions.</p>
+<p>Please take it for a spin and if you have any questions, suggestions, or even opinions please feel free to reach out.</p>
+<h2 id="thanks">Thanks</h2>
+<p>This tool was made possible thanks to a couple of excellent open source projects, special thanks go out to:</p>
+<ul>
+<li><a href="https://github.com/spectresystems/spectre.console">Spectre.Console</a></li>
+<li><a href="https://github.com/agc93/spectre.cli.extensions.dependencyinjection">Spectre.Cli.Extensions.DependencyInjection</a></li>
+<li><a href="https://github.com/dotnet/reactive">Reactive Extensions</a></li>
+<li><a href="https://github.com/cake-build/cake/">Cake</a></li>
+<li><a href="https://github.com/devlead/Cake.Bridge.DependencyInjection">Cake.Bridge.DependencyInjection</a></li>
+</ul>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2021/2021-03-20-introducing-dpi.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

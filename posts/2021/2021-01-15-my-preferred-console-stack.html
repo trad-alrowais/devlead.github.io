@@ -66,13 +66,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -111,7 +111,7 @@
 <h2 id="templates">Templates</h2>
 <p>A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like <code>console</code>, <code>classlib</code>, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given <a href="https://dotnet.microsoft.com/download/dotnet/5.0">.NET 5 SDK</a> installed, easily yourself can try and take a look at everything discussed in this post.</p>
 <h2 id="devlead-console-template">Devlead Console Template</h2>
-<p>So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is <a href="https://www.nuget.org">NuGet.org</a>, where I've published my template as <a href="https://www.nuget.org/packages/Devlead.Console.Template/">Devlead.Console.Template</a>. Templates are installed using the <code>dotnet new</code> command with <code>--install packageId</code> parameter, in this case:</p>
+<p>So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is <a href="https://www.nuget.org/">NuGet.org</a>, where I've published my template as <a href="https://www.nuget.org/packages/Devlead.Console.Template/">Devlead.Console.Template</a>. Templates are installed using the <code>dotnet new</code> command with <code>--install packageId</code> parameter, in this case:</p>
 <pre><code class="language-bash">dotnet new --install Devlead.Console.Template
 </code></pre>
 <h2 id="dotnet-new-devleadconsole">dotnet new devleadconsole</h2>
