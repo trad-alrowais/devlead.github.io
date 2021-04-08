@@ -1,0 +1,454 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="An .NET assembly extending the static site generator Statiq with new core features">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Devlead.Statiq - Part 1 - Tabs</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Devlead.Statiq - Part 1 - Tabs" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/04/05/390eeb4b-ad66-7406-860f-44ed05918873.png?sv=2019-12-12&amp;st=2021-04-04T18%3A20%3A27Z&amp;se=2031-04-05T18%3A20%3A27Z&amp;sr=b&amp;sp=r&amp;sig=yLJRew2YKzfdLNObjcb3I6kkwfWiegYX%2FP68MwmoX3k%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/04/05/390eeb4b-ad66-7406-860f-44ed05918873.png?sv=2019-12-12&amp;st=2021-04-04T18%3A20%3A27Z&amp;se=2031-04-05T18%3A20%3A27Z&amp;sr=b&amp;sp=r&amp;sig=yLJRew2YKzfdLNObjcb3I6kkwfWiegYX%2FP68MwmoX3k%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Devlead.Statiq - Part 1 - Tabs
+          </h1>
+            <h2 class="subheading">An .NET assembly extending the static site generator Statiq with new core features</h2>
+              <div class="meta">Published on Friday, April 9, 2021</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/nuget" class="badge badge-light"> NuGet</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/statiq" class="badge badge-light"> Statiq</a>
+                      <a href="/tags/devlead.statiq" class="badge badge-light"> Devlead.Statiq</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>Earlier this year I blogged about that my <a href="/posts/2021/2021-01-11-blog-migrated-to-statiq">&quot;Blog migrated to Statiq&quot;</a>, one advantage with <a href="https://statiq.dev/">Statiq</a> is that it's through .NET code really customizable and lets you adapt it fully to your needs. Code that can be packaged and distributed as a NuGet package, making it straightforward to share and reuse functionality between sites.<br/> <br/> In a three-part blog post series, I'll start going through the features of the NuGet package <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> created for my own Statiq based sites - but probably useful for others too, and this first part will be about the TabGroup Shortcode.</p>
+<h2 id="tabgroup-shortcode">TabGroup Shortcode</h2>
+<div class="tab-wrap">
+<input type="radio" id="efa58fe2a12347d28c16017600bdb1bd-3e969dbd94644716996c17fd7401ddb9" name="efa58fe2a12347d28c16017600bdb1bd" class="tab" checked><label for="efa58fe2a12347d28c16017600bdb1bd-3e969dbd94644716996c17fd7401ddb9" >Introduction</label>
+<input type="radio" id="efa58fe2a12347d28c16017600bdb1bd-120ea62a8bf24be694944a18e7390309" name="efa58fe2a12347d28c16017600bdb1bd" class="tab" ><label for="efa58fe2a12347d28c16017600bdb1bd-120ea62a8bf24be694944a18e7390309" >Prerequisites</label>
+<input type="radio" id="efa58fe2a12347d28c16017600bdb1bd-694e3bfbfd464ab490f15b07b8fa66d5" name="efa58fe2a12347d28c16017600bdb1bd" class="tab" ><label for="efa58fe2a12347d28c16017600bdb1bd-694e3bfbfd464ab490f15b07b8fa66d5" >Content</label>
+<input type="radio" id="efa58fe2a12347d28c16017600bdb1bd-ab483cbbbfad4522906b3d4dbba4567e" name="efa58fe2a12347d28c16017600bdb1bd" class="tab" ><label for="efa58fe2a12347d28c16017600bdb1bd-ab483cbbbfad4522906b3d4dbba4567e" >Include</label>
+<input type="radio" id="efa58fe2a12347d28c16017600bdb1bd-67ed06d531554f1e951fc663b30a4477" name="efa58fe2a12347d28c16017600bdb1bd" class="tab" ><label for="efa58fe2a12347d28c16017600bdb1bd-67ed06d531554f1e951fc663b30a4477" >Code</label>
+<div class="tab__content">
+
+<p>Statiq <a href="https://statiq.dev/framework/content/shortcodes">shortcodes</a> are small but powerful macros that can generate content or add metadata to your documents.</p>
+<p>The <code>TabGroup</code> shortcode, is a CSS-only solution to simplify adding tabs in your Statiq input files.</p>
+<p>Why add tabs? Well with some content, a good example of that is code samples, tabs make it easier to group content together, keep things more focused and reduce user vertical scrolling.</p>
+<p>With the <code>TabGroup</code> shortcode tab content can be defined as either</p>
+<ul>
+<li>Content - markdown defined directly in the shortcode content</li>
+<li>Include - markdown fetched and processed from a external file</li>
+<li>Code - fetch external file into markdown code fence</li>
+</ul>
+<p>the shortcode content is defined as <code>YAML</code>, you can within a single tab combine all variants (<code>content</code>, <code>include</code>, and <code>code</code>), and it'll render in the following order</p>
+<ol>
+<li><code>content</code></li>
+<li><code>include</code></li>
+<li><code>code</code></li>
+</ol>
+
+
+</div>
+<div class="tab__content">
+
+<p>First of all in your Statiq App you need to add the <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> NuGet package to your Statiq web application.</p>
+<p>Enabling <code>TabGroup</code> shortcode is done by invoking the <code>AddTabGroupShortCode</code> extension on your Statiq app <a href="https://statiq.dev/framework/configuration/bootstrapper/">Bootstrapper</a> which will enable the shortcode and add the needed CSS file to your generation output.</p>
+<pre><code class="language-csharp">using System;
+using Devlead.Statiq.Tabs;
+using Statiq.App;
+using Statiq.Web;
+
+await Bootstrapper
+    .Factory
+    .CreateDefault(args)
+    .AddWeb()
+    .AddTabGroupShortCode()
+    .RunAsync();
+</code></pre>
+<p>The CSS file will end up in <code>output/scss/TabGroup.css</code> and you'll need to reference it where you link in your other CSS custom files (i.e. <code>_head.cshtml</code>), but for your convenience, I've created a <code>TabGroupCss</code> shortcode you can use i.e. with this site my <a href="https://github.com/devlead/devlead.se/blob/main/src/DevLead/input/_head.cshtml">_head.cshtml</a> looks like this</p>
+<pre><code class="language-html">&lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;180x180&quot; href=&quot;/apple-touch-icon.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
+&lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;?# TabGroupCss /?&gt;
+</code></pre>
+
+
+
+</div>
+<div class="tab__content">
+
+<h2 id="content">Content</h2>
+<p>Content lets you use markdown self-contained directly within TabGroup shortcode, and is specified using tab <code>content</code>, using pipe (<code>|</code>) in YAML lets you have multiline content.</p>
+<p>The name of a tab is specified using <code>name</code> property, if not specified you'll get a unique id as its name.</p>
+<h3 id="example-usage">Example usage</h3>
+<pre><code class="language-markdown">&lt;?# TabGroup ?&gt;
+&lt;?*
+tabs:
+  - name: Tab Two
+    content: |
+      ## Famous words
+
+      Quote some latin
+
+      &gt; Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.
+
+      ## Useful?
+
+      I think so!
+
+  - name: Tab One
+    content: |
+      ## Useful?
+
+      I think so!
+
+      ## Famous words
+
+      Quote some latin
+
+      &gt; Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.
+
+?&gt;
+&lt;?#/ TabGroup ?&gt;
+</code></pre>
+
+<h3 id="result">Result</h3>
+<div class="tab-wrap">
+<input type="radio" id="02a65266a68e43238618e554e72e437a-ce09c50e193045cfa8b4b442dce860e7" name="02a65266a68e43238618e554e72e437a" class="tab" checked><label for="02a65266a68e43238618e554e72e437a-ce09c50e193045cfa8b4b442dce860e7" >Tab Two</label>
+<input type="radio" id="02a65266a68e43238618e554e72e437a-08d24f5af9a240e78c67fa2d2a722d0f" name="02a65266a68e43238618e554e72e437a" class="tab" ><label for="02a65266a68e43238618e554e72e437a-08d24f5af9a240e78c67fa2d2a722d0f" >Tab One</label>
+<div class="tab__content">
+
+<h2 id="famous-words">Famous words</h2>
+<p>Quote some latin</p>
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.</p>
+</blockquote>
+<h2 id="useful">Useful?</h2>
+<p>I think so!</p>
+
+
+</div>
+<div class="tab__content">
+
+<h2 id="useful">Useful?</h2>
+<p>I think so!</p>
+<h2 id="famous-words">Famous words</h2>
+<p>Quote some latin</p>
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.</p>
+</blockquote>
+
+
+</div>
+</div>
+
+
+
+
+</div>
+<div class="tab__content">
+
+<h2 id="include">Include</h2>
+<p>Include content lets you fetch markdown from an external document. This is really useful as it makes the TabGroup more readable, but it also great for code reuse and i.e. if you want the same content on multiple tabs.</p>
+<p>Path to the markdown file is specified using tab <code>include</code> property, either an absolute path or relative to the document,, by leading with dot slash (<code>./</code>) path will be relative to input root, which simplifies reasoning where document is located, regardless of where the document is included from.</p>
+<p>If no <code>name</code> property specified, by convention the tab name will be the name of the external document <strong>without</strong> extension, title cased, and underscores will be replaced by a space.</p>
+<h3 id="example-usage">Example usage</h3>
+<pre><code class="language-yaml">&lt;?# TabGroup ?&gt;
+&lt;?*
+tabs:
+  - include: &quot;./../includes/posts/2021/devlead-statiq/tabgroup/src/lorem_ipsum.md&quot;
+
+  - name: Famous words
+    include: &quot;./../includes/posts/2021/devlead-statiq/tabgroup/src/lorem_ipsum.md&quot;
+?&gt;
+&lt;?#/ TabGroup ?&gt;
+</code></pre>
+
+<h3 id="result">Result</h3>
+<div class="tab-wrap">
+<input type="radio" id="ae8e25a487f64c6387a6e6cdc655f33b-909bb0c226914899818d75cf8497d320" name="ae8e25a487f64c6387a6e6cdc655f33b" class="tab" checked><label for="ae8e25a487f64c6387a6e6cdc655f33b-909bb0c226914899818d75cf8497d320" >Lorem Ipsum</label>
+<input type="radio" id="ae8e25a487f64c6387a6e6cdc655f33b-db4d013a84924c84841af2e7c0a24b18" name="ae8e25a487f64c6387a6e6cdc655f33b" class="tab" ><label for="ae8e25a487f64c6387a6e6cdc655f33b-db4d013a84924c84841af2e7c0a24b18" >Famous words</label>
+<div class="tab__content">
+
+<h2 id="famous-words">Famous words</h2>
+<p>Quote some latin</p>
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.</p>
+</blockquote>
+<h2 id="useful">Useful?</h2>
+<p>I think so!</p>
+
+
+</div>
+<div class="tab__content">
+
+<h2 id="famous-words">Famous words</h2>
+<p>Quote some latin</p>
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id elementum neque, ac pharetra tortor. Vivamus ac vehicula augue. Curabitur pretium commodo nisi id pellentesque.</p>
+</blockquote>
+<h2 id="useful">Useful?</h2>
+<p>I think so!</p>
+
+
+</div>
+</div>
+
+
+
+
+</div>
+<div class="tab__content">
+
+<h2 id="code">Code</h2>
+<p>Code content lets you have fetch content from an external document into a markdown code fence. This is really useful as it makes the TabGroup more readable, but it also great for code reuse and i.e. keeping documentation in sync actual code used.</p>
+<p>Path to code file is specified using tab <code>code</code> property, either absolute path or relative to document, by leading with dot slash (<code>./</code>) path will be relative to input root, which simplifies reasoning where document is located, regardless of where the document is included from.</p>
+<p>If no <code>name</code> property specified the name of the document including extension (<em>with preserved casing</em>) will be used as tab name.</p>
+<p>Code language used for code fence will be automatically inferred from file extension but you can override it using the <code>codeLang</code> property.</p>
+<h3 id="example-usage">Example usage</h3>
+<pre><code class="language-yaml">&lt;?# TabGroup ?&gt;
+&lt;?*
+tabs:
+  - code: ./../settings.yml
+
+  - name: Settings yaml file
+    code: ./../settings.yml
+
+  - code: ./_head.cshtml
+
+  - code: ./_head.cshtml
+    codeLang: html
+
+?&gt;
+&lt;?#/ TabGroup ?&gt;
+</code></pre>
+
+<h3 id="result">Result</h3>
+<div class="tab-wrap">
+<input type="radio" id="fbaa8d0ee799458fab1d599a5717c553-a18b0f7d2cb84f8aaed1649d36f4a5b8" name="fbaa8d0ee799458fab1d599a5717c553" class="tab" checked><label for="fbaa8d0ee799458fab1d599a5717c553-a18b0f7d2cb84f8aaed1649d36f4a5b8" >settings.yml</label>
+<input type="radio" id="fbaa8d0ee799458fab1d599a5717c553-5501f20c43844ad3a908059ead187d2c" name="fbaa8d0ee799458fab1d599a5717c553" class="tab" ><label for="fbaa8d0ee799458fab1d599a5717c553-5501f20c43844ad3a908059ead187d2c" >Settings yaml file</label>
+<input type="radio" id="fbaa8d0ee799458fab1d599a5717c553-1b3f429e811e4266bb34e7d9a9cc68c4" name="fbaa8d0ee799458fab1d599a5717c553" class="tab" ><label for="fbaa8d0ee799458fab1d599a5717c553-1b3f429e811e4266bb34e7d9a9cc68c4" >_head.cshtml</label>
+<input type="radio" id="fbaa8d0ee799458fab1d599a5717c553-b4cd8bf26a214ccbb6e9cab76168ddb2" name="fbaa8d0ee799458fab1d599a5717c553" class="tab" ><label for="fbaa8d0ee799458fab1d599a5717c553-b4cd8bf26a214ccbb6e9cab76168ddb2" >_head.cshtml</label>
+<div class="tab__content">
+
+<pre><code class="language-yaml">Host: &quot;www.devlead.se&quot;
+SiteTitle: &quot;@devlead - Mattias Karlsson's Blog&quot;
+PostSources: &quot;posts/**/*&quot;
+Image: &quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;
+Copyright: =&gt; $&quot;© Mattias Karlsson {DateTime.Now.Year}&quot;
+LinksUseHttps: true
+EditLink: =&gt; &quot;https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/&quot; + doc.Source.GetRelativeInputPath()
+</code></pre>
+
+
+</div>
+<div class="tab__content">
+
+<pre><code class="language-yaml">Host: &quot;www.devlead.se&quot;
+SiteTitle: &quot;@devlead - Mattias Karlsson's Blog&quot;
+PostSources: &quot;posts/**/*&quot;
+Image: &quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;
+Copyright: =&gt; $&quot;© Mattias Karlsson {DateTime.Now.Year}&quot;
+LinksUseHttps: true
+EditLink: =&gt; &quot;https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/&quot; + doc.Source.GetRelativeInputPath()
+</code></pre>
+
+
+</div>
+<div class="tab__content">
+
+<pre><code class="language-razor">&lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;180x180&quot; href=&quot;/apple-touch-icon.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
+&lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;?# TabGroupCss /?&gt;
+</code></pre>
+
+
+</div>
+<div class="tab__content">
+
+<pre><code class="language-html">&lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;180x180&quot; href=&quot;/apple-touch-icon.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
+&lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
+&lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;?# TabGroupCss /?&gt;
+</code></pre>
+
+
+</div>
+</div>
+
+
+
+
+</div>
+</div>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>I'm really happy how flexible and versatile the <code>TabGroup</code> shortcode ended up being, while still keeping my markdown files nice and tidy, abstracting away the complexity.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>Statiq - <a href="https://github.com/statiqdev">GitHub</a> / <a href="https://statiq.dev/">Documentation</a></li>
+<li>Devlead.Statiq - <a href="https://github.com/devlead/Devlead.Statiq">GitHub</a> / <a href="https://www.nuget.org/packages/Devlead.Statiq/">NuGet</a></li>
+</ul>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2021/2021-04-09-devlead-statiq-part1-tabs.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js" integrity="sha384-OBYc88+eQm2E+Vw9J6jK9Z9rY4rcY+Mq5KlRpOzFTiHZV0Misu7O5AKmBOWGKk8j" crossorigin="anonymous"></script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

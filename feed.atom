@@ -4,8 +4,62 @@
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2021</rights>
-	<updated>2021-03-29T18:09:56Z</updated>
+	<updated>2021-04-08T22:42:59Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs</id>
+		<title>Devlead.Statiq - Part 1 - Tabs</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/04/05/390eeb4b-ad66-7406-860f-44ed05918873.png?sv=2019-12-12&amp;st=2021-04-04T18%253A20%253A27Z&amp;se=2031-04-05T18%253A20%253A27Z&amp;sr=b&amp;sp=r&amp;sig=yLJRew2YKzfdLNObjcb3I6kkwfWiegYX%252FP68MwmoX3k%253D" />
+		<updated>2021-04-09T00:00:00Z</updated>
+		<content>&lt;p&gt;Earlier this year I blogged about that my &lt;a href="https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq"&gt;"Blog migrated to Statiq"&lt;/a&gt;, one advantage with &lt;a href="https://statiq.dev/"&gt;Statiq&lt;/a&gt; is that it's through .NET code really customizable and lets you adapt it fully to your needs. Code that can be packaged and distributed as a NuGet package, making it straightforward to share and reuse functionality between sites.&lt;br&gt; &lt;br&gt; In a three-part blog post series, I'll start going through the features of the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; created for my own Statiq based sites - but probably useful for others too, and this first part will be about the TabGroup Shortcode.&lt;/p&gt;
+&lt;h2 id="tabgroup-shortcode"&gt;TabGroup Shortcode&lt;/h2&gt;
+&lt;!--?# TabGroup ?--&gt;
+&lt;!--?*
+tabs:
+  - name: Introduction
+    content: |
+      Statiq [shortcodes](https://statiq.dev/framework/content/shortcodes) are small but powerful macros that can generate content or add metadata to your documents.
+
+      The `TabGroup` shortcode, is a CSS-only solution to simplify adding tabs in your Statiq input files.
+
+      Why add tabs? Well with some content, a good example of that is code samples, tabs make it easier to group content together, keep things more focused and reduce user vertical scrolling.
+
+      With the `TabGroup` shortcode tab content can be defined as either
+
+      - Content - markdown defined directly in the shortcode content
+      - Include - markdown fetched and processed from a external file
+      - Code - fetch external file into markdown code fence
+
+      the shortcode content is defined as `YAML`, you can within a single tab combine all variants (`content`, `include`, and `code`), and it'll render in the following order
+
+      1. `content`
+      1. `include`
+      1. `code`
+
+  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/prerequisites.md
+
+  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/content.md
+
+  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/include.md
+
+  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/code.md
+
+?--&gt;
+&lt;!--?#/ TabGroup ?--&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;I'm really happy how flexible and versatile the &lt;code&gt;TabGroup&lt;/code&gt; shortcode ended up being, while still keeping my markdown files nice and tidy, abstracting away the complexity.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Statiq - &lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt; / &lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi</id>
 		<title>Introducing DPI</title>
@@ -1325,116 +1379,5 @@ In a nutshell the method will:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/d815ce8f-f979-6770-5abb-02d65e195cf3.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A42%3A16Z&amp;amp;se=2031-01-11T12%3A42%3A16Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=r4hBCgyhHLD%2FsHuT3RN49DXX4AeZczADKWtDnKCU5Vc%3D" alt="Introducing Cake Kudu Client" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content>
 		<summary>A new way to deploy your Azure Web Apps and Function Apps</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2018/2018-02-08-introducing-cake-kudu-client</id>
-		<title>Introducing Cake Kudu Client</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2018/2018-02-08-introducing-cake-kudu-client" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
-		<updated>2018-02-08T00:00:00Z</updated>
-		<content>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/4e020ade-f4b0-0bc4-55d8-fccd0fc0e416.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A45%3A04Z&amp;amp;se=2031-01-11T12%3A45%3A04Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=uakWSiJ6qtkF8nHV89itEeTnzN48MTOAzVLHZmfE77g%3D" alt="Long ship at sea" /&gt;&lt;/p&gt;
-&lt;p&gt;I’ve previously written how you on Azure App Services itself can build and deploy your web applications and functions utilizing &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; build scripts and the &lt;a href="https://www.nuget.org/packages/Cake.Kudu"&gt;Cake.Kudu&lt;/a&gt; addin.&lt;/p&gt;
-&lt;p&gt;While it’s fairly easy to get going, just add a build script and connect it to your source code repository of choice, for some scenarios it makes more sense to ship your application prebuilt.&lt;/p&gt;
-&lt;p&gt;A few of those scenarios can be&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Static web sites&lt;/strong&gt;, where it requires more resources build, than to serve.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Multi region apps&lt;/strong&gt;, where you deploy same bits to multiple sites and makes sense to just build it once.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Build requirements&lt;/strong&gt;, by building on App services you’re limited to the tooling it has pre-installed or it’s environment supports.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Private resources&lt;/strong&gt;, using private nugget feeds or other compile time sensitive information can be cumbersome, and might not be what you want to have lying around on your web site.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="cake-kudu-client-to-the-rescue"&gt;Cake Kudu Client to the rescue&lt;/h2&gt;
-&lt;p&gt;Kudu the “engine” behind Azure web and function apps provides and http-based API, which deploy is one of the features it offers. And it’s this API the “Cake Kudu Client” provides a typed C# API which makes it close to a one-liner to deploy from a directory or zip file.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt; #addin nuget:?package=Cake.Kudu.Client
-
- string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
-         userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
-         password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
-
- IKuduClient kuduClient = KuduClient(
-     baseUri,
-     userName,
-     password);
-
- DirectoryPath sourceDirectoryPath = &amp;quot;./Documentation/&amp;quot;;
-
- kuduClient.ZipDeployDirectory(
-     sourceDirectoryPath);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;What the above does is essentially&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;From environment variables gets Kudu endpoint for your App Service (i.e. &lt;code&gt;https://{yoursite}.scm.azurewebsites.net&lt;/code&gt;), user name and password.&lt;/li&gt;
-&lt;li&gt;Instantiate a new client using the &lt;code&gt;KuduClient&lt;/code&gt; alias.&lt;/li&gt;
-&lt;li&gt;Use the &lt;code&gt;ZipDeployDirectory&lt;/code&gt; method which with zip that folder in memory and deploy it.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;A real world example using this with the static site generator WYAM could look something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#tool &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Wyam&amp;amp;version=1.2.0&amp;quot;
-#addin &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Cake.Wyam&amp;amp;version=1.2.0&amp;quot;
-#addin &amp;quot;nuget:https://api.nuget.org/v3/index.json?package=Cake.Kudu.Client&amp;amp;version=0.1.0&amp;quot;
-
-DirectoryPath   outputPath = MakeAbsolute(Directory(&amp;quot;./output&amp;quot;));
-string          target     = Argument(&amp;quot;target&amp;quot;, &amp;quot;Kudu-Publish-Documentation&amp;quot;),
-                baseUri    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
-                userName   = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
-                password   = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
-
-Task(&amp;quot;Clean-Documentation&amp;quot;)
-    .Does(() =&amp;gt;
-{
-    CleanDirectory(outputPath);
-});
-
-Task(&amp;quot;Generate-Documentaton&amp;quot;)
-    .IsDependentOn(&amp;quot;Clean-Documentation&amp;quot;)
-    .Does(() =&amp;gt;
-{
-    Wyam(new WyamSettings
-    {
-        Recipe = &amp;quot;Docs&amp;quot;,
-        Theme = &amp;quot;Samson&amp;quot;,
-        OutputPath = outputPath,
-        Settings = new Dictionary&amp;lt;string, object&amp;gt;
-        {
-            { &amp;quot;BaseEditUrl&amp;quot;, &amp;quot;https://github.com/cake-contrib/Cake.Kudu.Client&amp;quot; },
-            { &amp;quot;SourceFiles&amp;quot;, &amp;quot;./src&amp;quot; },
-            { &amp;quot;Title&amp;quot;, &amp;quot;Cake Kudu Client&amp;quot; }
-    }});
-});
-
-Task(&amp;quot;Kudu-Publish-Documentation&amp;quot;)
-    .IsDependentOn(&amp;quot;Generate-Documentaton&amp;quot;)
-    .WithCriteria(!string.IsNullOrEmpty(baseUri)
-        &amp;amp;&amp;amp; !string.IsNullOrEmpty(userName)
-        &amp;amp;&amp;amp; !string.IsNullOrEmpty(password)
-    )
-    .Does(()=&amp;gt;
-{
-    IKuduClient kuduClient = KuduClient(
-        baseUri,
-        userName,
-        password);
-
-    kuduClient.ZipDeployDirectory(
-        outputPath);
-});
-
-RunTarget(target);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="not-just-deployments"&gt;Not just deployments&lt;/h2&gt;
-&lt;p&gt;Deployments is only one of the features the Cake Kudu Client addin handles&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Execute remote shell commands&lt;/li&gt;
-&lt;li&gt;Enumerate remote files and directories on&lt;/li&gt;
-&lt;li&gt;Upload files and directories to AppService&lt;/li&gt;
-&lt;li&gt;Download files and directories from AppService&lt;/li&gt;
-&lt;li&gt;Deploy to AppService from local folder or zip file&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;and more features are planned.&lt;/p&gt;
-&lt;p&gt;You can find the complete list of available methods with examples are available on the Cake web site at:
-&lt;a href="https://cakebuild.net/dsl/kudu/"&gt;cakebuild.net/dsl/kudu/&lt;/a&gt;&lt;/p&gt;
-</content>
-		<summary>Ship remotely to Azure App Services using Cake</summary>
 	</entry>
 </feed>
