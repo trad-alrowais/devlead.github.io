@@ -5,8 +5,53 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Fri, 09 Apr 2021 15:11:14 GMT</pubDate>
-		<lastBuildDate>Fri, 09 Apr 2021 15:11:14 GMT</lastBuildDate>
+		<pubDate>Fri, 09 Apr 2021 21:34:45 GMT</pubDate>
+		<lastBuildDate>Fri, 09 Apr 2021 21:34:45 GMT</lastBuildDate>
+		<item>
+			<title>Devlead.Statiq - Part 2 - Theme from external web resource</title>
+			<link>https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri</link>
+			<description>An .NET assembly extending the static site generator Statiq with new core features</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/04/08/04e3408e-5295-3d37-0421-11c3ec60a691.png?sv=2019-12-12&amp;st=2021-04-07T20%253A30%253A55Z&amp;se=2031-04-08T20%253A30%253A55Z&amp;sr=b&amp;sp=r&amp;sig=VI8xA0tYLfkNIsS%252FQx%252B9HDbDPU3n1TckpRJFflxg4sg%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri</guid>
+			<pubDate>Sat, 10 Apr 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Sometimes you just want things your way, in this second part of the three-part introductory blog post series about the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt;, I'll go through how it can enable having your Statiq web theme reside as a common external web resource.&lt;/p&gt;
+&lt;h2 id="the-problem"&gt;The problem&lt;/h2&gt;
+&lt;p&gt;Themes in Statiq are essentially a folder alongside your &lt;code&gt;input&lt;/code&gt; folder. An example of such a theme is &lt;a href="https://github.com/statiqdev/CleanBlog"&gt;statiqdev/CleanBlog&lt;/a&gt;, the official recommended way to use it as a GIT sub-module like below&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;git submodule add https://github.com/statiqdev/CleanBlog.git theme
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But I wanted a way to just clone and build without the hassle of sub-modules, but I also didn't want to just "copy-and-paste" the theme. I still wanted to with ease take the benefits of any updates to the upstream repository.&lt;/p&gt;
+&lt;h2 id="the-solution"&gt;The solution&lt;/h2&gt;
+&lt;p&gt;My solution ended up to extend Statiq so I could just configure the theme to a specific external uri, pointing to a web resource containing a zip archive of that theme, and Statiq would then transparently download, extract and cache that theme as the site was generated. Changing the uri would invalidate the cache and fetch the theme again.&lt;/p&gt;
+&lt;p&gt;Fortunately, GitHub provides the functionality to serve any commit/tag/release as a zip archive using the &lt;code&gt;https://github.com/{owner}/{repo}/archive/{reference}&lt;/code&gt; syntax, i.e. &lt;code&gt;https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip&lt;/code&gt;, making it really easy to obtain a specific immutable version of an upstream theme.&lt;/p&gt;
+&lt;p&gt;I then "gitignored" my &lt;code&gt;theme&lt;/code&gt; folder - so it would never be added to the site's repository. I made sure any site-specific modifications only existed within my Statiq content &lt;code&gt;input&lt;/code&gt; folder - ensuring new versions of the theme could be fetched without losing my tweaks to the theme.&lt;/p&gt;
+&lt;h2 id="example-usage"&gt;Example usage&lt;/h2&gt;
+&lt;p&gt;First of all in your Statiq App you need to add the &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; NuGet package to your Statiq web application.&lt;/p&gt;
+&lt;p&gt;Then theme from uri support in Statiq is enabled like below by invoking the &lt;code&gt;AddThemeFromUri&lt;/code&gt; extension on the Statiq app &lt;a href="https://statiq.dev/framework/configuration/bootstrapper/"&gt;Bootstrapper&lt;/a&gt;, and as a parameter to it specifying the uri where the theme zip archive is located&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
+using Devlead.Statiq.Themes;
+using Statiq.App;
+using Statiq.Common;
+using Statiq.Web;
+
+await Bootstrapper
+    .Factory
+    .CreateDefault(args)
+    .AddThemeFromUri(new Uri("https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip"))
+    .AddWeb()
+    .RunAsync();
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;IMHO this results in a fairly clean way to reuse themes between sites and makes it easy to contribute to a site using this method - all the setup a contributor needs to be able to test/preview the site clone the repository and run the project.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Statiq - &lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt; / &lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt; / &lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Devlead.Statiq - Part 1 - Tabs</title>
 			<link>https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs</link>
@@ -55,7 +100,7 @@ tabs:
 &lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Statiq - &lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt; / &lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt; / &lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource &lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
@@ -1310,64 +1355,6 @@ Task(&amp;quot;Deploy-Run-From-Zip&amp;quot;)
 &lt;p&gt;The example repository can be found on GitHub &lt;a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;A GitHub Gist of the Bitrise build definition is available &lt;a href="https://gist.github.com/devlead/6086fe79b0a5e4ebbbf145d4244a9713"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you haven’t but want to try Bitrise, then you can use &lt;a href="https://www.bitrise.io/?referrer=8049ac73f66b5427"&gt;this referral link&lt;/a&gt; which benefits the &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; project.&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>“Run-From-Zip” with Cake Kudu Client</title>
-			<link>https://www.devlead.se/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client</link>
-			<description>A new way to deploy your Azure Web Apps and Function Apps</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2018/2018-02-20-run-from-zip-with-cake-kudu-client</guid>
-			<pubDate>Tue, 20 Feb 2018 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/29bf78b1-94f2-6301-ec83-fd4541c438b7.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A37%3A03Z&amp;amp;se=2031-01-11T12%3A37%3A03Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=eyImi7f1xhlW0EtOsWQOS5NhsBgUv6fWlKtF03AqOXc%3D" alt="Ship at sea" /&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Update! Since this post was written, there’s been some breaking changes to Azure App Services Run-From-Zip feature, this was fixed in Cake.Kudu.Client version 0.6.0 you can read more about that at the post below
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;a href="https://medium.com/&amp;#64;devlead/cake-kudu-client-version-0-6-0-released-cb6435629684"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/3d72e5ff-aca6-965a-1989-d837ba7cce69.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A35%3A54Z&amp;amp;se=2031-01-11T12%3A35%3A54Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=bbuUUuci2RePI%2BEBfDKhyAvBNOV98aYSZ%2FBEqXNQ%2F1M%3D" alt="Cake.Kudu Client version 0.6.0 released" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;A couple of days ago Azure announced that they in preview added a new way to do app services deployments called &lt;a href="https://github.com/Azure/app-service-announcements/issues/84"&gt;Run-From-Zip&lt;/a&gt;, which lets you deploy using a zip file.&lt;/p&gt;
-&lt;p&gt;Deploying using a zip file as been possible before, the difference with this new method is that the file isn’t extracted into the “wwwroot” directory, but instead the zip file &lt;em&gt;mounted&lt;/em&gt; read only as “wwwroot”.&lt;/p&gt;
-&lt;p&gt;The zip file can either be hosted externally from the site or in a special folder on the app service itself, and the latter is now what the “Kudu Client” Cake addin now supports — enabling you to use this new method of deployment in your Cake build scripts.&lt;/p&gt;
-&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
-&lt;p&gt;To enable Run-From-Zip deployments you’ll first need to set an application setting called &lt;code&gt;WEBSITE_USE_ZIP&lt;/code&gt;, you either set this to an url when deploying from an external source, or in this case just set it to &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ca61d0c-daf2-3ada-e681-a129eee866fe.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A38%3A49Z&amp;amp;se=2031-01-11T12%3A38%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=RHcKAy41C%2FrjCXhM5jfrZsIqlSi%2BEamUIZoLSp%2Bqjao%3D" alt="App Service app settings" /&gt;&lt;/p&gt;
-&lt;h2 id="ziprunfromdirectory"&gt;ZipRunFromDirectory&lt;/h2&gt;
-&lt;p&gt;Naming things is hard, but the addin now has a method called &lt;a href="https://cakebuild.net/api/Cake.Kudu.Client.Extensions/KuduClientZipExtensions/AA111BEB"&gt;ZipRunFromDirectory&lt;/a&gt;, which will do all the “heavy lifting” and deploy a local directory.&lt;/p&gt;
-&lt;h2 id="example-usage"&gt;Example usage&lt;/h2&gt;
-&lt;p&gt;o deploying a site using this new method just becomes a couple of lines of code&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.3.0
-
-string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
-        userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
-        password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
-
-IKuduClient kuduClient = KuduClient(
-    baseUri,
-    userName,
-    password);
-
-DirectoryPath sourceDirectoryPath = &amp;quot;./Documentation/&amp;quot;;
-
-FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
-
-Information(&amp;quot;Deployed to {0}&amp;quot;, deployFilePath);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The file path returned, is the zip file deployed to the app service.&lt;/p&gt;
-&lt;h2 id="behind-the-curtain"&gt;Behind the curtain&lt;/h2&gt;
-&lt;p&gt;So what does actually happen here?
-In a nutshell the method will:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;In memory zip source directory&lt;/li&gt;
-&lt;li&gt;Push that zip to d:\home\data\SitePackages to a unique date stamped file name&lt;/li&gt;
-&lt;li&gt;Push the filename of the zip to d:\home\data\SitePackages\siteversion.txt&lt;/li&gt;
-&lt;li&gt;Via Kudu API call the site to ensure it’s up and right version deployed (a file called KuduClientZipRunFromDirectoryVersion.txt is included in deployed zip for this purpose)&lt;/li&gt;
-&lt;li&gt;Return the remote path of the deployed zip&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/996eea2c-912e-28db-5430-4a962037b645.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A41%3A15Z&amp;amp;se=2031-01-11T12%3A41%3A15Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=jQ0EAY8Joiny7%2BSJEP%2BwyjbR3kZRDBAsWBt%2FSVr5pzU%3D" alt="Kudu deploy zip files" /&gt;&lt;/p&gt;
-&lt;h2 id="closing-thoughts"&gt;Closing thoughts&lt;/h2&gt;
-&lt;p&gt;I’ve tried this for a couple of days now, and have found deployments to be very stable and quick. But really need some more testing to see what the implications of running this in production, how existing apps behave in a read only mode, etc.&lt;/p&gt;
-&lt;p&gt;This is a shiny new feature still in preview, general guidance and tooling support isn’t quite there yet, but as you seen with this post the primitives are in place to build upon and refine the experience in the future!&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/d815ce8f-f979-6770-5abb-02d65e195cf3.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A42%3A16Z&amp;amp;se=2031-01-11T12%3A42%3A16Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=r4hBCgyhHLD%2FsHuT3RN49DXX4AeZczADKWtDnKCU5Vc%3D" alt="Introducing Cake Kudu Client" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>

@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="An .NET assembly extending the static site generator Statiq with new core features">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Devlead.Statiq - Part 2 - Theme from external web resource</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri">
+
+      <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Devlead.Statiq - Part 2 - Theme from external web resource" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/04/08/04e3408e-5295-3d37-0421-11c3ec60a691.png?sv=2019-12-12&amp;st=2021-04-07T20%3A30%3A55Z&amp;se=2031-04-08T20%3A30%3A55Z&amp;sr=b&amp;sp=r&amp;sig=VI8xA0tYLfkNIsS%2FQx%2B9HDbDPU3n1TckpRJFflxg4sg%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/04/08/04e3408e-5295-3d37-0421-11c3ec60a691.png?sv=2019-12-12&amp;st=2021-04-07T20%3A30%3A55Z&amp;se=2031-04-08T20%3A30%3A55Z&amp;sr=b&amp;sp=r&amp;sig=VI8xA0tYLfkNIsS%2FQx%2B9HDbDPU3n1TckpRJFflxg4sg%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Devlead.Statiq - Part 2 - Theme from external web resource
+          </h1>
+            <h2 class="subheading">An .NET assembly extending the static site generator Statiq with new core features</h2>
+              <div class="meta">Published on Saturday, April 10, 2021</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/nuget" class="badge badge-light"> NuGet</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/statiq" class="badge badge-light"> Statiq</a>
+                      <a href="/tags/devlead.statiq" class="badge badge-light"> Devlead.Statiq</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>Sometimes you just want things your way, in this second part of the three-part introductory blog post series about the NuGet package <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a>, I'll go through how it can enable having your Statiq web theme reside as a common external web resource.</p>
+<h2 id="the-problem">The problem</h2>
+<p>Themes in Statiq are essentially a folder alongside your <code>input</code> folder. An example of such a theme is <a href="https://github.com/statiqdev/CleanBlog">statiqdev/CleanBlog</a>, the official recommended way to use it as a GIT sub-module like below</p>
+<pre><code class="language-bash">git submodule add https://github.com/statiqdev/CleanBlog.git theme
+</code></pre>
+<p>But I wanted a way to just clone and build without the hassle of sub-modules, but I also didn't want to just &quot;copy-and-paste&quot; the theme. I still wanted to with ease take the benefits of any updates to the upstream repository.</p>
+<h2 id="the-solution">The solution</h2>
+<p>My solution ended up to extend Statiq so I could just configure the theme to a specific external uri, pointing to a web resource containing a zip archive of that theme, and Statiq would then transparently download, extract and cache that theme as the site was generated. Changing the uri would invalidate the cache and fetch the theme again.</p>
+<p>Fortunately, GitHub provides the functionality to serve any commit/tag/release as a zip archive using the <code>https://github.com/{owner}/{repo}/archive/{reference}</code> syntax, i.e. <code>https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip</code>, making it really easy to obtain a specific immutable version of an upstream theme.</p>
+<p>I then &quot;gitignored&quot; my <code>theme</code> folder - so it would never be added to the site's repository. I made sure any site-specific modifications only existed within my Statiq content <code>input</code> folder - ensuring new versions of the theme could be fetched without losing my tweaks to the theme.</p>
+<h2 id="example-usage">Example usage</h2>
+<p>First of all in your Statiq App you need to add the <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> NuGet package to your Statiq web application.</p>
+<p>Then theme from uri support in Statiq is enabled like below by invoking the <code>AddThemeFromUri</code> extension on the Statiq app <a href="https://statiq.dev/framework/configuration/bootstrapper/">Bootstrapper</a>, and as a parameter to it specifying the uri where the theme zip archive is located</p>
+<pre><code class="language-csharp">using System;
+using Devlead.Statiq.Themes;
+using Statiq.App;
+using Statiq.Common;
+using Statiq.Web;
+
+await Bootstrapper
+    .Factory
+    .CreateDefault(args)
+    .AddThemeFromUri(new Uri(&quot;https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip&quot;))
+    .AddWeb()
+    .RunAsync();
+
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>IMHO this results in a fairly clean way to reuse themes between sites and makes it easy to contribute to a site using this method - all the setup a contributor needs to be able to test/preview the site clone the repository and run the project.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>Statiq - <a href="https://github.com/statiqdev">GitHub</a> / <a href="https://statiq.dev/">Documentation</a></li>
+<li>Devlead.Statiq - <a href="https://github.com/devlead/Devlead.Statiq">GitHub</a> / <a href="https://www.nuget.org/packages/Devlead.Statiq/">NuGet</a> / <a href="/posts/2021/2021-04-09-devlead-statiq-part1-tabs">Part 1 - Tabs</a></li>
+</ul>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><iframe src="https://github.com/sponsors/devlead/button" title="Sponsor devlead" height="35" width="116" style="border: 0;"></iframe></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40161705-1']);
+    _gaq.push(['_setDomainName', 'devlead.se']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js" integrity="sha384-OBYc88+eQm2E+Vw9J6jK9Z9rY4rcY+Mq5KlRpOzFTiHZV0Misu7O5AKmBOWGKk8j" crossorigin="anonymous"></script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>
