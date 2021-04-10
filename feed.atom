@@ -4,8 +4,49 @@
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2021</rights>
-	<updated>2021-04-09T21:34:45Z</updated>
+	<updated>2021-04-10T20:48:38Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode</id>
+		<title>Devlead.Statiq - Part 3 - IncludeCode 🤺</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/04/08/985368ff-3b5e-5079-00b1-2d01c433f6b8.png?sv=2019-12-12&amp;st=2021-04-07T21%253A28%253A53Z&amp;se=2031-04-08T21%253A28%253A53Z&amp;sr=b&amp;sp=r&amp;sig=yJSMzQzEuAd%252B1IyVh9Hsn%252FBBJE4iLet9Ymg6nOqFmCA%253D" />
+		<updated>2021-04-11T00:00:00Z</updated>
+		<content>&lt;p&gt;So I'm lazy... when doing a blog post, or documentation I don't want to repeat my self, and a prime example of that is when documenting Statiq features I found my self to want to both display both the "source" and the "result" without having to type the same thing twice nor update in multiple places and that's why I created the &lt;code&gt;IncludeCode&lt;/code&gt; Shortcode and in this last of the three-part introductory blog post series about the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; I'll tell you all about it.&lt;/p&gt;
+&lt;h2 id="includecode-shortcode"&gt;IncludeCode Shortcode&lt;/h2&gt;
+&lt;p&gt;Code include shortcode - A Statiq &lt;a href="https://statiq.dev/framework/content/shortcodes"&gt;shortcode&lt;/a&gt; enables you fetch an external file into a markdown code fence block.&lt;/p&gt;
+&lt;p&gt;Statiq comes with a built in &lt;code&gt;Include&lt;/code&gt; shortcode, which will just merge in the source of another document into the document utilizing the shortcode. This is really handy as it'll for example lets you edit content in one place, but you can use it in multiple places keeping things dry.&lt;/p&gt;
+&lt;p&gt;The issue and feature with &lt;code&gt;Include&lt;/code&gt; is that it'll be executed as part of your Statiq App pipeline, any code in it will be rendered. Which might not be what you want for a code sample. So I created the &lt;code&gt;IncludeCode&lt;/code&gt; shortcode which will process and include the external document within a markdown code fence.&lt;/p&gt;
+&lt;h3 id="example-usage"&gt;Example usage&lt;/h3&gt;
+&lt;!--?# IncludeCode "./../includes/posts/2021/devlead-statiq/includecode/includecode.md" /?--&gt;
+&lt;h3 id="result"&gt;Result&lt;/h3&gt;
+&lt;!--?# Include "./../includes/posts/2021/devlead-statiq/includecode/includecode.md" /?--&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;IncludeCode&lt;/code&gt; shortcode is a small addition, but it keeps my content DRY which I've learned to really appreciate as it not only reduces typing, but also reduces risk of inconsistencies and errors.&lt;/p&gt;
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri</id>
 		<title>Devlead.Statiq - Part 2 - Theme from external web resource</title>
@@ -46,8 +87,21 @@ await Bootstrapper
 &lt;p&gt;IMHO this results in a fairly clean way to reuse themes between sites and makes it easy to contribute to a site using this method - all the setup a contributor needs to be able to test/preview the site clone the repository and run the project.&lt;/p&gt;
 &lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;Statiq - &lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt; / &lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt; / &lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </content>
 		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
@@ -100,8 +154,21 @@ tabs:
 &lt;p&gt;I'm really happy how flexible and versatile the &lt;code&gt;TabGroup&lt;/code&gt; shortcode ended up being, while still keeping my markdown files nice and tidy, abstracting away the complexity.&lt;/p&gt;
 &lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;Statiq - &lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt; / &lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq - &lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt; / &lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt; / &lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Devlead.Statiq
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 </content>
 		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
@@ -1300,71 +1367,5 @@ Task(&amp;quot;Deploy-Run-From-Zip&amp;quot;)
 &lt;/ul&gt;
 </content>
 		<summary>&lt;p&gt;This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.&lt;/p&gt;</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake</id>
-		<title>Deploying .NET Core to Azure using Bitrise and Cake</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2018/2018-03-26-deploying-net-core-to-azure-using-bitrise-and-cake" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" />
-		<updated>2018-03-23T00:00:00Z</updated>
-		<content>&lt;p&gt;Originally published at &lt;a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/"&gt;blog.bitrise.com&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Mattias Karlsson demonstrates how you can build and ship a .NET Core website using a custom docker build image and the open source build system Cake.&lt;/p&gt;
-&lt;p&gt;Guest blog post by Mattias Karlsson.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Mattias Karlsson is a Microsoft Azure MVP and Open Source maintainer.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6ce723c3-edc9-8b41-6ed2-d474367040f5.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A03%3A31Z&amp;amp;se=2031-01-11T12%3A03%3A31Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=EMmpaNTM2%2Bhh3%2BVry4Tdumjs6aEMKLZwIKGQVE%2Bhwco%3D" alt="Bitrise Cake" /&gt;&lt;/p&gt;
-&lt;p&gt;Bitrise is mostly known for providing hosted continuous integration and deployment targeting iOS and Android projects, but it’s much more capable than that and can build and ship basically anything you can build on MacOS or Linux.&lt;/p&gt;
-&lt;h2 id="adding-a-project-to-bitrise"&gt;Adding a project to Bitrise&lt;/h2&gt;
-&lt;p&gt;Adding a new project is straightforward, click the “Add new app” Button.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/6bffcbe9-e099-e882-c949-7578884ff356.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A04%3A12Z&amp;amp;se=2031-01-11T12%3A04%3A12Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=XsOZ8Dbh2%2F5ScmcaC5NIp2nFni6IJ5cl8%2B%2BTYfX8kKQ%3D" alt="Add New Bitrise app" /&gt;&lt;/p&gt;
-&lt;p&gt;Then pick your source code management provider of choice and pick your project.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/2d53378d-28c4-81c1-7455-65648e9e1156.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A04%3A46Z&amp;amp;se=2031-01-11T12%3A04%3A46Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=0BY%2BinxBgzqkiCooJgYL7ca%2FB7cZsqeRN7hsbKXx4YU%3D" alt="Bitrise new project UI" /&gt;&lt;/p&gt;
-&lt;p&gt;Let Bitrise setup SSH keys and validate the repository.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/77e1853c-dcd6-e0e7-7f9e-fc011611912e.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A05%3A20Z&amp;amp;se=2031-01-11T12%3A05%3A20Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=nX6475e%2BP%2FmYnKObAcQBmWs68HnZ2GkYRwsu5Anqv44%3D" alt="Bitrise repo access configuration" /&gt;&lt;/p&gt;
-&lt;p&gt;Once Bitrise is done validating the repository, pick manual and then &lt;code&gt;other / manual&lt;/code&gt; and &amp;quot;Android &amp;amp; Docker on Ubuntu&amp;quot;, this will let us pick our own custom docker image later.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/ef576575-dd01-9bd5-2323-1cbd02a295e2.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A05%3A58Z&amp;amp;se=2031-01-11T12%3A05%3A58Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=vLe20a998sciuAvXRTZOFtgVq6v4rWfjFqzY0S9hrA0%3D" alt="Bitrise Project build configuration" /&gt;&lt;/p&gt;
-&lt;p&gt;To get continuous builds let Bitrise setup a webhook for you:&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/69c69813-8114-8c85-91ed-00df387e6fd4.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A06%3A19Z&amp;amp;se=2031-01-11T12%3A06%3A19Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=WrGowtyfgngndjGfQDezBmt8nTNpuEPgNNnZirQ7yJI%3D" alt="Bitrise webhook setup" /&gt;&lt;/p&gt;
-&lt;p&gt;Bitrise will then kick off a build, that will just clone the repository and let you know all is set up.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f3d155a7-0577-67db-7e62-c96a47e3e68b.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A06%3A42Z&amp;amp;se=2031-01-11T12%3A06%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=y2MXfmSVQqX9JWqV53gqrGqkW5uINbTyKWA9oxMfO6k%3D" alt="Bitrise running build" /&gt;&lt;/p&gt;
-&lt;h2 id="setup-a-custom-build-docker-image"&gt;Setup a custom build docker image&lt;/h2&gt;
-&lt;p&gt;You could download and bootstrap Cake as part of a build step, but Bitrise also lets you pick custom docker images from Docker Hub, which could be tailored with your tools pre-installed. I’ve created and published &lt;code&gt;cakebuild/cake:2.1-sdk-bitrise&lt;/code&gt; on Docker Hub, which contains Bitrise CLI, .NET Core SDK 2.1 and Cake script runner.&lt;/p&gt;
-&lt;p&gt;To switch to custom Docker image, navigate to “Workflow” and click on “Stack”.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7abbd37e-e5c1-002a-2e74-e48957a39ed0.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A07%3A30Z&amp;amp;se=2031-01-11T12%3A07%3A30Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=n9pR68dRGlzeG25Gqiif%2FhxF8S%2Fdnl7pkR6v4PjdPjs%3D" alt="Bitrise workflow UI" /&gt;&lt;/p&gt;
-&lt;p&gt;Then change Docker Image to use to your custom image (i.e. &lt;code&gt;cakebuild/cake:2.1-sdk-bitrise&lt;/code&gt;, the only requirement is that Bitrise CLI and its dependencies need to be present).&lt;/p&gt;
-&lt;h2 id="configuring-cake"&gt;Configuring Cake&lt;/h2&gt;
-&lt;p&gt;When picking the “manual” template you’ll get 4 build steps, which will handle authentication, fetching code, the “hello world” build script and also handle artifacts.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53b6d29d-26d1-9b4b-bcf9-9df2579e0f69.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A13%3A30Z&amp;amp;se=2031-01-11T12%3A13%3A30Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=YtIPD%2Be5oIH6t7DC1o1G6U5WCleKFXeR3yfhYS4oaOc%3D" alt="Bitrise configuring Build work flow" /&gt;&lt;/p&gt;
-&lt;p&gt;As Cake is pre-loaded on the custom container image, all that’s needed to execute Cake build script is &lt;code&gt;Cake [path to cake script]&lt;/code&gt;, if your build script is in the root and follows the &lt;code&gt;build.cake&lt;/code&gt; convention, then all that's needed is &lt;code&gt;Cake&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/60b0c772-1718-2cfa-9d9e-6c7b1ae0124c.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A15%3A08Z&amp;amp;se=2031-01-11T12%3A15%3A08Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=N%2FlvKWLEw4KZeNrmwssdn5ZgRNYdzxJOhEn02mswtCA%3D" alt="Bitrise Cake build step" /&gt;&lt;/p&gt;
-&lt;h2 id="the-build-script"&gt;The Build script&lt;/h2&gt;
-&lt;p&gt;The example &lt;a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake/blob/master/build.cake"&gt;build.cake&lt;/a&gt; used for this post has the following steps&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Clean build output &amp;amp; Restore build dependencies&lt;/li&gt;
-&lt;li&gt;Build code&lt;/li&gt;
-&lt;li&gt;Run unit tests&lt;/li&gt;
-&lt;li&gt;Publish web&lt;/li&gt;
-&lt;li&gt;Deploy to Azure&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Deploying to Azure is done using Azure App Service Kudu rest API using the &lt;a href="https://hackernoon.com/introducing-cake-kudu-client-abda40d15f38"&gt;Cake.Kudu.Client&lt;/a&gt; Cake addin.&lt;/p&gt;
-&lt;h2 id="keeping-secrets"&gt;Keeping secrets&lt;/h2&gt;
-&lt;p&gt;To deploy to Azure with Cake.Kudu.Client, you’ll need the base URL for the site’s Kudu API, the username, and password. You can find this information by downloading your publishing profile from the Azure portal&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/9246ea9b-4f1a-6d44-49bc-2259baf27317.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A17%3A08Z&amp;amp;se=2031-01-11T12%3A17%3A08Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=awELNBjLpVX389GaIU%2Flod3ecRMC6t4J06j%2B6US9IQ8%3D" alt="Azure Portal App Servuce overview blade" /&gt;&lt;/p&gt;
-&lt;p&gt;This is, of course, sensitive information that you don’t want to be in your repository or accessible from e.g. pull requests.&lt;/p&gt;
-&lt;p&gt;To cater for this need Bitrise provides “Secrets”, Secrets are exposed as environment variables, so they can easily be consumed from build steps / scripts. But to add an extra level of security they’re not part of your build definition and by default, they won’t be available from pull requests.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/7c7e9f35-228b-5473-7d48-4d9ff08483da.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A17%3A49Z&amp;amp;se=2031-01-11T12%3A17%3A49Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=zt4xJyLiZCO5AC%2FwWXRxELQREb68NpgVQtSf7aajVxQ%3D" alt="Bitrise Secret Environment Variables" /&gt;&lt;/p&gt;
-&lt;h2 id="all-set"&gt;All set&lt;/h2&gt;
-&lt;p&gt;Now hit Start a Build or push a commit and your website will continuously build and deploy.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1ce86013-621d-ba8f-3490-37902ab1b0dc.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A20%3A20Z&amp;amp;se=2031-01-11T12%3A20%3A20Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=aXM%2BQrIollFehwDDMS7dxEGY9e96s5x26HXe70jqMEs%3D" alt="Bitrise Start/Schedule new build" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/aeaed4b6-04dc-d99e-fe2a-bb8ffcc04057.png?sv=2019-12-12&amp;amp;st=2021-01-10T12%3A20%3A33Z&amp;amp;se=2031-01-11T12%3A20%3A33Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=2JZDluWVvMzRVKOyjaX4IqQmWavSwfynDIzBBEARCUQ%3D" alt="Cake build log" /&gt;&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;p&gt;The example repository can be found on GitHub &lt;a href="https://github.com/azurevoodoo/DeployingToAzureUsingBitriseAndCake"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;A GitHub Gist of the Bitrise build definition is available &lt;a href="https://gist.github.com/devlead/6086fe79b0a5e4ebbbf145d4244a9713"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;If you haven’t but want to try Bitrise, then you can use &lt;a href="https://www.bitrise.io/?referrer=8049ac73f66b5427"&gt;this referral link&lt;/a&gt; which benefits the &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; project.&lt;/p&gt;
-</content>
-		<summary>&lt;p&gt;Originally published at &lt;a href="https://blog.bitrise.io/deploying-net-core-to-azure-using-bitrise-and-cake/"&gt;blog.bitrise.com&lt;/a&gt;.&lt;/p&gt;</summary>
 	</entry>
 </feed>

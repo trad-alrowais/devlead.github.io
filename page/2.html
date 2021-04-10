@@ -67,13 +67,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -109,6 +109,13 @@
 
 
 <div class="post-preview">
+    <h2 class="post-title"><a href="/posts/2021/2021-03-20-introducing-dpi">Introducing DPI</a></h2>
+    <p class="post-meta">Published on Saturday, March 20, 2021</p>                
+<p>When brought in as DevOps consultant or a new employee for that matter, one is often tasked with getting a clear picture of the current state of projects, how they work and fit together.<br><br>
+A big part of this initial and ongoing is to analyze and audit dependencies, which is why I've created <code>dpi</code> a tool that both locally and as part of your DevOps pipeline can analyze your repository projects dependencies and report to Azure Log Analytics, console, and files.</p>        <p class="small"><a href="/posts/2021/2021-03-20-introducing-dpi">Read more...</a></p>
+</div>
+
+<div class="post-preview">
     <h2 class="post-title"><a href="/posts/2021/2021-03-03-introducing-cake-clickonce-recipe">Introducing Cake ClickOnce Recipe</a></h2>
     <p class="post-meta">Published on Wednesday, March 3, 2021</p>                
 <p>A little over a decade ago I did a lot of business applications with .NET Framework WPF and ClickOnce was in many cases used as a convenient way to deploy and update Windows applications. ClickOnce hasn't gotten much love over the years, and when .NET Core 3 introduced support for WPF applications ClickOnce support was nowhere to be found. But guess what, that's changed with .NET 5 and in this post, I'll go through my recipe for simplifying the building and publishing .NET 5 Windows application using GitHub Actions, Cake, and ClickOnce to Azure Blob Storage.</p>        <p class="small"><a href="/posts/2021/2021-03-03-introducing-cake-clickonce-recipe">Read more...</a></p>
@@ -118,12 +125,6 @@
     <h2 class="post-title"><a href="/posts/2021/2021-01-15-my-preferred-console-stack">My preferred .NET console stack</a></h2>
     <p class="post-meta">Published on Friday, January 15, 2021</p>                
 <p>There's type of application that has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a <code>Main(string[] args)</code> and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll walk through what today is my alternative starting point to <code>dotnet new console</code>, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.</p>        <p class="small"><a href="/posts/2021/2021-01-15-my-preferred-console-stack">Read more...</a></p>
-</div>
-
-<div class="post-preview">
-    <h2 class="post-title"><a href="/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection">Introducing Cake Bridge Dependency Injection</a></h2>
-    <p class="post-meta">Published on Tuesday, January 12, 2021</p>                
-<p>A couple of years ago I blogged <a href="/posts/2017/2017-07-09-dispelling-the-magic">Dispelling the magic!</a>, a post explaining the internals of the <a href="https://cakebuild.net/">Cake</a> build orchestration tool, with that post as a proof of concept I created <a href="https://www.nuget.org/packages/Cake.Bridge">Cake.Bridge</a> assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.</p>        <p class="small"><a href="/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection">Read more...</a></p>
 </div>
     <div>
         <div class="float-sm-left">
@@ -139,15 +140,15 @@
         <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
                     <div>
                         <h5>Tags</h5>
-                            <a href="/tags/net" class="badge badge-light"> .NET (16)</a>
-                            <a href="/tags/c" class="badge badge-light"> C# (14)</a>
+                            <a href="/tags/net" class="badge badge-light"> .NET (17)</a>
+                            <a href="/tags/c" class="badge badge-light"> C# (15)</a>
                             <a href="/tags/devops" class="badge badge-light"> DevOps (10)</a>
                             <a href="/tags/azure" class="badge badge-light"> Azure (9)</a>
                             <a href="/tags/cake" class="badge badge-light"> Cake (7)</a>
-                            <a href="/tags/nuget" class="badge badge-light"> NuGet (3)</a>
-                            <a href="/tags/statiq" class="badge badge-light"> Statiq (3)</a>
+                            <a href="/tags/nuget" class="badge badge-light"> NuGet (4)</a>
+                            <a href="/tags/statiq" class="badge badge-light"> Statiq (4)</a>
+                            <a href="/tags/devlead.statiq" class="badge badge-light"> Devlead.Statiq (3)</a>
                             <a href="/tags/release-notes" class="badge badge-light"> Release Notes (3)</a>
-                            <a href="/tags/devlead.statiq" class="badge badge-light"> Devlead.Statiq (2)</a>
                             <a href="/tags/oss" class="badge badge-light"> OSS (2)</a>
                         <div class="mt-3">
                             <div class="float-sm-right">
