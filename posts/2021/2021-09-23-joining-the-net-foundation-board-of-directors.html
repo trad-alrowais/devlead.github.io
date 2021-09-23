@@ -5,11 +5,12 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A reflection on the results from the 2021 Board of Directors Election">
     <meta name="author" content="devlead">
 
-  <title>@devlead - Mattias Karlsson&#x27;s Blog - Cake.Kudu.Client version 0.6.0 released</title>
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Joining the .NET Foundation Board of Directors</title>
 
-  <link rel="canonical" href="https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684">
+  <link rel="canonical" href="https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors">
 
       <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
       <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
@@ -18,10 +19,10 @@
   <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
   <meta name="msapplication-starturl" content="/" />
 
-  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Cake.Kudu.Client version 0.6.0 released" />
-    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Joining the .NET Foundation Board of Directors" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/09/23/468b4b6e-3ecd-c723-3323-8ffce93ac433.png?sv=2019-12-12&amp;st=2021-09-22T14%3A02%3A54Z&amp;se=2031-09-23T14%3A02%3A54Z&amp;sr=b&amp;sp=r&amp;sig=kN9k556DBbpI5pYPbI2tLDpXGiLFIJRsBsZ07Pf1LEc%3D" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors" />
   
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -81,23 +82,20 @@
 </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D&quot;)">
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2021/09/23/468b4b6e-3ecd-c723-3323-8ffce93ac433.png?sv=2019-12-12&amp;st=2021-09-22T14%3A02%3A54Z&amp;se=2031-09-23T14%3A02%3A54Z&amp;sr=b&amp;sp=r&amp;sig=kN9k556DBbpI5pYPbI2tLDpXGiLFIJRsBsZ07Pf1LEc%3D&quot;)">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="post-heading">
           <h1>
-            Cake.Kudu.Client version 0.6.0 released
+            Joining the .NET Foundation Board of Directors
           </h1>
-              <div class="meta">Published on Sunday, June 3, 2018</div>
+            <h2 class="subheading">A reflection on the results from the 2021 Board of Directors Election</h2>
+              <div class="meta">Published on Thursday, September 23, 2021</div>
                 <div class="mt-3">
                       <a href="/tags/net" class="badge badge-light"> .NET</a>
-                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
-                      <a href="/tags/c" class="badge badge-light"> C#</a>
-                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
-                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
-                      <a href="/tags/release-notes" class="badge badge-light"> Release Notes</a>
+                      <a href="/tags/oss" class="badge badge-light"> OSS</a>
                 </div>
         </div>
       </div>
@@ -109,53 +107,46 @@
   <div class="container"> 
     <div class="row">
       <div id="content" class="col-md-12">  
-        <p>This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.</p>
-<h2 id="app-service-changes">App Service Changes</h2>
+        <p>Yesterday the .NET Foundation <a href="https://dotnetfoundation.org/blog/2021/09/22/net-foundation-election-results-2021">announced</a> the results from the 2021 Board of Directors Election. An election where the Foundation's members choose who they want to represent them on the board and this election set out to fill four out of seven seats.</p>
+<p>And I'm deeply honored to announce that I have this election been elected along with</p>
 <ul>
-<li>App Setting: <code>WEBSITE_USE_ZIP</code> --&gt; <code>WEBSITE_RUN_FROM_ZIP</code></li>
-<li>Marker filename: <code>siteversion.txt</code> --&gt; <code>packagename.txt</code></li>
+<li><a href="https://dotnetfoundation.org/about/election/campaign-2021/frank-arkhurst-odoom">Frank Odoom</a></li>
+<li><a href="https://dotnetfoundation.org/about/election/campaign-2021/javier-lozano">Javier Lozano</a></li>
+<li><a href="https://dotnetfoundation.org/about/election/campaign-2021/rob-prouse">Rob Prouse</a></li>
 </ul>
-<h2 id="action-you-need-to-take">Action you need to take</h2>
-<p>As the App Setting has change you’ll need to change you setting name to <code>WEBSITE_RUN_FROM_ZIP</code> (it’s value should still be <code>1</code> )</p>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/b0858633-3124-5aec-09c6-de238e198b19.png?sv=2019-12-12&amp;st=2021-01-10T09%3A54%3A47Z&amp;se=2031-01-11T09%3A54%3A47Z&amp;sr=b&amp;sp=r&amp;sig=D%2BroDxmN6v7WRtasetPKfTpV%2Bxj2Y%2Bx3vM0Mc97pbwo%3D" alt="App Service App Settings" /></p>
-<p>Maker filename is handled by the new version so all you need to update scripts to use Cake.Kudu.Client version <code>0.6.0</code>.</p>
-<pre><code class="language-csharp">#addin nuget:?package=Cake.Kudu.Client&amp;version=0.6.0
-</code></pre>
-<p>nothing else needs to be changed in your Cake script.</p>
-<h2 id="verifying-change">Verifying change</h2>
-<p>You can verify the publish succeeded under App Service Advanced Tools ( Kudu ) — Debug Console by navigating to <code>data/SitePackages</code> and see deployment package and the new <code>packagename.txt</code></p>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/73564b06-ae73-e415-a9f3-f34c69bbddd5.png?sv=2019-12-12&amp;st=2021-01-10T09%3A56%3A42Z&amp;se=2031-01-11T09%3A56%3A42Z&amp;sr=b&amp;sp=r&amp;sig=471bIcnxlyPDPBXWGvnPeSRQ0YHSoT4FFkcv1qb9pdQ%3D" alt="Kudu Debug Console" /></p>
-<h2 id="full-example">Full example</h2>
-<p>If you haven’t used the feature before below is a full example</p>
-<pre><code class="language-csharp">#addin nuget:?package=Cake.Kudu.Client&amp;version=0.6.0
-
-Task(&quot;Deploy-Run-From-Zip&quot;)
- .Does( ()=&gt;
- {
-    string  baseUri     = EnvironmentVariable(&quot;KUDU_CLIENT_BASEURI&quot;),
-            userName    = EnvironmentVariable(&quot;KUDU_CLIENT_USERNAME&quot;),
-            password    = EnvironmentVariable(&quot;KUDU_CLIENT_PASSWORD&quot;);
-
-    IKuduClient kuduClient = KuduClient(
-        baseUri,
-        userName,
-        password);
-
-    DirectoryPath sourceDirectoryPath = &quot;./website/&quot;;
-
-    FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
-
-    Information(&quot;Deployed to {0}&quot;, deployFilePath);
- });
-
- RunTarget(&quot;Deploy-Run-From-Zip&quot;);
-</code></pre>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/8ecbff75-0985-f2e0-b354-9c0095b52cdf.png?sv=2019-12-12&amp;st=2021-01-10T09%3A57%3A52Z&amp;se=2031-01-11T09%3A57%3A52Z&amp;sr=b&amp;sp=r&amp;sig=ucQsy%2B4S8GqWnr7bK9N%2BR3QarAsM%2FnUDSrJ5QeRAQTI%3D" alt="Deploy Run From Zip Cake console output log" /></p>
-<p>Related posts</p>
+<h2 id="the-new-board-of-directors">The new Board of Directors</h2>
+<p>This means that as a result of the election the board will have the following members</p>
 <ul>
-<li><a href="https://medium.com/hackernoon/introducing-cake-kudu-client-abda40d15f38">Introducing Cake Kudu Client</a></li>
-<li><a href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37">“Run-From-Zip” with Cake Kudu Client</a></li>
+<li>Beth Massi</li>
+<li>Bill Wagner</li>
+<li>Frank Odoom</li>
+<li>Javier Lozano</li>
+<li>Mattias Karlsson</li>
+<li>Rob Prouse</li>
+<li>Shawn Wildermuth</li>
 </ul>
+<h2 id="changes-to-the-board-of-directors">Changes to the Board of Directors</h2>
+<p>Javier Lozano was re-elected, so leaving the board are</p>
+<ul>
+<li>Jeff Strauss</li>
+<li>Layla Porter</li>
+<li>Rodney Littles II</li>
+</ul>
+<p>Jeff, Layla, Rodney thanks you for your hard work! ❤️</p>
+<h2 id="personal-reflections">Personal reflections</h2>
+<p>I'm truly humbled by the confidence placed in me by the Foundation members, so thank you!❤️</p>
+<p>I just got the news at the same time as the rest of the world, so I'm far from onboarded yet, and honestly don't have a 100% clear picture of what to expect and what's expected of me.</p>
+<p>But at the same time, I know too well how much hard and frustrating work it can be from years of experience participating in various boards, non-profits, communities, and open source projects. And I've got huge respect for the tasks and challenges at hand. The board speaks in one voice but consists of several voices, yours included.
+There're several challenges we face, some issues may be small, others unacceptable which clearly need to be addressed, key problem areas in my mind are:</p>
+<h3 id="diversity">Diversity</h3>
+<p>We need for the  .NET community to be welcoming safe, inclusive, and representative for current and new participants. And it's clear there's room for improvement here.
+This includes the Board of Directors, which in my opinion isn't representative - so here we will need your, members, committees, and the community help to hold us accountable and provide us honest constructive feedback. We can be good allies and champions, even if we're not serving in any official capacity. And truly hope we'll have a more representative board post next election.</p>
+<h3 id="sustainability">Sustainability</h3>
+<p>Sustainability isn't just about adding members, projects, and responsibilities, it's also what happens after you've joined or promises have been made. It's not sustainable if members, maintainers, and community leaders burn out, feel unwelcome or unheard. We can't grow if we at the same time have a churn of people and projects. Don't set things in motion you don't have a plan for how to maintain it - or clearly scope that it's time-limited.</p>
+<h3 id="transparency">Transparency</h3>
+<p>For me, this is hugely centered around communication, only promise what you can deliver on, clearly communicate what can be expected and when to expect it. If you're unsure, clarify. If you can't communicate yet - communicate that - silence isn't respectful and just fuels misinformation.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Thanks for the confidence! this will be an interesting journey, and truly hope I can represent you well. I will need some time to be the &quot;new person&quot; - hear people out, ask stupid questions, inventory which tools are at hand, and so on.</p>
 
 
         <div class="container">
@@ -167,7 +158,7 @@ Task(&quot;Deploy-Run-From-Zip&quot;)
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
                 </div>
             </div>
         </div>
@@ -182,8 +173,6 @@ Task(&quot;Deploy-Run-From-Zip&quot;)
     <div class="container">
         <div class="row">
                 <div class="col-md-12 text-center">
-                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684">https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684</a>.</p>
-                        <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2021</p>
                     <br />
                     <ul class="list-inline text-center small">

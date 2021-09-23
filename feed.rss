@@ -5,8 +5,59 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2021</copyright>
-		<pubDate>Mon, 23 Aug 2021 07:57:25 GMT</pubDate>
-		<lastBuildDate>Mon, 23 Aug 2021 07:57:25 GMT</lastBuildDate>
+		<pubDate>Thu, 23 Sep 2021 14:10:55 GMT</pubDate>
+		<lastBuildDate>Thu, 23 Sep 2021 14:10:55 GMT</lastBuildDate>
+		<item>
+			<title>Joining the .NET Foundation Board of Directors</title>
+			<link>https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors</link>
+			<description>A reflection on the results from the 2021 Board of Directors Election</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/09/23/468b4b6e-3ecd-c723-3323-8ffce93ac433.png?sv=2019-12-12&amp;st=2021-09-22T14%253A02%253A54Z&amp;se=2031-09-23T14%253A02%253A54Z&amp;sr=b&amp;sp=r&amp;sig=kN9k556DBbpI5pYPbI2tLDpXGiLFIJRsBsZ07Pf1LEc%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors</guid>
+			<pubDate>Thu, 23 Sep 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Yesterday the .NET Foundation &lt;a href="https://dotnetfoundation.org/blog/2021/09/22/net-foundation-election-results-2021"&gt;announced&lt;/a&gt; the results from the 2021 Board of Directors Election. An election where the Foundation's members choose who they want to represent them on the board and this election set out to fill four out of seven seats.&lt;/p&gt;
+&lt;p&gt;And I'm deeply honored to announce that I have this election been elected along with&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/frank-arkhurst-odoom"&gt;Frank Odoom&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/javier-lozano"&gt;Javier Lozano&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/rob-prouse"&gt;Rob Prouse&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-new-board-of-directors"&gt;The new Board of Directors&lt;/h2&gt;
+&lt;p&gt;This means that as a result of the election the board will have the following members&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Beth Massi&lt;/li&gt;
+&lt;li&gt;Bill Wagner&lt;/li&gt;
+&lt;li&gt;Frank Odoom&lt;/li&gt;
+&lt;li&gt;Javier Lozano&lt;/li&gt;
+&lt;li&gt;Mattias Karlsson&lt;/li&gt;
+&lt;li&gt;Rob Prouse&lt;/li&gt;
+&lt;li&gt;Shawn Wildermuth&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="changes-to-the-board-of-directors"&gt;Changes to the Board of Directors&lt;/h2&gt;
+&lt;p&gt;Javier Lozano was re-elected, so leaving the board are&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jeff Strauss&lt;/li&gt;
+&lt;li&gt;Layla Porter&lt;/li&gt;
+&lt;li&gt;Rodney Littles II&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Jeff, Layla, Rodney thanks you for your hard work! ❤️&lt;/p&gt;
+&lt;h2 id="personal-reflections"&gt;Personal reflections&lt;/h2&gt;
+&lt;p&gt;I'm truly humbled by the confidence placed in me by the Foundation members, so thank you!❤️&lt;/p&gt;
+&lt;p&gt;I just got the news at the same time as the rest of the world, so I'm far from onboarded yet, and honestly don't have a 100% clear picture of what to expect and what's expected of me.&lt;/p&gt;
+&lt;p&gt;But at the same time, I know too well how much hard and frustrating work it can be from years of experience participating in various boards, non-profits, communities, and open source projects. And I've got huge respect for the tasks and challenges at hand. The board speaks in one voice but consists of several voices, yours included.
+There're several challenges we face, some issues may be small, others unacceptable which clearly need to be addressed, key problem areas in my mind are:&lt;/p&gt;
+&lt;h3 id="diversity"&gt;Diversity&lt;/h3&gt;
+&lt;p&gt;We need for the  .NET community to be welcoming safe, inclusive, and representative for current and new participants. And it's clear there's room for improvement here.
+This includes the Board of Directors, which in my opinion isn't representative - so here we will need your, members, committees, and the community help to hold us accountable and provide us honest constructive feedback. We can be good allies and champions, even if we're not serving in any official capacity. And truly hope we'll have a more representative board post next election.&lt;/p&gt;
+&lt;h3 id="sustainability"&gt;Sustainability&lt;/h3&gt;
+&lt;p&gt;Sustainability isn't just about adding members, projects, and responsibilities, it's also what happens after you've joined or promises have been made. It's not sustainable if members, maintainers, and community leaders burn out, feel unwelcome or unheard. We can't grow if we at the same time have a churn of people and projects. Don't set things in motion you don't have a plan for how to maintain it - or clearly scope that it's time-limited.&lt;/p&gt;
+&lt;h3 id="transparency"&gt;Transparency&lt;/h3&gt;
+&lt;p&gt;For me, this is hugely centered around communication, only promise what you can deliver on, clearly communicate what can be expected and when to expect it. If you're unsure, clarify. If you can't communicate yet - communicate that - silence isn't respectful and just fuels misinformation.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Thanks for the confidence! this will be an interesting journey, and truly hope I can represent you well. I will need some time to be the &amp;quot;new person&amp;quot; - hear people out, ask stupid questions, inventory which tools are at hand, and so on.&lt;/p&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Devlead.Statiq - Part 3 - IncludeCode 🤺</title>
 			<link>https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode</link>
@@ -1298,64 +1349,6 @@ Process Id: 32723, Name: dotnet
 &lt;p&gt;Fairly quickly found the issue added a commit and builds were green and I could go to sleep.&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/f94d4dea-7f34-2d6b-2b98-b78a727ebe35.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A47%3A48Z&amp;amp;se=2031-01-11T09%3A47%3A48Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=tgplc9XhXuY5qBJLd%2FCSU4ZUKaz%2BgorxGG%2B9h0%2F2C60%3D" alt="macOS build passes" /&gt;&lt;/p&gt;
 &lt;p&gt;Sometimes you just want to attack the problem and not debug tooling, then attacking the problem from another direction might get you there quicker, today it was setting &lt;code&gt;VSTEST_HOST_DEBUG&lt;/code&gt; to &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Cake.Kudu.Client version 0.6.0 released</title>
-			<link>https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released</link>
-			<description>&lt;p&gt;This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.&lt;/p&gt;</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released</guid>
-			<pubDate>Sun, 03 Jun 2018 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.&lt;/p&gt;
-&lt;h2 id="app-service-changes"&gt;App Service Changes&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;App Setting: &lt;code&gt;WEBSITE_USE_ZIP&lt;/code&gt; --&amp;gt; &lt;code&gt;WEBSITE_RUN_FROM_ZIP&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Marker filename: &lt;code&gt;siteversion.txt&lt;/code&gt; --&amp;gt; &lt;code&gt;packagename.txt&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="action-you-need-to-take"&gt;Action you need to take&lt;/h2&gt;
-&lt;p&gt;As the App Setting has change you’ll need to change you setting name to &lt;code&gt;WEBSITE_RUN_FROM_ZIP&lt;/code&gt; (it’s value should still be &lt;code&gt;1&lt;/code&gt; )&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/b0858633-3124-5aec-09c6-de238e198b19.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A54%3A47Z&amp;amp;se=2031-01-11T09%3A54%3A47Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=D%2BroDxmN6v7WRtasetPKfTpV%2Bxj2Y%2Bx3vM0Mc97pbwo%3D" alt="App Service App Settings" /&gt;&lt;/p&gt;
-&lt;p&gt;Maker filename is handled by the new version so all you need to update scripts to use Cake.Kudu.Client version &lt;code&gt;0.6.0&lt;/code&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.6.0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;nothing else needs to be changed in your Cake script.&lt;/p&gt;
-&lt;h2 id="verifying-change"&gt;Verifying change&lt;/h2&gt;
-&lt;p&gt;You can verify the publish succeeded under App Service Advanced Tools ( Kudu ) — Debug Console by navigating to &lt;code&gt;data/SitePackages&lt;/code&gt; and see deployment package and the new &lt;code&gt;packagename.txt&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/73564b06-ae73-e415-a9f3-f34c69bbddd5.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A56%3A42Z&amp;amp;se=2031-01-11T09%3A56%3A42Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=471bIcnxlyPDPBXWGvnPeSRQ0YHSoT4FFkcv1qb9pdQ%3D" alt="Kudu Debug Console" /&gt;&lt;/p&gt;
-&lt;h2 id="full-example"&gt;Full example&lt;/h2&gt;
-&lt;p&gt;If you haven’t used the feature before below is a full example&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.Kudu.Client&amp;amp;version=0.6.0
-
-Task(&amp;quot;Deploy-Run-From-Zip&amp;quot;)
- .Does( ()=&amp;gt;
- {
-    string  baseUri     = EnvironmentVariable(&amp;quot;KUDU_CLIENT_BASEURI&amp;quot;),
-            userName    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_USERNAME&amp;quot;),
-            password    = EnvironmentVariable(&amp;quot;KUDU_CLIENT_PASSWORD&amp;quot;);
-
-    IKuduClient kuduClient = KuduClient(
-        baseUri,
-        userName,
-        password);
-
-    DirectoryPath sourceDirectoryPath = &amp;quot;./website/&amp;quot;;
-
-    FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
-
-    Information(&amp;quot;Deployed to {0}&amp;quot;, deployFilePath);
- });
-
- RunTarget(&amp;quot;Deploy-Run-From-Zip&amp;quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/8ecbff75-0985-f2e0-b354-9c0095b52cdf.png?sv=2019-12-12&amp;amp;st=2021-01-10T09%3A57%3A52Z&amp;amp;se=2031-01-11T09%3A57%3A52Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=ucQsy%2B4S8GqWnr7bK9N%2BR3QarAsM%2FnUDSrJ5QeRAQTI%3D" alt="Deploy Run From Zip Cake console output log" /&gt;&lt;/p&gt;
-&lt;p&gt;Related posts&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://medium.com/hackernoon/introducing-cake-kudu-client-abda40d15f38"&gt;Introducing Cake Kudu Client&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37"&gt;“Run-From-Zip” with Cake Kudu Client&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>
