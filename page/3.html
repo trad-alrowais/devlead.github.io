@@ -42,6 +42,8 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
   <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
   
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -67,13 +69,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -110,19 +112,19 @@
 
 <div class="post-preview">
     <h2 class="post-title"><a href="/posts/2021/2021-01-15-my-preferred-console-stack">My preferred .NET console stack</a></h2>
-    <p class="post-meta">Published on Friday, January 15, 2021</p>                
+    <p class="post-meta">Published on Friday, 15 January 2021</p>
 <p>There's type of application that has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a <code>Main(string[] args)</code> and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll walk through what today is my alternative starting point to <code>dotnet new console</code>, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.</p>        <p class="small"><a href="/posts/2021/2021-01-15-my-preferred-console-stack">Read more...</a></p>
 </div>
 
 <div class="post-preview">
     <h2 class="post-title"><a href="/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection">Introducing Cake Bridge Dependency Injection</a></h2>
-    <p class="post-meta">Published on Tuesday, January 12, 2021</p>                
+    <p class="post-meta">Published on Tuesday, 12 January 2021</p>
 <p>A couple of years ago I blogged <a href="/posts/2017/2017-07-09-dispelling-the-magic">Dispelling the magic!</a>, a post explaining the internals of the <a href="https://cakebuild.net/">Cake</a> build orchestration tool, with that post as a proof of concept I created <a href="https://www.nuget.org/packages/Cake.Bridge">Cake.Bridge</a> assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.</p>        <p class="small"><a href="/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection">Read more...</a></p>
 </div>
 
 <div class="post-preview">
     <h2 class="post-title"><a href="/posts/2021/2021-01-11-blog-migrated-to-statiq">Blog migrated to Statiq</a></h2>
-    <p class="post-meta">Published on Monday, January 11, 2021</p>                
+    <p class="post-meta">Published on Monday, 11 January 2021</p>
 <p>Since 2016 I've been using Medium as my platform of choice, this is not a rage quit from the platform, I'll keep posting on Medium, the difference is that the main source for my posts will be on my own canonical domain, where I've got full access and control over my words.</p>        <p class="small"><a href="/posts/2021/2021-01-11-blog-migrated-to-statiq">Read more...</a></p>
 </div>
     <div>
@@ -159,9 +161,10 @@
             
             <hr />
 <h5>Online presence</h5>
-<img align="left" src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/devlead_white_256x256.png?sp=rl&st=2021-01-11T15:33:13Z&se=2031-01-12T15:33:00Z&sv=2019-12-12&sr=b&sig=YcJAjv8TaE1tD7%2B110enTaBM%2FyBEhEBFN8KpJRO1NHo%3D" alt="devlead avatar" style="width: 200px;height:200px;margin-bottom:60px" />
+<img align="left" src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/devlead_white_256x256.png?sp=rl&st=2021-01-11T15:33:13Z&se=2031-01-12T15:33:00Z&sv=2019-12-12&sr=b&sig=YcJAjv8TaE1tD7%2B110enTaBM%2FyBEhEBFN8KpJRO1NHo%3D" alt="devlead avatar" style="width: 200px;height:200px;margin-bottom:80px" />
 <ul class="list-unstyled">
     <li><a href="https://twitter.com/devlead"><i class="fab fa-twitter"></i> Twitter</a></li>
+    <li><a rel="me" href="https://mastodon.social/@devlead"><i class="fab fa-mastodon"></i> Mastodon</a></li>
     <li><a href="https://devlead.medium.com"><i class="fab fa-medium"></i> Medium</a></li>
     <li><a href="https://github.com/devlead"><i class="fab fa-github"></i> GitHub</a></li>
     <li><a href="https://bitbucket.org/devlead"><i class="fab fa-bitbucket"></i> Bitbucket</a></li>
@@ -225,7 +228,7 @@
     })();
 </script>
 
-<script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js" integrity="sha384-OBYc88+eQm2E+Vw9J6jK9Z9rY4rcY+Mq5KlRpOzFTiHZV0Misu7O5AKmBOWGKk8j" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/mermaid@8.9.3/dist/mermaid.min.js" integrity="sha384-nVmn6yKHyUktDHdQfBgpn1YPgEu8gDXTYI5qccfkF1j6oxBHjKEafySIuNs3UhEW" crossorigin="anonymous"></script>
 
   
 
