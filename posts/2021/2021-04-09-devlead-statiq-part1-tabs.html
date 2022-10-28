@@ -76,13 +76,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -121,11 +121,11 @@
         <p>Earlier this year I blogged about that my <a href="/posts/2021/2021-01-11-blog-migrated-to-statiq">&quot;Blog migrated to Statiq&quot;</a>, one advantage with <a href="https://statiq.dev/">Statiq</a> is that it's through .NET code really customizable and lets you adapt it fully to your needs. Code that can be packaged and distributed as a NuGet package, making it straightforward to share and reuse functionality between sites.<br/> <br/> In a three-part blog post series, I'll start going through the features of the NuGet package <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> created for my own Statiq based sites - but probably useful for others too, and this first part will be about the TabGroup Shortcode.</p>
 <h2 id="tabgroup-shortcode">TabGroup Shortcode</h2>
 <div class="tab-wrap">
-<input type="radio" id="8d8117ddca0243d89b9bd1f9e1ca4a04-5e0f93ab5d9e4a81854a844d1c1ac088" name="8d8117ddca0243d89b9bd1f9e1ca4a04" class="tab" checked><label for="8d8117ddca0243d89b9bd1f9e1ca4a04-5e0f93ab5d9e4a81854a844d1c1ac088" >Introduction</label>
-<input type="radio" id="8d8117ddca0243d89b9bd1f9e1ca4a04-a0e63d8ffafa4a06905a4d622f5f161b" name="8d8117ddca0243d89b9bd1f9e1ca4a04" class="tab" ><label for="8d8117ddca0243d89b9bd1f9e1ca4a04-a0e63d8ffafa4a06905a4d622f5f161b" >Prerequisites</label>
-<input type="radio" id="8d8117ddca0243d89b9bd1f9e1ca4a04-02c080e4d6c94ff4a8816bdcbb2c9015" name="8d8117ddca0243d89b9bd1f9e1ca4a04" class="tab" ><label for="8d8117ddca0243d89b9bd1f9e1ca4a04-02c080e4d6c94ff4a8816bdcbb2c9015" >Content</label>
-<input type="radio" id="8d8117ddca0243d89b9bd1f9e1ca4a04-d273a9895ad44115ba8cd60822092c43" name="8d8117ddca0243d89b9bd1f9e1ca4a04" class="tab" ><label for="8d8117ddca0243d89b9bd1f9e1ca4a04-d273a9895ad44115ba8cd60822092c43" >Include</label>
-<input type="radio" id="8d8117ddca0243d89b9bd1f9e1ca4a04-1ab0c599cfc24e169afa9fbcc6d119f3" name="8d8117ddca0243d89b9bd1f9e1ca4a04" class="tab" ><label for="8d8117ddca0243d89b9bd1f9e1ca4a04-1ab0c599cfc24e169afa9fbcc6d119f3" >Code</label>
+<input type="radio" id="da099a02edc8472bb493c5b077dea382-40e01948571243d5be70cebe29162e5e" name="da099a02edc8472bb493c5b077dea382" class="tab" checked><label for="da099a02edc8472bb493c5b077dea382-40e01948571243d5be70cebe29162e5e" >Introduction</label>
+<input type="radio" id="da099a02edc8472bb493c5b077dea382-af8e25ab4db443df870b1aba68826392" name="da099a02edc8472bb493c5b077dea382" class="tab" ><label for="da099a02edc8472bb493c5b077dea382-af8e25ab4db443df870b1aba68826392" >Prerequisites</label>
+<input type="radio" id="da099a02edc8472bb493c5b077dea382-fd4a1a18d3b340a1a7332603046fff79" name="da099a02edc8472bb493c5b077dea382" class="tab" ><label for="da099a02edc8472bb493c5b077dea382-fd4a1a18d3b340a1a7332603046fff79" >Content</label>
+<input type="radio" id="da099a02edc8472bb493c5b077dea382-48ce0f87c4584fc2aa2154d84af54bae" name="da099a02edc8472bb493c5b077dea382" class="tab" ><label for="da099a02edc8472bb493c5b077dea382-48ce0f87c4584fc2aa2154d84af54bae" >Include</label>
+<input type="radio" id="da099a02edc8472bb493c5b077dea382-0bc42d3fad8143feba1bcab409a1cea0" name="da099a02edc8472bb493c5b077dea382" class="tab" ><label for="da099a02edc8472bb493c5b077dea382-0bc42d3fad8143feba1bcab409a1cea0" >Code</label>
 <div class="tab__content">
 
 <p>Statiq <a href="https://statiq.dev/framework/content/shortcodes">shortcodes</a> are small but powerful macros that can generate content or add metadata to your documents.</p>
@@ -218,8 +218,8 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="e029de70593c433381bc09b4a9f13d0b-07d1801cb40f4604a385907dea18a801" name="e029de70593c433381bc09b4a9f13d0b" class="tab" checked><label for="e029de70593c433381bc09b4a9f13d0b-07d1801cb40f4604a385907dea18a801" >Tab Two</label>
-<input type="radio" id="e029de70593c433381bc09b4a9f13d0b-03ddb0bcb5cb44f595f11d0f619f345d" name="e029de70593c433381bc09b4a9f13d0b" class="tab" ><label for="e029de70593c433381bc09b4a9f13d0b-03ddb0bcb5cb44f595f11d0f619f345d" >Tab One</label>
+<input type="radio" id="0ee40c85b4434df98c1e78a40e6e911d-98edeb5c92ad449aa16ca81c25d099fb" name="0ee40c85b4434df98c1e78a40e6e911d" class="tab" checked><label for="0ee40c85b4434df98c1e78a40e6e911d-98edeb5c92ad449aa16ca81c25d099fb" >Tab Two</label>
+<input type="radio" id="0ee40c85b4434df98c1e78a40e6e911d-7b12cb29b05c41fb94a448414c036f6c" name="0ee40c85b4434df98c1e78a40e6e911d" class="tab" ><label for="0ee40c85b4434df98c1e78a40e6e911d-7b12cb29b05c41fb94a448414c036f6c" >Tab One</label>
 <div class="tab__content">
 
 <h2 id="famous-words">Famous words</h2>
@@ -270,8 +270,8 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="ba321dd46d5e4d498585e6b89cb5a44c-9a1bcf7304924d2c8cec58861cb2dda4" name="ba321dd46d5e4d498585e6b89cb5a44c" class="tab" checked><label for="ba321dd46d5e4d498585e6b89cb5a44c-9a1bcf7304924d2c8cec58861cb2dda4" >Lorem Ipsum</label>
-<input type="radio" id="ba321dd46d5e4d498585e6b89cb5a44c-215eee0c2d8e4a9095b753767c968423" name="ba321dd46d5e4d498585e6b89cb5a44c" class="tab" ><label for="ba321dd46d5e4d498585e6b89cb5a44c-215eee0c2d8e4a9095b753767c968423" >Famous words</label>
+<input type="radio" id="3ff5446696ae42e6901dc6b80d43fc54-53ad38654dbb49829b6471c5939e6d4b" name="3ff5446696ae42e6901dc6b80d43fc54" class="tab" checked><label for="3ff5446696ae42e6901dc6b80d43fc54-53ad38654dbb49829b6471c5939e6d4b" >Lorem Ipsum</label>
+<input type="radio" id="3ff5446696ae42e6901dc6b80d43fc54-247772844bdd4c6cbeeffc8bf7da8fcf" name="3ff5446696ae42e6901dc6b80d43fc54" class="tab" ><label for="3ff5446696ae42e6901dc6b80d43fc54-247772844bdd4c6cbeeffc8bf7da8fcf" >Famous words</label>
 <div class="tab__content">
 
 <h2 id="famous-words">Famous words</h2>
@@ -329,10 +329,10 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="3cd857d952a14dcea22b871feaa3018f-039f8a3f652e4f53b56941c64aa65109" name="3cd857d952a14dcea22b871feaa3018f" class="tab" checked><label for="3cd857d952a14dcea22b871feaa3018f-039f8a3f652e4f53b56941c64aa65109" >settings.yml</label>
-<input type="radio" id="3cd857d952a14dcea22b871feaa3018f-538185ad626f483ba6e3e22fcbeba455" name="3cd857d952a14dcea22b871feaa3018f" class="tab" ><label for="3cd857d952a14dcea22b871feaa3018f-538185ad626f483ba6e3e22fcbeba455" >Settings yaml file</label>
-<input type="radio" id="3cd857d952a14dcea22b871feaa3018f-009e6e2405024811b06379ffeb221fde" name="3cd857d952a14dcea22b871feaa3018f" class="tab" ><label for="3cd857d952a14dcea22b871feaa3018f-009e6e2405024811b06379ffeb221fde" >_head.cshtml</label>
-<input type="radio" id="3cd857d952a14dcea22b871feaa3018f-259c90fbcaf9437e80d12cf033d36242" name="3cd857d952a14dcea22b871feaa3018f" class="tab" ><label for="3cd857d952a14dcea22b871feaa3018f-259c90fbcaf9437e80d12cf033d36242" >_head.cshtml</label>
+<input type="radio" id="11592acebc4440d881cfee578431953c-ba7171ad88c64b01962080466a97f9de" name="11592acebc4440d881cfee578431953c" class="tab" checked><label for="11592acebc4440d881cfee578431953c-ba7171ad88c64b01962080466a97f9de" >settings.yml</label>
+<input type="radio" id="11592acebc4440d881cfee578431953c-6098b0054b8e4743bc219160703de68f" name="11592acebc4440d881cfee578431953c" class="tab" ><label for="11592acebc4440d881cfee578431953c-6098b0054b8e4743bc219160703de68f" >Settings yaml file</label>
+<input type="radio" id="11592acebc4440d881cfee578431953c-36f0afdf3c934efe9879eb42cccb8426" name="11592acebc4440d881cfee578431953c" class="tab" ><label for="11592acebc4440d881cfee578431953c-36f0afdf3c934efe9879eb42cccb8426" >_head.cshtml</label>
+<input type="radio" id="11592acebc4440d881cfee578431953c-b836c3a576724f558a43c9a47d7334fe" name="11592acebc4440d881cfee578431953c" class="tab" ><label for="11592acebc4440d881cfee578431953c-b836c3a576724f558a43c9a47d7334fe" >_head.cshtml</label>
 <div class="tab__content">
 
 <pre><code class="language-yaml">Host: &quot;www.devlead.se&quot;
@@ -429,12 +429,12 @@ DateTimeDisplayCulture: &quot;en-SE&quot;
             <div class="row">
                 <div class="col-md-12 text-center">
                     <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
-                    <p class="sponsorship" style="margin-top: 1em">
-                        <a class="btn btn-lg btn-outline-primary" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
-                            <i class="fa fa-heart"></i>
-                            Sponsor Mattias 
-                        </a>
-                    </p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
                 </div>
             </div>
             <div class="row">
