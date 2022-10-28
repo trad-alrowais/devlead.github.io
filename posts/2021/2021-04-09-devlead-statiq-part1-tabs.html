@@ -50,6 +50,11 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
 
 
@@ -70,13 +75,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
             <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/tags">Tags</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
             </li>
 </ul>
     </div>
@@ -115,11 +120,11 @@
         <p>Earlier this year I blogged about that my <a href="/posts/2021/2021-01-11-blog-migrated-to-statiq">&quot;Blog migrated to Statiq&quot;</a>, one advantage with <a href="https://statiq.dev/">Statiq</a> is that it's through .NET code really customizable and lets you adapt it fully to your needs. Code that can be packaged and distributed as a NuGet package, making it straightforward to share and reuse functionality between sites.<br/> <br/> In a three-part blog post series, I'll start going through the features of the NuGet package <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> created for my own Statiq based sites - but probably useful for others too, and this first part will be about the TabGroup Shortcode.</p>
 <h2 id="tabgroup-shortcode">TabGroup Shortcode</h2>
 <div class="tab-wrap">
-<input type="radio" id="2007847ffefb49ee82bb2c0e199b3889-a38a165f08cf4e518a6f9abf8ab52910" name="2007847ffefb49ee82bb2c0e199b3889" class="tab" checked><label for="2007847ffefb49ee82bb2c0e199b3889-a38a165f08cf4e518a6f9abf8ab52910" >Introduction</label>
-<input type="radio" id="2007847ffefb49ee82bb2c0e199b3889-d2c5ad3737b846d0a3c31b0fdb8695d6" name="2007847ffefb49ee82bb2c0e199b3889" class="tab" ><label for="2007847ffefb49ee82bb2c0e199b3889-d2c5ad3737b846d0a3c31b0fdb8695d6" >Prerequisites</label>
-<input type="radio" id="2007847ffefb49ee82bb2c0e199b3889-b851599ec80040bbbb509142b08033f5" name="2007847ffefb49ee82bb2c0e199b3889" class="tab" ><label for="2007847ffefb49ee82bb2c0e199b3889-b851599ec80040bbbb509142b08033f5" >Content</label>
-<input type="radio" id="2007847ffefb49ee82bb2c0e199b3889-b6326a1b7379419caee175f44f640dcd" name="2007847ffefb49ee82bb2c0e199b3889" class="tab" ><label for="2007847ffefb49ee82bb2c0e199b3889-b6326a1b7379419caee175f44f640dcd" >Include</label>
-<input type="radio" id="2007847ffefb49ee82bb2c0e199b3889-7359c764516749029b02bb7372017c0d" name="2007847ffefb49ee82bb2c0e199b3889" class="tab" ><label for="2007847ffefb49ee82bb2c0e199b3889-7359c764516749029b02bb7372017c0d" >Code</label>
+<input type="radio" id="b3240dd655a84554b3f3fe868010210d-22f1b0cc6d9540daaedc5a79b633fff2" name="b3240dd655a84554b3f3fe868010210d" class="tab" checked><label for="b3240dd655a84554b3f3fe868010210d-22f1b0cc6d9540daaedc5a79b633fff2" >Introduction</label>
+<input type="radio" id="b3240dd655a84554b3f3fe868010210d-4f704d946779469db965cedc49a2af26" name="b3240dd655a84554b3f3fe868010210d" class="tab" ><label for="b3240dd655a84554b3f3fe868010210d-4f704d946779469db965cedc49a2af26" >Prerequisites</label>
+<input type="radio" id="b3240dd655a84554b3f3fe868010210d-d32c06683da04ca9971f38fa8eae17ae" name="b3240dd655a84554b3f3fe868010210d" class="tab" ><label for="b3240dd655a84554b3f3fe868010210d-d32c06683da04ca9971f38fa8eae17ae" >Content</label>
+<input type="radio" id="b3240dd655a84554b3f3fe868010210d-30af56dd43124beaa13573030742c3d1" name="b3240dd655a84554b3f3fe868010210d" class="tab" ><label for="b3240dd655a84554b3f3fe868010210d-30af56dd43124beaa13573030742c3d1" >Include</label>
+<input type="radio" id="b3240dd655a84554b3f3fe868010210d-a4654339315145f9b00c6d674989e257" name="b3240dd655a84554b3f3fe868010210d" class="tab" ><label for="b3240dd655a84554b3f3fe868010210d-a4654339315145f9b00c6d674989e257" >Code</label>
 <div class="tab__content">
 
 <p>Statiq <a href="https://statiq.dev/framework/content/shortcodes">shortcodes</a> are small but powerful macros that can generate content or add metadata to your documents.</p>
@@ -161,6 +166,11 @@ await Bootstrapper
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
 &lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;style&gt;
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+&lt;/style&gt;
 &lt;?# TabGroupCss /?&gt;
 </code></pre>
 
@@ -206,8 +216,8 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="c07e48d4e4b147c28c3a3c6340a7e869-aac68e0421934740b696b3791ca9ae40" name="c07e48d4e4b147c28c3a3c6340a7e869" class="tab" checked><label for="c07e48d4e4b147c28c3a3c6340a7e869-aac68e0421934740b696b3791ca9ae40" >Tab Two</label>
-<input type="radio" id="c07e48d4e4b147c28c3a3c6340a7e869-3e409df884224770a9d397c71a1b3392" name="c07e48d4e4b147c28c3a3c6340a7e869" class="tab" ><label for="c07e48d4e4b147c28c3a3c6340a7e869-3e409df884224770a9d397c71a1b3392" >Tab One</label>
+<input type="radio" id="fa3d45d78fc74100a8f51b2192e0fe1c-707e62e828f34253ac785283747ce37a" name="fa3d45d78fc74100a8f51b2192e0fe1c" class="tab" checked><label for="fa3d45d78fc74100a8f51b2192e0fe1c-707e62e828f34253ac785283747ce37a" >Tab Two</label>
+<input type="radio" id="fa3d45d78fc74100a8f51b2192e0fe1c-8573cf5abb0e40e080cc43817e0de6fe" name="fa3d45d78fc74100a8f51b2192e0fe1c" class="tab" ><label for="fa3d45d78fc74100a8f51b2192e0fe1c-8573cf5abb0e40e080cc43817e0de6fe" >Tab One</label>
 <div class="tab__content">
 
 <h2 id="famous-words">Famous words</h2>
@@ -258,8 +268,8 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="97570ee73bf84825863e9470b98e15c3-58d94f12a42c476ba79ec3372e584722" name="97570ee73bf84825863e9470b98e15c3" class="tab" checked><label for="97570ee73bf84825863e9470b98e15c3-58d94f12a42c476ba79ec3372e584722" >Lorem Ipsum</label>
-<input type="radio" id="97570ee73bf84825863e9470b98e15c3-1b7aa3ddd535465cace7d68fb97517ae" name="97570ee73bf84825863e9470b98e15c3" class="tab" ><label for="97570ee73bf84825863e9470b98e15c3-1b7aa3ddd535465cace7d68fb97517ae" >Famous words</label>
+<input type="radio" id="085f4c742b514cc589e7f71976b39737-79bbb17fac084696bc99559b1796a0a4" name="085f4c742b514cc589e7f71976b39737" class="tab" checked><label for="085f4c742b514cc589e7f71976b39737-79bbb17fac084696bc99559b1796a0a4" >Lorem Ipsum</label>
+<input type="radio" id="085f4c742b514cc589e7f71976b39737-62515ecabf414d4fba993648a6499a23" name="085f4c742b514cc589e7f71976b39737" class="tab" ><label for="085f4c742b514cc589e7f71976b39737-62515ecabf414d4fba993648a6499a23" >Famous words</label>
 <div class="tab__content">
 
 <h2 id="famous-words">Famous words</h2>
@@ -317,10 +327,10 @@ tabs:
 
 <h3 id="result">Result</h3>
 <div class="tab-wrap">
-<input type="radio" id="5cbaebaac5494c38ae8c5f55c03d203f-0db45adfee3c44d89555e2d2ccda220a" name="5cbaebaac5494c38ae8c5f55c03d203f" class="tab" checked><label for="5cbaebaac5494c38ae8c5f55c03d203f-0db45adfee3c44d89555e2d2ccda220a" >settings.yml</label>
-<input type="radio" id="5cbaebaac5494c38ae8c5f55c03d203f-8f8ab9afbd7a45d2aa3d1fe3bd987896" name="5cbaebaac5494c38ae8c5f55c03d203f" class="tab" ><label for="5cbaebaac5494c38ae8c5f55c03d203f-8f8ab9afbd7a45d2aa3d1fe3bd987896" >Settings yaml file</label>
-<input type="radio" id="5cbaebaac5494c38ae8c5f55c03d203f-f7b3d3ac52d74295a67b49d1af835ab6" name="5cbaebaac5494c38ae8c5f55c03d203f" class="tab" ><label for="5cbaebaac5494c38ae8c5f55c03d203f-f7b3d3ac52d74295a67b49d1af835ab6" >_head.cshtml</label>
-<input type="radio" id="5cbaebaac5494c38ae8c5f55c03d203f-818fd20bf7b4481982062717b5d82401" name="5cbaebaac5494c38ae8c5f55c03d203f" class="tab" ><label for="5cbaebaac5494c38ae8c5f55c03d203f-818fd20bf7b4481982062717b5d82401" >_head.cshtml</label>
+<input type="radio" id="3aad1f3ac2dd45c099104922dd76891a-2caddee495074cb19d911cffba602a7f" name="3aad1f3ac2dd45c099104922dd76891a" class="tab" checked><label for="3aad1f3ac2dd45c099104922dd76891a-2caddee495074cb19d911cffba602a7f" >settings.yml</label>
+<input type="radio" id="3aad1f3ac2dd45c099104922dd76891a-e7a3b07593af4f37bacc7f30855a4c08" name="3aad1f3ac2dd45c099104922dd76891a" class="tab" ><label for="3aad1f3ac2dd45c099104922dd76891a-e7a3b07593af4f37bacc7f30855a4c08" >Settings yaml file</label>
+<input type="radio" id="3aad1f3ac2dd45c099104922dd76891a-676b655722c4404ba5c05d282eb28f3e" name="3aad1f3ac2dd45c099104922dd76891a" class="tab" ><label for="3aad1f3ac2dd45c099104922dd76891a-676b655722c4404ba5c05d282eb28f3e" >_head.cshtml</label>
+<input type="radio" id="3aad1f3ac2dd45c099104922dd76891a-6a50ef3a4743462cb6f00ebd4f7f21f3" name="3aad1f3ac2dd45c099104922dd76891a" class="tab" ><label for="3aad1f3ac2dd45c099104922dd76891a-6a50ef3a4743462cb6f00ebd4f7f21f3" >_head.cshtml</label>
 <div class="tab__content">
 
 <pre><code class="language-yaml">Host: &quot;www.devlead.se&quot;
@@ -355,6 +365,11 @@ DateTimeDisplayCulture: &quot;en-SE&quot;
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
 &lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;style&gt;
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+&lt;/style&gt;
 &lt;?# TabGroupCss /?&gt;
 </code></pre>
 
@@ -366,6 +381,11 @@ DateTimeDisplayCulture: &quot;en-SE&quot;
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/favicon-32x32.png&quot;&gt;
 &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/favicon-16x16.png&quot;&gt;
 &lt;link rel=&quot;manifest&quot; href=&quot;/site.webmanifest&quot;&gt;
+&lt;style&gt;
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+&lt;/style&gt;
 &lt;?# TabGroupCss /?&gt;
 </code></pre>
 
