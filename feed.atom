@@ -4,7 +4,7 @@
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2023</rights>
-	<updated>2023-11-27T20:29:22Z</updated>
+	<updated>2023-11-27T21:35:35Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
 	<entry>
 		<id>https://www.devlead.se/posts/2023/2023-11-27-introducing-bri</id>
@@ -32,8 +32,8 @@
 &lt;pre&gt;&lt;code class="language-bash"&gt;bri inventory myregistry.azurecr.io ./output/path
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="example"&gt;Example&lt;/h2&gt;
-&lt;p&gt;You can see an example of the output that BRI generates at &lt;a href="https://www.devlead.se/bri/britool.azurecr.io/Bicep/modules/bri/4.0.0.0#overview"&gt;www.devlead.se/bri/&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.devlead.se/bri/britool.azurecr.io/Bicep/modules/bri/4.0.0.0#overview"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2022/11/27/00ee924d-9de2-4b2b-90cc-1b5a8bcfb696_small.jpg?sv=2021-10-04&amp;amp;st=2023-11-27T19%3A39%3A50Z&amp;amp;se=2031-11-28T19%3A39%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=oree1I2Ia%2BqTdwXxZ1teSRHTf9iPODDLjjp5HvUGVsA%3D" alt="example" /&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can see an example of the output that BRI generates at &lt;a href="https://www.devlead.se/bri/britool.azurecr.io/bicep/modules/bri/4.0.0.0.html"&gt;www.devlead.se/bri/&lt;/a&gt;
+&lt;a href="https://www.devlead.se/bri/britool.azurecr.io/bicep/modules/bri/4.0.0.0.html"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2022/11/27/00ee924d-9de2-4b2b-90cc-1b5a8bcfb696_small.jpg?sv=2021-10-04&amp;amp;st=2023-11-27T19%3A39%3A50Z&amp;amp;se=2031-11-28T19%3A39%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=oree1I2Ia%2BqTdwXxZ1teSRHTf9iPODDLjjp5HvUGVsA%3D" alt="example" /&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="authentication"&gt;Authentication&lt;/h2&gt;
 &lt;p&gt;By default, it'll try to authenticate using the &lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet"&gt;DefaultAzureCredential&lt;/a&gt; which tries to authorize in the following order based on your environment.&lt;/p&gt;
 &lt;ol&gt;
