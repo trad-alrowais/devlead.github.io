@@ -4,8 +4,52 @@
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2023</rights>
-	<updated>2023-11-27T21:35:35Z</updated>
+	<updated>2023-11-29T19:21:05Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2023/2023-11-29-introducing-unpackdacpac</id>
+		<title>Introducing UnpackDacPac</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2023/2023-11-29-introducing-unpackdacpac" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2023/11/29/d29f363677f845559d19401cd5a47318.jpg?sv=2021-10-04&amp;st=2023-11-29T17%253A14%253A21Z&amp;se=2035-11-30T17%253A14%253A00Z&amp;sr=b&amp;sp=r&amp;sig=ga7enWBL804T0haYj29QJE7hvaV14REXobavSOZ4wwU%253D" />
+		<updated>2023-11-29T00:00:00Z</updated>
+		<content>&lt;p&gt;If you work with SQL Server databases, you may have encountered DAC packages, or dacpacs, which are a way of packaging a database's schema and seed data for deployment or migration. Dacpacs are useful for deploying databases to different environments, such as development, testing, or production, but it's tooling comes with some limitations. For example, you cannot easily inspect the contents of a dacpac file without having a running instance of SQL Server.&lt;/p&gt;
+&lt;p&gt;That's why I created UnpackDacPac, a .NET tool that enables you to extract a dacpac file and generate a deployment script to a target folder without the need to deploy it to an actual database. A really useful for example when you need to debug a failed deployment or retrieve an old version of a SQL object from just a DevOps build artifact.
+UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (&lt;em&gt;If you don't have the .NET SDK installed, you can get it from &lt;a href="https://get.dot.net/"&gt;here&lt;/a&gt;&lt;/em&gt;).&lt;/p&gt;
+&lt;h2 id="installation"&gt;Installation&lt;/h2&gt;
+&lt;p&gt;You can install UnpackDacPac as a global tool from the command line by typing:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global UnpackDacPac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;p&gt;The usage of UnpackDacPac is simple:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;unpackdacpac unpack &amp;lt;dacPacPath&amp;gt; &amp;lt;outputPath&amp;gt; [OPTIONS]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For example, if you have a dacpac file named Source.dacpac and you want to extract it to a folder named TargetPath, you can run:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;unpackdacpac unpack Source.dacpac TargetPath
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will create the following files in the TargetPath folder:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DacMetadata.xml&lt;/code&gt;: This file contains the metadata of the dacpac, such as the name, version, description, and dependencies of the database.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Deploy.sql&lt;/code&gt;: This file contains the generated deployment script that can be used to create or update a database from the dacpac.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;model.sql&lt;/code&gt;: This file contains the formatted SQL code that defines the schema and data of the database.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;model.xml&lt;/code&gt;: This file contains the XML representation of the database model.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Origin.xml&lt;/code&gt;: This file contains the origin information of the dacpac, such as the source server and database name.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;postdeploy.sql&lt;/code&gt;: This file contains any post-deployment scripts that are included in the dacpac.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One of the features of UnpackDacPac is that you can exclude certain types of objects from the generated deployment script by using the &lt;code&gt;--deploy-script-exclude-object-type&lt;/code&gt; parameter. For example, if you want to exclude users, logins, and role memberships from the deployment script, you can run:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;unpackdacpac unpack Source.dacpac TargetPath --deploy-script-exclude-object-type Users --deploy-script-exclude-object-type Logins --deploy-script-exclude-object-type RoleMembership
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will generate a deployment script that does not contain statements related to users, logins, or role memberships.&lt;/p&gt;
+&lt;h2 id="where-to-find-unpackdacpac"&gt;Where to find UnpackDacPac?&lt;/h2&gt;
+&lt;p&gt;UnpackDacPac is an open-source project under a permissive MIT license, the source can be found on &lt;a href="https://github.com/devlead/UnpackDacPac"&gt;GitHub&lt;/a&gt; and the NuGet package at &lt;a href="https://www.nuget.org/packages/UnpackDacPac"&gt;NuGet.org&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="feedback-and-suggestions"&gt;Feedback and suggestions&lt;/h2&gt;
+&lt;p&gt;I hope you find UnpackDacPac useful and feel free to provide any feedback, suggestions, or pull requests.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Happy unpacking!&lt;/em&gt;&lt;/p&gt;
+</content>
+		<summary>A .NET Tool for Extracting DAC Packages</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2023/2023-11-27-introducing-bri</id>
 		<title>Introducing BRI</title>
@@ -1351,27 +1395,5 @@ Total:                        00:00:00.0228957
 &lt;/ul&gt;
 </content>
 		<summary>Utilize Cake abstractions and addins using Microsoft dependency injection</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq</id>
-		<title>Blog migrated to Statiq</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/11/a20c196d-ae40-ed83-1a49-ec09f0e55e2e.png?sv=2019-12-12&amp;st=2021-01-10T20%253A53%253A57Z&amp;se=2031-01-11T20%253A53%253A57Z&amp;sr=b&amp;sp=r&amp;sig=ZzDlx22k%252BmCJJkPeHnEcxZFZ5xbBoG4PQluscRG7%252BeM%253D" />
-		<updated>2021-01-11T00:00:00Z</updated>
-		<content>&lt;p&gt;Since 2016 I've been using Medium as my platform of choice, this is not a rage quit from the platform, I'll keep posting on Medium, the difference is that the main source for my posts will be on my own canonical domain, where I've got full access and control over my words.&lt;/p&gt;
-&lt;p&gt;The decision is just as much that I've found a stack and toolchain I really like, feel comfortable, and hopefully productive with.&lt;/p&gt;
-&lt;p&gt;The stack I've settled on has a few key components&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Statiq Web&lt;/a&gt; - a brilliant .NET based static site generator by &lt;a href="https://daveaglick.com/"&gt;Dave Glick&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/"&gt;GitHub&lt;/a&gt; - where the code is stored.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; - where the html is served from.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://azure.microsoft.com/en-us/services/cdn/"&gt;Azure CDN&lt;/a&gt; - where the blog images are served from.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://marketplace.visualstudio.com/items?itemName=gep13.clipimg-vscode"&gt;ClipImg&lt;/a&gt; - Visual Studio Code addin that takes images from clipboard, uploads to Azure blob storage and inserts the markdown needed to render image - with just one keyboard shortcut.&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-		<summary>It was long overdue</summary>
 	</entry>
 </feed>
