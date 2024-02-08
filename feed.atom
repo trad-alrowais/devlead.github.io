@@ -3,9 +3,54 @@
 	<id>https://www.devlead.se/</id>
 	<title />
 	<link rel="self" href="https://www.devlead.se/" />
-	<rights>© Mattias Karlsson 2023</rights>
-	<updated>2023-11-29T19:21:05Z</updated>
+	<rights>© Mattias Karlsson 2024</rights>
+	<updated>2024-02-08T19:31:20Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2024/2024-02-08-introducing-ari</id>
+		<title>Introducing ARI</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2024/2024-02-08-introducing-ari" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2024/02/08/23be558ef4784e74a88b6bab00141708.jpg?sv=2021-10-04&amp;st=2024-02-08T19%253A03%253A22Z&amp;se=2050-12-16T19%253A05%253A00Z&amp;sr=b&amp;sp=r&amp;sig=MYOLIoM7zuZkWN7OQmLDVMTP796IKEhotMKRCtPYIsY%253D" />
+		<updated>2024-02-08T00:00:00Z</updated>
+		<content>&lt;p&gt;If you are working with Azure, you might have encountered the challenge of keeping track of all the subscriptions, resource groups, and resources that you have in your tenant. You might also want to document them in a clear and consistent way, for example, for compliance, auditing, or reporting purposes.&lt;/p&gt;
+&lt;p&gt;That's why I created ARI, a .NET tool that inventories and documents your Azure tenant's subscriptions, resource groups, and resources. ARI stands for Azure Resource Inventory, and it is a free and open source tool that you can install and use with the .NET 7 or 8 SDK.&lt;/p&gt;
+&lt;h2 id="how-to-install-ari"&gt;How to install ARI&lt;/h2&gt;
+&lt;p&gt;ARI is available as a NuGet package at &lt;a href="https://www.nuget.org/packages/ARI"&gt;nuget.org/packages/ARI&lt;/a&gt;. You can install it either globally on your machine or locally in a specific folder or repository.&lt;/p&gt;
+&lt;p&gt;To install it globally, run the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global ARI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To install it locally, you need to create a tool manifest file first. You can do this by running the following command in the folder where you want to use ARI:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then, you can install ARI in that folder by running:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --local ARI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="how-to-use-ari"&gt;How to use ARI&lt;/h2&gt;
+&lt;p&gt;Once you have installed ARI, you can use it by typing &lt;code&gt;ari&lt;/code&gt; if you installed it globally, or &lt;code&gt;dotnet ari&lt;/code&gt; if you installed it locally.&lt;/p&gt;
+&lt;p&gt;You can use the &lt;code&gt;-h&lt;/code&gt; or &lt;code&gt;--help&lt;/code&gt; parameters to get the current list of available commands and options. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;ari --help
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;ari &amp;lt;command&amp;gt; --help
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The main current available command of ARI is &lt;code&gt;inventory&lt;/code&gt;, which takes a tenant ID and an output path as required parameters. It also has some optional parameters that you can use to customize the inventory process. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;ari inventory &amp;lt;tenantId&amp;gt; &amp;lt;outputpath&amp;gt; [options]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;inventory&lt;/code&gt; command will scan your Azure tenant and generate a set of GitHub flavoured markdown files that document your subscriptions, resource groups, and resources. It will also create indexes by tag name and value, or by resources missing tags.&lt;/p&gt;
+&lt;h2 id="how-to-contribute-to-ari"&gt;How to contribute to ARI&lt;/h2&gt;
+&lt;p&gt;ARI is licensed under the MIT license, which means you can use it for any purpose, modify it, and distribute it freely. The source code is hosted on GitHub at &lt;a href="https://github.com/devlead/ari"&gt;github.com/devlead/ari&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I welcome any feedback, suggestions, bug reports, or pull requests from the community. If you want to contribute to ARI, please check out the issues on GitHub.&lt;/p&gt;
+&lt;h2 id="how-to-use-the-output-of-ari"&gt;How to use the output of ARI&lt;/h2&gt;
+&lt;p&gt;The output of ARI is a set of GitHub flavored markdown files that you can use for various purposes. For example, you can use them with static site generators, wikis, or other tools that support markdown.&lt;/p&gt;
+&lt;p&gt;One example of a static site generator that works well with ARI is Statiq ( &lt;a href="https://statiq.dev/"&gt;statiq.dev&lt;/a&gt; ), which is also a .NET framework for generating static websites and markdown files is one of its supported input formats. You can see an example of a static website generated using Statiq and ARI at &lt;a href="https://www.devlead.se/ARI/"&gt;devlead.se/ARI&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I hope you find ARI useful and helpful for your Azure projects. Please let me know what you think and how I can improve it.&lt;/p&gt;
+&lt;p&gt;Thank you for reading!&lt;/p&gt;
+</content>
+		<summary>A DevOps tool to document a Azure tenant resources</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2023/2023-11-29-introducing-unpackdacpac</id>
 		<title>Introducing UnpackDacPac</title>
@@ -1271,129 +1316,5 @@ namespace MyConsoleApp.Commands.Validation
 &lt;/ul&gt;
 </content>
 		<summary>An opinionated view on the boilerplate starting point of any .NET console application</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection</id>
-		<title>Introducing Cake Bridge Dependency Injection</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2021/2021-01-12-introducing-cake-bridge-dependency-injection" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/12/c2a643e9-2c63-361b-b458-a647352ebe87.png?sv=2019-12-12&amp;st=2021-01-11T10%253A13%253A57Z&amp;se=2031-01-12T10%253A13%253A57Z&amp;sr=b&amp;sp=r&amp;sig=qInj%252F3o1X2jmpZR1KQIWUgaYF5S8c9zJz0l7zZVYmWg%253D" />
-		<updated>2021-01-12T00:00:00Z</updated>
-		<content>&lt;p&gt;A couple of years ago I blogged &lt;a href="https://www.devlead.se/posts/2017/2017-07-09-dispelling-the-magic"&gt;Dispelling the magic!&lt;/a&gt;, a post explaining the internals of the &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; build orchestration tool, with that post as a proof of concept I created &lt;a href="https://www.nuget.org/packages/Cake.Bridge"&gt;Cake.Bridge&lt;/a&gt; assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.&lt;/p&gt;
-&lt;h2 id="the-need"&gt;The Need&lt;/h2&gt;
-&lt;p&gt;Cake has some real nice testable abstractions around working with the filesystem, processes, tools, etc. and for a .NET project, we had just that need. But a static instance isn't very testable, and for most of our .NET projects (console apps, APIs, Azure Functions, WPF, etc.) we now use dependency injection using &lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;Microsoft.Extensions.DependencyInjection&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;So with that in mind, I created an extension method to &lt;a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection?view=dotnet-plat-ext-5.0"&gt;IServiceCollection&lt;/a&gt; that easily provided me a way to get a &lt;a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/"&gt;IFileSystem&lt;/a&gt; injected and utilizing the &lt;a href="https://cakebuild.net/api/Cake.Testing/FakeFileSystem/"&gt;FakeFileSystem&lt;/a&gt; provided by &lt;a href="https://www.nuget.org/packages/Cake.Testing"&gt;Cake.Testing&lt;/a&gt; for testing.
-That grew into supporting most core Cake types including the more complex &lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; and &lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="introducing-cake.bridge.dependencyinjection"&gt;Introducing Cake.Bridge.DependencyInjection&lt;/h2&gt;
-&lt;p&gt;If we got a need, chances are someone else has it too, so I've open-sourced the code and made it available as a NuGet &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection/"&gt;package&lt;/a&gt;. It's early bits tailored for a specific need, so you should expect some rough edges, but sharing is caring.&lt;/p&gt;
-&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
-&lt;h3 id="obtain"&gt;Obtain&lt;/h3&gt;
-&lt;p&gt;The assembly is published at &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection"&gt;NuGet.org/packages/Cake.Bridge.DependencyInjection&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 id="net-cli"&gt;.NET CLI&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet add package Cake.Bridge.DependencyInjection
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="packagereference"&gt;PackageReference&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include="Cake.Bridge.DependencyInjection" Version="0.1.0" /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="register"&gt;Register&lt;/h3&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
-...
-serviceCollection
-    .AddCakeCore();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="resolve"&gt;Resolve&lt;/h3&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Core;
-...
-var cakeContext = serviceProvider.GetRequiredService&amp;lt;ICakeContext&amp;gt;();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="use"&gt;Use&lt;/h3&gt;
-&lt;p&gt;Once registered you can now via dependency injection access the majority &lt;a href="https://cakebuild.net/api/Cake.Core/#InterfaceTypes"&gt;Cake.Core&lt;/a&gt; interfaces with ease, i.e:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; - Gives access to Cake built-in and addin aliases, and most Cake abstractions.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt; - Gives access to script/task runner.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.Diagnostics/ICakeLog/"&gt;ICakeLog&lt;/a&gt; - Cake logging implementation.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://cakebuild.net/api/Cake.Core.IO/IFileSystem/"&gt;IFileSystem&lt;/a&gt; - Cake file system abstraction.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="example-icakecontext"&gt;Example ICakeContext&lt;/h3&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
-using Cake.Core;
-using Cake.Core.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-
-var serviceCollection = new ServiceCollection()
-    .AddCakeCore();
-
-var serviceProvider = serviceCollection.BuildServiceProvider();
-
-var cakeContext = serviceProvider.GetRequiredService&amp;lt;ICakeContext&amp;gt;();
-
-cakeContext.Log.Write(
-    Verbosity.Normal,
-    LogLevel.Information,
-    "Hello World!");
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;will output&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;Hello World!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="example-iscripthost-and-cake.common"&gt;Example IScriptHost and Cake.Common&lt;/h3&gt;
-&lt;p&gt;Cake.Common contains Cake aliases normally ships together with the Cake script runner, when using Cake Bridge you'll need to add it to you project (same for any Cake addin).&lt;/p&gt;
-&lt;h4 id="net-cli-1"&gt;.NET CLI&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet add package Cake.Common --version 1.0.0-rc0002
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="packagereference-1"&gt;PackageReference&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include="Cake.Common" Version="1.0.0-rc0002" /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;then add the appropriate using statements and you can achieve something very similar to a Cake "script"&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Cake.Bridge.DependencyInjection;
-using Cake.Core;
-using Cake.Common.Diagnostics;
-using Cake.Core.Scripting;
-using Microsoft.Extensions.DependencyInjection;
-
-var serviceCollection = new ServiceCollection()
-    .AddCakeCore();
-
-var serviceProvider = serviceCollection.BuildServiceProvider();
-
-var scriptHost = serviceProvider.GetRequiredService&amp;lt;IScriptHost&amp;gt;();
-
-scriptHost.Task("Hello")
-    .Does(ctx =&amp;gt; ctx.Information("Hello"));
-
-scriptHost.Task("World")
-    .IsDependentOn("Hello")
-    .Does(ctx =&amp;gt; ctx.Information("World"));
-
-await scriptHost.RunTargetAsync("World");
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;will output&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;========================================
-Hello
-========================================
-Hello
-
-========================================
-World
-========================================
-World
-
-Task                          Duration
---------------------------------------------------
-Hello                         00:00:00.0226275
-World                         00:00:00.0002682
---------------------------------------------------
-Total:                        00:00:00.0228957
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="complete-example-project"&gt;Complete example project&lt;/h3&gt;
-&lt;p&gt;A full example console application using &lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt; demonstrating usage of both &lt;a href="https://cakebuild.net/api/Cake.Core/ICakeContext/"&gt;ICakeContext&lt;/a&gt; and &lt;a href="https://cakebuild.net/api/Cake.Core.Scripting/IScriptHost/"&gt;IScriptHost&lt;/a&gt; can be found in project's GitHub &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;repository&lt;/a&gt; at &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection/tree/develop/src/Cake.Bridge.DependencyInjection.Example"&gt;src/Cake.Bridge.DependencyInjection.Example&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;GitHub - &lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;github.com/devlead/Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;NuGet -  &lt;a href="https://www.nuget.org/packages/Cake.Bridge.DependencyInjection/"&gt;nuget.org/packages/Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-		<summary>Utilize Cake abstractions and addins using Microsoft dependency injection</summary>
 	</entry>
 </feed>

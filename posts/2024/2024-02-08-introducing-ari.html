@@ -5,12 +5,12 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="A .NET Tool for Extracting DAC Packages">
+    <meta name="description" content="A DevOps tool to document a Azure tenant resources">
     <meta name="author" content="devlead">
 
-  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing UnpackDacPac</title>
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing ARI</title>
 
-  <link rel="canonical" href="https://www.devlead.se/posts/2023/2023-11-29-introducing-unpackdacpac">
+  <link rel="canonical" href="https://www.devlead.se/posts/2024/2024-02-08-introducing-ari">
 
       <link type="application/rss+xml" rel="alternate" href="/feed.rss" />
       <link type="application/atom+xml" rel="alternate" href="/feed.atom" />
@@ -19,10 +19,10 @@
   <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
   <meta name="msapplication-starturl" content="/" />
 
-  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing UnpackDacPac" />
-    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2023/11/29/d29f363677f845559d19401cd5a47318.jpg?sv=2021-10-04&amp;st=2023-11-29T17%3A14%3A21Z&amp;se=2035-11-30T17%3A14%3A00Z&amp;sr=b&amp;sp=r&amp;sig=ga7enWBL804T0haYj29QJE7hvaV14REXobavSOZ4wwU%3D" />
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing ARI" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2024/02/08/23be558ef4784e74a88b6bab00141708.jpg?sv=2021-10-04&amp;st=2024-02-08T19%3A03%3A22Z&amp;se=2050-12-16T19%3A05%3A00Z&amp;sr=b&amp;sp=r&amp;sig=MYOLIoM7zuZkWN7OQmLDVMTP796IKEhotMKRCtPYIsY%3D" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.devlead.se/posts/2023/2023-11-29-introducing-unpackdacpac" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2024/2024-02-08-introducing-ari" />
   
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -90,22 +90,23 @@
 </nav>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2023/11/29/d29f363677f845559d19401cd5a47318.jpg?sv=2021-10-04&amp;st=2023-11-29T17%3A14%3A21Z&amp;se=2035-11-30T17%3A14%3A00Z&amp;sr=b&amp;sp=r&amp;sig=ga7enWBL804T0haYj29QJE7hvaV14REXobavSOZ4wwU%3D&quot;)">
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2024/02/08/23be558ef4784e74a88b6bab00141708.jpg?sv=2021-10-04&amp;st=2024-02-08T19%3A03%3A22Z&amp;se=2050-12-16T19%3A05%3A00Z&amp;sr=b&amp;sp=r&amp;sig=MYOLIoM7zuZkWN7OQmLDVMTP796IKEhotMKRCtPYIsY%3D&quot;)">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="post-heading">
           <h1>
-            Introducing UnpackDacPac
+            Introducing ARI
           </h1>
-            <h2 class="subheading">A .NET Tool for Extracting DAC Packages</h2>
-              <div class="meta">Published on Wednesday, 29 November 2023</div>
+            <h2 class="subheading">A DevOps tool to document a Azure tenant resources</h2>
+              <div class="meta">Published on Thursday, 8 February 2024</div>
                 <div class="mt-3">
                       <a href="/tags/net" class="badge badge-light"> .NET</a>
-                      <a href="/tags/sql" class="badge badge-light"> SQL</a>
-                      <a href="/tags/dacpac" class="badge badge-light"> Dacpac</a>
-                      <a href="/tags/dacfx" class="badge badge-light"> Dacfx</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                      <a href="/tags/arm" class="badge badge-light"> ARM</a>
+                      <a href="/tags/iaas" class="badge badge-light"> IAAS</a>
                       <a href="/tags/tool" class="badge badge-light"> Tool</a>
                 </div>
         </div>
@@ -118,38 +119,39 @@
   <div class="container"> 
     <div class="row">
       <div id="content" class="col-md-12">  
-        <p>If you work with SQL Server databases, you may have encountered DAC packages, or dacpacs, which are a way of packaging a database's schema and seed data for deployment or migration. Dacpacs are useful for deploying databases to different environments, such as development, testing, or production, but it's tooling comes with some limitations. For example, you cannot easily inspect the contents of a dacpac file without having a running instance of SQL Server.</p>
-<p>That's why I created UnpackDacPac, a .NET tool that enables you to extract a dacpac file and generate a deployment script to a target folder without the need to deploy it to an actual database. A really useful for example when you need to debug a failed deployment or retrieve an old version of a SQL object from just a DevOps build artifact.
-UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (<em>If you don't have the .NET SDK installed, you can get it from <a href="https://get.dot.net/">here</a></em>).</p>
-<h2 id="installation">Installation</h2>
-<p>You can install UnpackDacPac as a global tool from the command line by typing:</p>
-<pre><code class="language-bash">dotnet tool install --global UnpackDacPac
+        <p>If you are working with Azure, you might have encountered the challenge of keeping track of all the subscriptions, resource groups, and resources that you have in your tenant. You might also want to document them in a clear and consistent way, for example, for compliance, auditing, or reporting purposes.</p>
+<p>That's why I created ARI, a .NET tool that inventories and documents your Azure tenant's subscriptions, resource groups, and resources. ARI stands for Azure Resource Inventory, and it is a free and open source tool that you can install and use with the .NET 7 or 8 SDK.</p>
+<h2 id="how-to-install-ari">How to install ARI</h2>
+<p>ARI is available as a NuGet package at <a href="https://www.nuget.org/packages/ARI">nuget.org/packages/ARI</a>. You can install it either globally on your machine or locally in a specific folder or repository.</p>
+<p>To install it globally, run the following command:</p>
+<pre><code class="language-bash">dotnet tool install --global ARI
 </code></pre>
-<h2 id="usage">Usage</h2>
-<p>The usage of UnpackDacPac is simple:</p>
-<pre><code class="language-bash">unpackdacpac unpack &lt;dacPacPath&gt; &lt;outputPath&gt; [OPTIONS]
+<p>To install it locally, you need to create a tool manifest file first. You can do this by running the following command in the folder where you want to use ARI:</p>
+<pre><code class="language-bash">dotnet new tool-manifest
 </code></pre>
-<p>For example, if you have a dacpac file named Source.dacpac and you want to extract it to a folder named TargetPath, you can run:</p>
-<pre><code class="language-bash">unpackdacpac unpack Source.dacpac TargetPath
+<p>Then, you can install ARI in that folder by running:</p>
+<pre><code class="language-bash">dotnet tool install --local ARI
 </code></pre>
-<p>This will create the following files in the TargetPath folder:</p>
-<ul>
-<li><code>DacMetadata.xml</code>: This file contains the metadata of the dacpac, such as the name, version, description, and dependencies of the database.</li>
-<li><code>Deploy.sql</code>: This file contains the generated deployment script that can be used to create or update a database from the dacpac.</li>
-<li><code>model.sql</code>: This file contains the formatted SQL code that defines the schema and data of the database.</li>
-<li><code>model.xml</code>: This file contains the XML representation of the database model.</li>
-<li><code>Origin.xml</code>: This file contains the origin information of the dacpac, such as the source server and database name.</li>
-<li><code>postdeploy.sql</code>: This file contains any post-deployment scripts that are included in the dacpac.</li>
-</ul>
-<p>One of the features of UnpackDacPac is that you can exclude certain types of objects from the generated deployment script by using the <code>--deploy-script-exclude-object-type</code> parameter. For example, if you want to exclude users, logins, and role memberships from the deployment script, you can run:</p>
-<pre><code class="language-bash">unpackdacpac unpack Source.dacpac TargetPath --deploy-script-exclude-object-type Users --deploy-script-exclude-object-type Logins --deploy-script-exclude-object-type RoleMembership
+<h2 id="how-to-use-ari">How to use ARI</h2>
+<p>Once you have installed ARI, you can use it by typing <code>ari</code> if you installed it globally, or <code>dotnet ari</code> if you installed it locally.</p>
+<p>You can use the <code>-h</code> or <code>--help</code> parameters to get the current list of available commands and options. For example:</p>
+<pre><code class="language-bash">ari --help
 </code></pre>
-<p>This will generate a deployment script that does not contain statements related to users, logins, or role memberships.</p>
-<h2 id="where-to-find-unpackdacpac">Where to find UnpackDacPac?</h2>
-<p>UnpackDacPac is an open-source project under a permissive MIT license, the source can be found on <a href="https://github.com/devlead/UnpackDacPac">GitHub</a> and the NuGet package at <a href="https://www.nuget.org/packages/UnpackDacPac">NuGet.org</a>.</p>
-<h2 id="feedback-and-suggestions">Feedback and suggestions</h2>
-<p>I hope you find UnpackDacPac useful and feel free to provide any feedback, suggestions, or pull requests.</p>
-<p><em>Happy unpacking!</em></p>
+<p>or</p>
+<pre><code class="language-bash">ari &lt;command&gt; --help
+</code></pre>
+<p>The main current available command of ARI is <code>inventory</code>, which takes a tenant ID and an output path as required parameters. It also has some optional parameters that you can use to customize the inventory process. For example:</p>
+<pre><code class="language-bash">ari inventory &lt;tenantId&gt; &lt;outputpath&gt; [options]
+</code></pre>
+<p>The <code>inventory</code> command will scan your Azure tenant and generate a set of GitHub flavoured markdown files that document your subscriptions, resource groups, and resources. It will also create indexes by tag name and value, or by resources missing tags.</p>
+<h2 id="how-to-contribute-to-ari">How to contribute to ARI</h2>
+<p>ARI is licensed under the MIT license, which means you can use it for any purpose, modify it, and distribute it freely. The source code is hosted on GitHub at <a href="https://github.com/devlead/ari">github.com/devlead/ari</a>.</p>
+<p>I welcome any feedback, suggestions, bug reports, or pull requests from the community. If you want to contribute to ARI, please check out the issues on GitHub.</p>
+<h2 id="how-to-use-the-output-of-ari">How to use the output of ARI</h2>
+<p>The output of ARI is a set of GitHub flavored markdown files that you can use for various purposes. For example, you can use them with static site generators, wikis, or other tools that support markdown.</p>
+<p>One example of a static site generator that works well with ARI is Statiq ( <a href="https://statiq.dev/">statiq.dev</a> ), which is also a .NET framework for generating static websites and markdown files is one of its supported input formats. You can see an example of a static website generated using Statiq and ARI at <a href="https://www.devlead.se/ARI/">devlead.se/ARI</a>.</p>
+<p>I hope you find ARI useful and helpful for your Azure projects. Please let me know what you think and how I can improve it.</p>
+<p>Thank you for reading!</p>
 
 
         <div class="container">
@@ -166,7 +168,7 @@ UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (<em>If 
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2023/2023-11-29-introducing-unpackdacpac.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2024/2024-02-08-introducing-ari.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
                 </div>
             </div>
         </div>
