@@ -5,8 +5,80 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2024</copyright>
-		<pubDate>Thu, 08 Feb 2024 19:31:20 GMT</pubDate>
-		<lastBuildDate>Thu, 08 Feb 2024 19:31:20 GMT</lastBuildDate>
+		<pubDate>Thu, 05 Sep 2024 19:38:27 GMT</pubDate>
+		<lastBuildDate>Thu, 05 Sep 2024 19:38:27 GMT</lastBuildDate>
+		<item>
+			<title>Introducing Blobify</title>
+			<link>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</link>
+			<description>A .NET Global tool that archives (moves) files from a local folder to Azure Blob Storage container.</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2024/09/05/fe73bb0124cc43a1af9520490a6367a8.jpg?sp=r&amp;st=2024-09-04T18:14:45Z&amp;se=2035-05-01T02:14:45Z&amp;spr=https&amp;sv=2022-11-02&amp;sr=b&amp;sig=HuC7WPifcu40wqwTXUZJ77qxzzfs%252BKtSKrkbJrmbqJw%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</guid>
+			<pubDate>Thu, 05 Sep 2024 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I recently needed a seamless and efficient way to recursively archive and move local files to Azure Blob Storage with relative folder structure intact. That’s why I wrote Blobify, a .NET global tool that simplifies the process of transferring files from a local directory to an Azure Blob Storage container.&lt;/p&gt;
+&lt;h2 id="easy-installation-with.net-sdk-cli"&gt;Easy Installation with .NET SDK CLI&lt;/h2&gt;
+&lt;p&gt;Blobify is installed using the .NET SDK CLI. Ensure you have the .NET 8 SDK installed, and type the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install -g Blobify
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="simple-and-powerful-command-line-options"&gt;Simple and Powerful Command Line Options&lt;/h2&gt;
+&lt;p&gt;Utilizing Blobify is straightforward with its archive command and options.&lt;/p&gt;
+&lt;h3 id="usage"&gt;Usage&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;blobify archive &amp;lt;inputpath&amp;gt; &amp;lt;azureStorageAccount&amp;gt; &amp;lt;azureStorageAccountContainer&amp;gt; [OPTIONS]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="example"&gt;Example&lt;/h4&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;blobify archive c:\local\folder targetaccount targetcontainer
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h5 id="arguments"&gt;Arguments&lt;/h5&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;    &amp;lt;inputpath&amp;gt;                       Input path
+    &amp;lt;azureStorageAccount&amp;gt;             Azure Storage Account Name
+    &amp;lt;azureStorageAccountContainer&amp;gt;    Azure Storage Account Container Name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h5 id="options"&gt;Options&lt;/h5&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;    -h, --help               Prints help information
+        --azure-tenant-id    Azure Tentant ID to sign into
+        --file-pattern       Local file pattern to match (default **/*.*)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="secure-authentication-and-reliable-uploads"&gt;Secure Authentication and Reliable Uploads&lt;/h2&gt;
+&lt;p&gt;Blobify ensures secure authentication using Azure EntraID and Azure.Identity's &lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet"&gt;DefaultAzureCredential&lt;/a&gt; . It uploads files from the specified source folder—and optionally a file pattern, and removes them locally only after verifying that a file with the same hash exists in the target blob storage container. If the file already exists on blob it won't upload it, but if hashes macthes it'll remove the local file.&lt;/p&gt;
+&lt;div class="mermaid"&gt;flowchart TD
+    ls[List files in source path]
+    exists[Verifies if blob file already exists]
+    upload[Upload file]
+    verify[Verifies MD5 hash]
+    delete[Delete file]
+    skip[Skip file]
+    ls --&gt; exists
+    exists --Found--&gt; verify
+    exists --Not Found--&gt; upload
+    upload --&gt; verify
+    verify --Matches--&gt; delete
+    verify --Not Matches--&gt; skip
+&lt;/div&gt;
+&lt;h2 id="example-usage-in-an-azure-devops-pipeline-task"&gt;Example Usage in an Azure DevOps Pipeline task&lt;/h2&gt;
+&lt;p&gt;My personal use case was to archive local files on a schedules, this was achived with a scheduled Azure DevOps Pipelines running on a local DevOps agent, example Azure Pipelines task:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;    - task: AzureCLI&amp;#64;2
+      displayName: Archive files
+      inputs:
+        azureSubscription: 'azureSubscription'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          dotnet tool restore
+          dotnet blobify archive c:\local\agent\folder account container
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The above task expects Blobify to be installed and pinned to a specific verion using a .NET tool manifest in repository, a manifest can be created using the .NET SDK CLI&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
+dotnet tool install Blobify
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="open-source-and-free-to-use"&gt;Open Source and Free to Use&lt;/h2&gt;
+&lt;p&gt;Blobify is available for free on NuGet and is open source, with its code accessible on GitHub. It is licensed under the permissive MIT license.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NuGet Package: &lt;a href="https://www.nuget.org/packages/Blobify/"&gt;Blobify on NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;GitHub Repository: &lt;a href="https://github.com/devlead/Blobify"&gt;Blobify on GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Introducing ARI</title>
 			<link>https://www.devlead.se/posts/2024/2024-02-08-introducing-ari</link>
@@ -1093,217 +1165,6 @@ The recipe is open source, so I'll happily take feedback and contributions to im
 &lt;li&gt;Recipe on NuGet.org - &lt;a href="https://www.nuget.org/packages/Cake.ClickOnce.Recipe/"&gt;nuget.org/packages/Cake.ClickOnce.Recipe&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Example repository on GitHub - &lt;a href="https://github.com/devlead/Cake.ClickOnce.Recipe.Example"&gt;github.com/devlead/Cake.ClickOnce.Recipe.Example&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Cake - &lt;a href="https://cakebuild.net/"&gt;cakebuild.net&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>My preferred .NET console stack</title>
-			<link>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</link>
-			<description>An opinionated view on the boilerplate starting point of any .NET console application</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/01/14/e02ce155-5ff2-8a7b-e306-8c486f23f864.png?sv=2019-12-12&amp;st=2021-01-13T20%253A33%253A10Z&amp;se=2031-01-14T20%253A33%253A10Z&amp;sr=b&amp;sp=r&amp;sig=fdANWdytZGRdgDMxN%252B%252BTNSCAbz%252Bzg6R0iAvtvYWYoKw%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2021/2021-01-15-my-preferred-console-stack</guid>
-			<pubDate>Fri, 15 Jan 2021 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;There's type of application that has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a &lt;code&gt;Main(string[] args)&lt;/code&gt; and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll walk through what today is my alternative starting point to &lt;code&gt;dotnet new console&lt;/code&gt;, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.&lt;/p&gt;
-&lt;h2 id="templates"&gt;Templates&lt;/h2&gt;
-&lt;p&gt;A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like &lt;code&gt;console&lt;/code&gt;, &lt;code&gt;classlib&lt;/code&gt;, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given &lt;a href="https://dotnet.microsoft.com/download/dotnet/5.0"&gt;.NET 5 SDK&lt;/a&gt; installed, easily yourself can try and take a look at everything discussed in this post.&lt;/p&gt;
-&lt;h2 id="devlead-console-template"&gt;Devlead Console Template&lt;/h2&gt;
-&lt;p&gt;So let's get started with creating a new console application according to my opinionated recipe, .NET SDK Templates are distributed as NuGet packages and the canonical source for NuGet packages is &lt;a href="https://www.nuget.org/"&gt;NuGet.org&lt;/a&gt;, where I've published my template as &lt;a href="https://www.nuget.org/packages/Devlead.Console.Template/"&gt;Devlead.Console.Template&lt;/a&gt;. Templates are installed using the &lt;code&gt;dotnet new&lt;/code&gt; command with &lt;code&gt;--install packageId&lt;/code&gt; parameter, in this case:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new --install Devlead.Console.Template
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="dotnet-new-devleadconsole"&gt;dotnet new devleadconsole&lt;/h2&gt;
-&lt;p&gt;With the template installed locally, we now have a new &lt;code&gt;devleadconsole&lt;/code&gt; template at our disposal, to create our new console applications with according to me, essential dependencies and boilerplate code:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new devleadconsole -n MyConsoleApp
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The above command will in the current directory result in the below folder structure&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-text"&gt;MyConsoleApp
-    │   MyConsoleApp.csproj
-    │   Program.cs
-    │
-    └───Commands
-        │   ConsoleCommand.cs
-        │
-        ├───Settings
-        │       ConsoleSettings.cs
-        │
-        └───Validation
-                ValidateStringAttribute.cs
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="myconsoleapp.csproj"&gt;MyConsoleApp.csproj&lt;/h2&gt;
-&lt;p&gt;The created project file will look something like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Project Sdk=&amp;quot;Microsoft.NET.Sdk&amp;quot;&amp;gt;
-  &amp;lt;PropertyGroup&amp;gt;
-    &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt;
-    &amp;lt;TargetFramework&amp;gt;net5.0&amp;lt;/TargetFramework&amp;gt;
-    &amp;lt;Nullable&amp;gt;enable&amp;lt;/Nullable&amp;gt;
-    &amp;lt;TreatWarningsAsErrors&amp;gt;true&amp;lt;/TreatWarningsAsErrors&amp;gt;
-  &amp;lt;/PropertyGroup&amp;gt;
-  &amp;lt;ItemGroup&amp;gt;
-    &amp;lt;PackageReference Include=&amp;quot;Spectre.Console&amp;quot; Version=&amp;quot;0.37.0&amp;quot; /&amp;gt;
-    &amp;lt;PackageReference Include=&amp;quot;Spectre.Cli.Extensions.DependencyInjection&amp;quot; Version=&amp;quot;0.3.0&amp;quot; /&amp;gt;
-    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Extensions.Logging&amp;quot; Version=&amp;quot;5.0.0&amp;quot; /&amp;gt;
-    &amp;lt;PackageReference Include=&amp;quot;Microsoft.Extensions.Logging.Console&amp;quot; Version=&amp;quot;5.0.0&amp;quot; /&amp;gt;
-    &amp;lt;PackageReference Include=&amp;quot;Microsoft.SourceLink.GitHub&amp;quot; Version=&amp;quot;1.0.0&amp;quot; PrivateAssets=&amp;quot;All&amp;quot;/&amp;gt;
-  &amp;lt;/ItemGroup&amp;gt;
-&amp;lt;/Project&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;let's step for step break it down&lt;/p&gt;
-&lt;h3 id="outputtype"&gt;OutputType&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;OutputType&lt;/code&gt; with the value &lt;code&gt;exe&lt;/code&gt;, indicates that this will be an executable.&lt;/p&gt;
-&lt;h3 id="targetframework"&gt;TargetFramework&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;TargetFramework&lt;/code&gt; with the value &lt;code&gt;net5.0&lt;/code&gt;, means that this will be compiled for/targeting .NET 5.&lt;/p&gt;
-&lt;h3 id="nullable"&gt;Nullable&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;Nullable&lt;/code&gt; with the value &lt;code&gt;enable&lt;/code&gt;, enables the &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references"&gt;nullable reference types&lt;/a&gt; feature that was introduced with C# 8, making reference types non-nullable by default, basically moving many errors from being caught late at runtime, to be caught early at compile time.&lt;/p&gt;
-&lt;h3 id="treatwarningsaserrors"&gt;TreatWarningsAsErrors&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;TreatWarningsAsErrors&lt;/code&gt; with the value &lt;code&gt;true&lt;/code&gt; makes the compiler grumpier, it won't just break the build for compiler errors, but also for compiler warnings, combined with &lt;code&gt;Nullable&lt;/code&gt; I personally believe code quality gets better from the start.&lt;/p&gt;
-&lt;h3 id="packagereferences"&gt;PackageReference(s)&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt;&lt;/strong&gt; is a lot of things, a true swiss army for anyone doing console applications, but in this template, it's foremost an extremely opinionated command-line parser.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Spectre.Cli.Extensions.DependencyInjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt;&lt;/strong&gt; makes it easy for &lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;Spectre.Console&lt;/a&gt; to interop with standard &lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;Microsoft DependencyInjection&lt;/a&gt;&lt;/strong&gt;, same as used by default for dependency injection with i.e. ASP .NET and Azure Functions.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging"&gt;Microsoft.Extensions.Logging&lt;/a&gt;&lt;/strong&gt; simplified provides standard logging abstractions and &lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging.Console"&gt;Microsoft.Extensions.Logging.Console&lt;/a&gt;&lt;/strong&gt; provides an implementation for logging to the console.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href="https://www.nuget.org/packages/Microsoft.SourceLink.GitHub"&gt;Microsoft.SourceLink.GitHub&lt;/a&gt;&lt;/strong&gt; enables automatic tracking between artifact and source control, providing a better debugging and traceability experience.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="program.cs"&gt;Program.cs&lt;/h2&gt;
-&lt;p&gt;The generated &lt;code&gt;Program.cs&lt;/code&gt; uses the new C#9 &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#top-level-statements"&gt;Top-level statement&lt;/a&gt; pattern removing unnecessary ceremony code from the application, but what it does contain:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;using statements&lt;/li&gt;
-&lt;li&gt;Creating dependency injection container&lt;/li&gt;
-&lt;li&gt;Console logger registration&lt;/li&gt;
-&lt;li&gt;Hooking up dependency injection container with Spectre.Console&lt;/li&gt;
-&lt;li&gt;Spectre.Console command declaration&lt;/li&gt;
-&lt;li&gt;Execute the application&lt;/li&gt;
-&lt;/ol&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Note: &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9#top-level-statements"&gt;Top-level statement&lt;/a&gt;  means as &lt;code&gt;RunAsync&lt;/code&gt; returns a &lt;code&gt;Task&amp;lt;int&amp;gt;&lt;/code&gt;, .NET 5 will automatically generate &amp;quot;&lt;code&gt;Program&lt;/code&gt;&amp;quot; class and &lt;code&gt;async Task&amp;lt;int&amp;gt; Main(string args)&lt;/code&gt; for you, removing the need to write a lot of boilerplate code.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Devlead.Console.Commands;
-using Spectre.Console.Cli;
-using Spectre.Cli.Extensions.DependencyInjection;
-
-var serviceCollection = new ServiceCollection()
-    .AddLogging(configure =&amp;gt;
-            configure
-                .AddSimpleConsole(opts =&amp;gt; {
-                    opts.TimestampFormat = &amp;quot;yyyy-MM-dd HH:mm:ss &amp;quot;;
-                })
-    );
-
-using var registrar = new DependencyInjectionRegistrar(serviceCollection);
-var app = new CommandApp(registrar);
-
-app.Configure(
-    config =&amp;gt;
-    {
-        config.ValidateExamples();
-
-        config.AddCommand&amp;lt;ConsoleCommand&amp;gt;(&amp;quot;console&amp;quot;)
-                .WithDescription(&amp;quot;Example console command.&amp;quot;)
-                .WithExample(new[] { &amp;quot;console&amp;quot; });
-    });
-
-return await app.RunAsync(args);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="consolecommand.cs"&gt;ConsoleCommand.cs&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;ConsoleCommand.cs&lt;/code&gt; contains &amp;quot;just&amp;quot; your business code, &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; handles the heavy lifting of parsing and validating command-line arguments (&lt;em&gt;based on provided settings class, more on that later in the post.&lt;/em&gt;), resolving constructor parameters using dependency injection, etc. Letting you focus on the domain and not the boilerplate code, resulting in a very similar experience to i.e. Azure Function or .NET Workers, enabling reuse of both patterns and code. &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; has support for both async and sync commands.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using MyConsoleApp.Commands.Setting;
-using Spectre.Console.Cli;
-
-namespace MyConsoleApp.Commands
-{
-    public class ConsoleCommand : AsyncCommand&amp;lt;ConsoleSettings&amp;gt;
-    {
-        private ILogger Logger { get; }
-
-        public override async Task&amp;lt;int&amp;gt; ExecuteAsync(CommandContext context, ConsoleSettings settings)
-        {
-            Logger.LogInformation(&amp;quot;Mandatory: {Mandatory}&amp;quot;, settings.Mandatory);
-            Logger.LogInformation(&amp;quot;Optional: {Optional}&amp;quot;, settings.Optional);
-            Logger.LogInformation(&amp;quot;CommandOptionFlag: {CommandOptionFlag}&amp;quot;, settings.CommandOptionFlag);
-            Logger.LogInformation(&amp;quot;CommandOptionValue: {CommandOptionValue}&amp;quot;, settings.CommandOptionValue);
-            return await Task.FromResult(0);
-        }
-
-        public ConsoleCommand(ILogger&amp;lt;ConsoleCommand&amp;gt; logger)
-        {
-            Logger = logger;
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="consolesettings.cs"&gt;ConsoleSettings.cs&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;ConsoleSettings.cs&lt;/code&gt; contains the definition of what parameters each command has, if they're are mandatory/optional, positional and how they validated. It also contains metadata used for automatically generating help and error messages.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using System.ComponentModel;
-using Devlead.Console.Commands.Validate;
-using Spectre.Console.Cli;
-
-namespace Devlead.Console.Commands.Setting
-{
-    public class ConsoleSettings : CommandSettings
-    {
-        [CommandArgument(0, &amp;quot;&amp;lt;mandatory&amp;gt;&amp;quot;)]
-        [Description(&amp;quot;Mandatory argument&amp;quot;)]
-        public string Mandatory { get; set; } = string.Empty;
-
-        [CommandArgument(1, &amp;quot;[optional]&amp;quot;)]
-        [Description(&amp;quot;Optional argument&amp;quot;)]
-        public string? Optional { get; set; }
-
-        [CommandOption(&amp;quot;--command-option-flag&amp;quot;)]
-        [Description(&amp;quot;Command option flag.&amp;quot;)]
-        public bool CommandOptionFlag { get; set; }
-
-        [CommandOption(&amp;quot;--command-option-value &amp;lt;value&amp;gt;&amp;quot;)]
-        [Description(&amp;quot;Command option value.&amp;quot;)]
-        [ValidateString]
-        public string? CommandOptionValue { get; set; }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="validatestringattribute.cs"&gt;ValidateStringAttribute.cs&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; can validate either by custom attributes on properties (&lt;em&gt;see &lt;code&gt;ConsoleSettings.CommandOptionValue&lt;/code&gt; for an example of that&lt;/em&gt;) or globally by overriding &lt;code&gt;Validate()&lt;/code&gt; method on &lt;code&gt;CommandSettings&lt;/code&gt;. The template ships with a sample &lt;code&gt;ValidateStringAttribute&lt;/code&gt; that just validates the length of a string, but you can make it as advanced as you want.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using Spectre.Console;
-using Spectre.Console.Cli;
-
-namespace MyConsoleApp.Commands.Validation
-{
-    public class ValidateStringAttribute : ParameterValidationAttribute
-    {
-        public const int MinimumLength = 3;
-
-        public ValidateStringAttribute() : base(errorMessage: null)
-        {
-        }
-
-        public override ValidationResult Validate(ICommandParameterInfo parameterInfo, object? value)
-            =&amp;gt; (value as string) switch {
-                { Length: &amp;gt;= MinimumLength }
-                    =&amp;gt; ValidationResult.Success(),
-
-                { Length: &amp;lt; MinimumLength }
-                    =&amp;gt; ValidationResult.Error($&amp;quot;{parameterInfo?.PropertyName} ({value}) needs to be at least {MinimumLength} characters long.&amp;quot;),
-
-                _ =&amp;gt; ValidationResult.Error($&amp;quot;Invalid {parameterInfo?.PropertyName} ({value}) specified.&amp;quot;)
-            };
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="result"&gt;Result&lt;/h2&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/15/devleadmyconsoleapp.gif?sp=rl&amp;amp;st=2021-01-15T09:33:29Z&amp;amp;se=2031-01-16T09:33:00Z&amp;amp;sv=2019-12-12&amp;amp;sr=b&amp;amp;sig=fp8lXgfDwOgGkdK3cYm0fFojddT8ZEx7SJuiIMkIOW8%3D" alt="GIF animation of Console experience" /&gt;&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;This is my opinionated happy path for doing .NET Console applications, feel free to let me know if you've got your own recipe for success, but must say I'm really happy how this combination lets me write console applications in the same way as I do my .NET workers, Azure Functions, ASP .NET Core, etc. ensuring consistency, less duplication and good reuse of both patterns and code. There's a LOT more to &lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; than command-line parsing, to I hight recommend you check out all the other features it has to offer.&lt;/p&gt;
-&lt;h2 id="references"&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Console.Template"&gt;Devlead.Console.Template&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Devlead.Console.Template"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://spectresystems.github.io/spectre.console/"&gt;Spectre.Console&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Spectre.Console"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/agc93/spectre.cli.extensions.dependencyinjection#spectrecliextensionsdependencyinjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Spectre.Cli.Extensions.DependencyInjection"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0"&gt;Dependency injection in ASP.NET Core&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/dotnet/sourcelink#source-link"&gt;Source Link&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.SourceLink.GitHub"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0"&gt;Logging in .NET Core and ASP.NET Core&lt;/a&gt; (&lt;a href="https://www.nuget.org/packages/Microsoft.Extensions.Logging.Console"&gt;NuGet&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
