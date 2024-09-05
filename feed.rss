@@ -5,12 +5,12 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2024</copyright>
-		<pubDate>Thu, 05 Sep 2024 19:38:27 GMT</pubDate>
-		<lastBuildDate>Thu, 05 Sep 2024 19:38:27 GMT</lastBuildDate>
+		<pubDate>Thu, 05 Sep 2024 19:47:48 GMT</pubDate>
+		<lastBuildDate>Thu, 05 Sep 2024 19:47:48 GMT</lastBuildDate>
 		<item>
 			<title>Introducing Blobify</title>
 			<link>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</link>
-			<description>A .NET Global tool that archives (moves) files from a local folder to Azure Blob Storage container.</description>
+			<description>A .NET Global tool that archives (moves) files from a local folder to an Azure Blob Storage container.</description>
 			<author>devlead</author>
 			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2024/09/05/fe73bb0124cc43a1af9520490a6367a8.jpg?sp=r&amp;st=2024-09-04T18:14:45Z&amp;se=2035-05-01T02:14:45Z&amp;spr=https&amp;sv=2022-11-02&amp;sr=b&amp;sig=HuC7WPifcu40wqwTXUZJ77qxzzfs%252BKtSKrkbJrmbqJw%253D" length="0" type="image" />
 			<guid>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</guid>
