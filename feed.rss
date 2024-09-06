@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
 	<channel>
-		<title />
+		<title>@devlead - Mattias Karlsson's Blog</title>
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2024</copyright>
-		<pubDate>Thu, 05 Sep 2024 19:47:48 GMT</pubDate>
-		<lastBuildDate>Thu, 05 Sep 2024 19:47:48 GMT</lastBuildDate>
+		<pubDate>Fri, 06 Sep 2024 14:31:42 GMT</pubDate>
+		<lastBuildDate>Fri, 06 Sep 2024 14:31:42 GMT</lastBuildDate>
 		<item>
 			<title>Introducing Blobify</title>
 			<link>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</link>
