@@ -4,7 +4,7 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2024</rights>
-	<updated>2024-09-22T13:51:47Z</updated>
+	<updated>2024-09-22T19:39:11Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
 	<entry>
 		<id>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</id>
@@ -18,7 +18,7 @@
 		<content>&lt;p&gt;.NET 9 is just around the corner with the General Availability (GA) release scheduled for November 2024. The .NET 9 RC 1 (released September 10, 2024) already comes with a Go-Live license, meaning it’s supported by Microsoft for use in production environments.&lt;/p&gt;
 &lt;p&gt;If you’re currently running .NET 6 or newer, I’ve found the migration process to .NET 9 to be fairly straightforward. Here are some key steps to guide you through the transition.&lt;/p&gt;
 &lt;h3 id="update-dependencies"&gt;1. Update Dependencies&lt;/h3&gt;
-&lt;p&gt;Update outdated dependencies. This is always a good practice before migrating, many incompatibility issues are often sorted this way. An excellent tool aiding with this is the &lt;a href="https://github.com/dotnet-outdated/dotnet-outdated"&gt;dotnet-outdated&lt;/a&gt; tool, run &lt;code&gt;dotnet outdated &amp;lt;solution/porojec folder&amp;gt;&lt;/code&gt; to check for any out of date packages and it can even update the packages for you.&lt;/p&gt;
+&lt;p&gt;Update outdated dependencies. This is always a good practice before migrating, many incompatibility issues are often sorted this way. An excellent tool aiding with this is the &lt;a href="https://github.com/dotnet-outdated/dotnet-outdated"&gt;dotnet-outdated&lt;/a&gt; tool, run &lt;code&gt;dotnet outdated &amp;lt;solution/project folder&amp;gt;&lt;/code&gt; to check for any out of date packages and it can even update the packages for you.&lt;/p&gt;
 &lt;h3 id="remove-obsolete-target-frameworks"&gt;2. Remove Obsolete Target Frameworks&lt;/h3&gt;
 &lt;p&gt;If you are still targeting obsolete frameworks like &lt;code&gt;net7.0&lt;/code&gt;, it's time to clean them up. Many newer .NET 9 assemblies only target .NET 8 and above. If you need to maintain compatibility with .NET 6, you can use conditionals on your package references as a workaround during the interim, example:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-xml"&gt;    &amp;lt;PackageReference Condition=&amp;quot; '$(TargetFramework)' == 'net6.0' &amp;quot; Include=&amp;quot;Verify.Http&amp;quot; Version=&amp;quot;5.0.1&amp;quot; /&amp;gt;
