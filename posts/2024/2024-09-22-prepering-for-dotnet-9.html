@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Inital reflections after running .NET 9 in production">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Preparing for .NET 9</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9">
+
+      <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Preparing for .NET 9" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2024/09/22/df979602c75a4074bff02d5d02fdb88e.jpg?sv=2023-01-03&amp;st=2024-09-22T12%3A57%3A23Z&amp;se=2035-07-29T12%3A57%3A00Z&amp;sr=b&amp;sp=r&amp;sig=V0HqKU5KQUe8JuTyKzmuxyNNyyX735PAm4M6Lx%2FaXoY%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a { text-decoration: none; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2024/09/22/df979602c75a4074bff02d5d02fdb88e.jpg?sv=2023-01-03&amp;st=2024-09-22T12%3A57%3A23Z&amp;se=2035-07-29T12%3A57%3A00Z&amp;sr=b&amp;sp=r&amp;sig=V0HqKU5KQUe8JuTyKzmuxyNNyyX735PAm4M6Lx%2FaXoY%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Preparing for .NET 9
+          </h1>
+            <h2 class="subheading">Inital reflections after running .NET 9 in production</h2>
+              <div class="meta">Published on Sunday, 22 September 2024</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>.NET 9 is just around the corner with the General Availability (GA) release scheduled for November 2024. The .NET 9 RC 1 (released September 10, 2024) already comes with a Go-Live license, meaning it’s supported by Microsoft for use in production environments.</p>
+<p>If you’re currently running .NET 6 or newer, I’ve found the migration process to .NET 9 to be fairly straightforward. Here are some key steps to guide you through the transition.</p>
+<h3 id="update-dependencies">1. Update Dependencies</h3>
+<p>Update outdated dependencies. This is always a good practice before migrating, many incompatibility issues are often sorted this way. An excellent tool aiding with this is the <a href="https://github.com/dotnet-outdated/dotnet-outdated">dotnet-outdated</a> tool, run <code>dotnet outdated &lt;solution/porojec folder&gt;</code> to check for any out of date packages and it can even update the packages for you.</p>
+<h3 id="remove-obsolete-target-frameworks">2. Remove Obsolete Target Frameworks</h3>
+<p>If you are still targeting obsolete frameworks like <code>net7.0</code>, it's time to clean them up. Many newer .NET 9 assemblies only target .NET 8 and above. If you need to maintain compatibility with .NET 6, you can use conditionals on your package references as a workaround during the interim, example:</p>
+<pre><code class="language-xml">    &lt;PackageReference Condition=&quot; '$(TargetFramework)' == 'net6.0' &quot; Include=&quot;Verify.Http&quot; Version=&quot;5.0.1&quot; /&gt;
+    &lt;PackageReference Condition=&quot; '$(TargetFramework)' != 'net6.0' &quot; Include=&quot;Verify.Http&quot; Version=&quot;6.3.0&quot; /&gt;
+</code></pre>
+<h3 id="update-global.json">3. Update <code>global.json</code></h3>
+<p>An easy way to update your <code>global.json</code> is to simply delete it and run <code>dotnet new globaljson</code>. This command will create a <code>global.json</code> matching the preview SDK, which will work smoothly in your CI/CD pipeline.</p>
+<h3 id="add-net9.0-target-framework-moniker-tfm">4. Add <code>net9.0</code> Target Framework Moniker (TFM)</h3>
+<p>Add the <code>net9.0</code> target framework to your project, using the <code>TargetFrameworks</code> MSBuild property (if you're using <code>TargetFramework</code> today and want to multitarget it will need to be relaced with <code>TargetFrameworks</code>), example:</p>
+<pre><code class="language-xml">&lt;TargetFrameworks&gt;net9.0;net8.0&lt;/TargetFrameworks&gt;
+</code></pre>
+<p>After November 12, 2024, the supported frameworks will be:</p>
+<ul>
+<li>.NET 8 (Long Term Support until November 10, 2026)</li>
+<li>.NET 9 (Standard Term Support, 18 months from release)</li>
+</ul>
+<h3 id="build-and-address-issues">5. Build and Address Issues</h3>
+<p>Once you’ve set everything up, build your solution and resolve any issues that arise:</p>
+<ol>
+<li><p><strong>Source Issues</strong>: The only code issue I encountered was an <code>Index</code> extension method for <code>IEnumerable&lt;T&gt;</code>, which is now built-in with .NET 9. In my case, the method was internal and semantically different, so I simply renamed it.</p>
+</li>
+<li><p><strong>Dependency Errors/Warnings</strong>: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transient dependencies (ones you don’t directly reference) might trigger warnings. <code>dotnet nuget why</code> is helpful here. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).</p>
+</li>
+</ol>
+<h3 id="my-experience-running.net-9-in-production">My Experience Running .NET 9 in Production</h3>
+<p>I’ve had code running on .NET 9 in production since the day after RC1. It’s not about being an early adopter for the sake of it, but about preparing for the future. By picking small, isolated workloads, I’m learning what challenges might come up during a larger migration. There are many things we can prepare for now so that the full migration is as smooth as possible.</p>
+<p>In fact, you can start using the new .NET 9 SDK today while still targeting older frameworks, and gaining access to new build-time features while staying on your current runtime.</p>
+<p>Overall, my experience running .NET 9 in production has been smooth sailing, with only minor issues. The one hiccup I encountered involved the .NET 9 base Docker images, which use a slightly newer Linux distribution, requiring some native binaries to be installed. But that’s exactly the kind of valuable lesson you want to learn early before migrating all your workloads. One common example is <a href="https://www.nuget.org/packages/System.Text.Json">System.Text.Json</a> which many packages reference old and outdated versions of, by explicitly adding a package reference to it, you're pinning the version used by your project, example:</p>
+<pre><code class="language-xml">&lt;PackageReference Include=&quot;System.Text.Json&quot; Version=&quot;8.0.4&quot; /&gt;
+</code></pre>
+<h3 id="adding-net9.0-to-my-open-source-tools">Adding <code>net9.0</code> to My Open-Source Tools</h3>
+<p>I’ve already started adding the <code>net9.0</code> target framework to my OSS tools. Here are a few that have been shipped and published so far:</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/ARI"><strong>ARI</strong> - Azure Resource Inventory</a> .NET Tool: Inventories and documents Azure Tenant resources.</li>
+<li><a href="https://www.nuget.org/packages/Blobify"><strong>Blobify</strong> - Blobify</a> .NET Tool: Archives local files to Azure Blob Storage.</li>
+<li><a href="https://github.com/yourlink"><strong>BRI</strong> - Bicep Registry Inventory</a> .NET Tool: Inventories and documents Bicep modules in an Azure container registry.</li>
+<li><a href="https://www.nuget.org/packages/DPI"><strong>DPI</strong> - Dependency Inventory</a> .NET Tool: Inventories dependencies to Azure Log Analytics.</li>
+<li><a href="https://www.nuget.org/packages/UnpackDacPac"><strong>UnpackDacPac</strong> - Unpack DAC Package</a> .NET Tool: Extracts a DACPAC and generates a deployment script to a target folder, without needing a live database.</li>
+</ul>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2024/2024-09-22-prepering-for-dotnet-9.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2024</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://unpkg.com/mermaid@8.9.3/dist/mermaid.min.js" integrity="sha384-nVmn6yKHyUktDHdQfBgpn1YPgEu8gDXTYI5qccfkF1j6oxBHjKEafySIuNs3UhEW" crossorigin="anonymous"></script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

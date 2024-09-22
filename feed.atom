@@ -4,8 +4,63 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2024</rights>
-	<updated>2024-09-06T14:31:42Z</updated>
+	<updated>2024-09-22T13:37:21Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9</id>
+		<title>Preparing for .NET 9</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2024/09/22/df979602c75a4074bff02d5d02fdb88e.jpg?sv=2023-01-03&amp;st=2024-09-22T12%253A57%253A23Z&amp;se=2035-07-29T12%253A57%253A00Z&amp;sr=b&amp;sp=r&amp;sig=V0HqKU5KQUe8JuTyKzmuxyNNyyX735PAm4M6Lx%252FaXoY%253D" />
+		<updated>2024-09-22T00:00:00Z</updated>
+		<content>&lt;p&gt;.NET 9 is just around the corner with the General Availability (GA) release scheduled for November 2024. The .NET 9 RC 1 (released September 10, 2024) already comes with a Go-Live license, meaning it’s supported by Microsoft for use in production environments.&lt;/p&gt;
+&lt;p&gt;If you’re currently running .NET 6 or newer, I’ve found the migration process to .NET 9 to be fairly straightforward. Here are some key steps to guide you through the transition.&lt;/p&gt;
+&lt;h3 id="update-dependencies"&gt;1. Update Dependencies&lt;/h3&gt;
+&lt;p&gt;Update outdated dependencies. This is always a good practice before migrating, many incompatibility issues are often sorted this way. An excellent tool aiding with this is the &lt;a href="https://github.com/dotnet-outdated/dotnet-outdated"&gt;dotnet-outdated&lt;/a&gt; tool, run &lt;code&gt;dotnet outdated &amp;lt;solution/porojec folder&amp;gt;&lt;/code&gt; to check for any out of date packages and it can even update the packages for you.&lt;/p&gt;
+&lt;h3 id="remove-obsolete-target-frameworks"&gt;2. Remove Obsolete Target Frameworks&lt;/h3&gt;
+&lt;p&gt;If you are still targeting obsolete frameworks like &lt;code&gt;net7.0&lt;/code&gt;, it's time to clean them up. Many newer .NET 9 assemblies only target .NET 8 and above. If you need to maintain compatibility with .NET 6, you can use conditionals on your package references as a workaround during the interim, example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;    &amp;lt;PackageReference Condition=&amp;quot; '$(TargetFramework)' == 'net6.0' &amp;quot; Include=&amp;quot;Verify.Http&amp;quot; Version=&amp;quot;5.0.1&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Condition=&amp;quot; '$(TargetFramework)' != 'net6.0' &amp;quot; Include=&amp;quot;Verify.Http&amp;quot; Version=&amp;quot;6.3.0&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="update-global.json"&gt;3. Update &lt;code&gt;global.json&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;An easy way to update your &lt;code&gt;global.json&lt;/code&gt; is to simply delete it and run &lt;code&gt;dotnet new globaljson&lt;/code&gt;. This command will create a &lt;code&gt;global.json&lt;/code&gt; matching the preview SDK, which will work smoothly in your CI/CD pipeline.&lt;/p&gt;
+&lt;h3 id="add-net9.0-target-framework-moniker-tfm"&gt;4. Add &lt;code&gt;net9.0&lt;/code&gt; Target Framework Moniker (TFM)&lt;/h3&gt;
+&lt;p&gt;Add the &lt;code&gt;net9.0&lt;/code&gt; target framework to your project, using the &lt;code&gt;TargetFrameworks&lt;/code&gt; MSBuild property (if you're using &lt;code&gt;TargetFramework&lt;/code&gt; today and want to multitarget it will need to be relaced with &lt;code&gt;TargetFrameworks&lt;/code&gt;), example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;TargetFrameworks&amp;gt;net9.0;net8.0&amp;lt;/TargetFrameworks&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After November 12, 2024, the supported frameworks will be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;.NET 8 (Long Term Support until November 10, 2026)&lt;/li&gt;
+&lt;li&gt;.NET 9 (Standard Term Support, 18 months from release)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="build-and-address-issues"&gt;5. Build and Address Issues&lt;/h3&gt;
+&lt;p&gt;Once you’ve set everything up, build your solution and resolve any issues that arise:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Source Issues&lt;/strong&gt;: The only code issue I encountered was an &lt;code&gt;Index&lt;/code&gt; extension method for &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt;, which is now built-in with .NET 9. In my case, the method was internal and semantically different, so I simply renamed it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Dependency Errors/Warnings&lt;/strong&gt;: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transient dependencies (ones you don’t directly reference) might trigger warnings. &lt;code&gt;dotnet nuget why&lt;/code&gt; is helpful here. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="my-experience-running.net-9-in-production"&gt;My Experience Running .NET 9 in Production&lt;/h3&gt;
+&lt;p&gt;I’ve had code running on .NET 9 in production since the day after RC1. It’s not about being an early adopter for the sake of it, but about preparing for the future. By picking small, isolated workloads, I’m learning what challenges might come up during a larger migration. There are many things we can prepare for now so that the full migration is as smooth as possible.&lt;/p&gt;
+&lt;p&gt;In fact, you can start using the new .NET 9 SDK today while still targeting older frameworks, and gaining access to new build-time features while staying on your current runtime.&lt;/p&gt;
+&lt;p&gt;Overall, my experience running .NET 9 in production has been smooth sailing, with only minor issues. The one hiccup I encountered involved the .NET 9 base Docker images, which use a slightly newer Linux distribution, requiring some native binaries to be installed. But that’s exactly the kind of valuable lesson you want to learn early before migrating all your workloads. One common example is &lt;a href="https://www.nuget.org/packages/System.Text.Json"&gt;System.Text.Json&lt;/a&gt; which many packages reference old and outdated versions of, by explicitly adding a package reference to it, you're pinning the version used by your project, example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include=&amp;quot;System.Text.Json&amp;quot; Version=&amp;quot;8.0.4&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="adding-net9.0-to-my-open-source-tools"&gt;Adding &lt;code&gt;net9.0&lt;/code&gt; to My Open-Source Tools&lt;/h3&gt;
+&lt;p&gt;I’ve already started adding the &lt;code&gt;net9.0&lt;/code&gt; target framework to my OSS tools. Here are a few that have been shipped and published so far:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/ARI"&gt;&lt;strong&gt;ARI&lt;/strong&gt; - Azure Resource Inventory&lt;/a&gt; .NET Tool: Inventories and documents Azure Tenant resources.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Blobify"&gt;&lt;strong&gt;Blobify&lt;/strong&gt; - Blobify&lt;/a&gt; .NET Tool: Archives local files to Azure Blob Storage.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/yourlink"&gt;&lt;strong&gt;BRI&lt;/strong&gt; - Bicep Registry Inventory&lt;/a&gt; .NET Tool: Inventories and documents Bicep modules in an Azure container registry.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/DPI"&gt;&lt;strong&gt;DPI&lt;/strong&gt; - Dependency Inventory&lt;/a&gt; .NET Tool: Inventories dependencies to Azure Log Analytics.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/UnpackDacPac"&gt;&lt;strong&gt;UnpackDacPac&lt;/strong&gt; - Unpack DAC Package&lt;/a&gt; .NET Tool: Extracts a DACPAC and generates a deployment script to a target folder, without needing a live database.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>Inital reflections after running .NET 9 in production</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2024/2024-09-05-introducing-blobify</id>
 		<title>Introducing Blobify</title>
@@ -961,221 +1016,5 @@ RunTarget(Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;));
 &lt;/ul&gt;
 </content>
 		<summary>A DevOps tool to inspect dependencies and report to Azure Log Analytics</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe</id>
-		<title>Introducing Cake ClickOnce Recipe</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2021/2021-03-03-introducing-cake-clickonce-recipe" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/01/31/efaa9de4-9e5c-e66b-8b35-3f6b3475b8d3.png?sv=2019-12-12&amp;st=2021-01-30T15%253A03%253A52Z&amp;se=2031-01-31T15%253A03%253A52Z&amp;sr=b&amp;sp=r&amp;sig=wSUYJRdZjnHt0AZ86nc06YeF5eKqwXWAH%252F5525wyiAk%253D" />
-		<updated>2021-03-03T00:00:00Z</updated>
-		<content>&lt;p&gt;A little over a decade ago I did a lot of business applications with .NET Framework WPF and ClickOnce was in many cases used as a convenient way to deploy and update Windows applications. ClickOnce hasn't gotten much love over the years, and when .NET Core 3 introduced support for WPF applications ClickOnce support was nowhere to be found. But guess what, that's changed with .NET 5 and in this post, I'll go through my recipe for simplifying the building and publishing .NET 5 Windows application using GitHub Actions, Cake, and ClickOnce to Azure Blob Storage.&lt;/p&gt;
-&lt;h2 id="cake-recipe"&gt;Cake Recipe?&lt;/h2&gt;
-&lt;p&gt;So what is a Cake recipe? Regardless of what it sounds like, it in this case has nothing to do with baking, but it's a set of &lt;a href="https://cakebuild.net/"&gt;Cake&lt;/a&gt; scripts packaged as NuGet package and published on NuGet.org, providing a highly reusable way to with just a few lines of code get access to rich functionality.&lt;/p&gt;
-&lt;p&gt;For example this recipe will for a .NET 5 based Windows application, in a very optioned way&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Version application&lt;/li&gt;
-&lt;li&gt;Build application&lt;/li&gt;
-&lt;li&gt;Create ClickOnce assets&lt;/li&gt;
-&lt;li&gt;Deploy to Azure Blob storage&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="sample-application"&gt;Sample application&lt;/h2&gt;
-&lt;p&gt;For simplicity I'm here going to use the standard .NET 5 WPF template, using .NET CLI that would look something like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new wpf -n MyApp
-dotnet new sln -n MyApp
-dotnet sln add MyApp/MyApp.csproj
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Which essentially:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Creates project&lt;/li&gt;
-&lt;li&gt;Creates solution&lt;/li&gt;
-&lt;li&gt;Adds project to solution&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Which is similar to &lt;em&gt;New Project -&amp;gt; WPF Application (C# / Windows / Desktop .NET Core)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/9348f210-84a6-74b2-5f9f-6f31e20b1877.png?sv=2019-12-12&amp;amp;st=2021-01-30T17%3A12%3A36Z&amp;amp;se=2031-01-31T17%3A12%3A36Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=YnOmvtwboOr30u0v1EnSsdpBpJnHl%2FcwEIKr9p%2FAQ1Y%3D" alt="Create new project in Visual Studio 2019" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/6dadc800-fcc0-31ab-f4f3-9446b5f5c411.png?sv=2019-12-12&amp;amp;st=2021-01-30T17%3A13%3A34Z&amp;amp;se=2031-01-31T17%3A13%3A34Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=jdfRM7ANfxT8XyzhzfXKZfv2U8JV%2B%2Bl%2BREX4ALUpdiM%3D" alt=".NET Core WPF Application Template" /&gt;&lt;/p&gt;
-&lt;p&gt;Resulting in a bare minimum folder/file structure like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-text"&gt;src
- │    MyApp.sln
- │
- └─── MyApp
-        App.xaml
-        App.xaml.cs
-        AssemblyInfo.cs
-        MainWindow.xaml
-        MainWindow.xaml.cs
-        MyApp.csproj
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="adding-cake.clickonce.recipe"&gt;Adding Cake.ClickOnce.Recipe&lt;/h2&gt;
-&lt;p&gt;Now that we have our sample application, let's rub some DevOps on it using Cake.ClickOnce.Recipe.&lt;/p&gt;
-&lt;h3 id="prerequisites"&gt;Prerequisites&lt;/h3&gt;
-&lt;h4 id="tools"&gt;Tools&lt;/h4&gt;
-&lt;p&gt;To run our recipe we need one .NET tool installed&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Cake.Tool 1.0.0 or newer&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;My preferred way is to install using a .NET tool manifest in repo root, so the tools are versioned and restored within the repo, a manifest is easiest created using the .NET CLI template &lt;code&gt;tool-manifest&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and then install the tool&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install Cake.Tool
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="azure"&gt;Azure&lt;/h4&gt;
-&lt;p&gt;The recipe uses Azure Blob Storage to distribute the application and ClickOnce manifest, so you'll need to create:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Azure Storage Account&lt;/li&gt;
-&lt;li&gt;Container with anonymous read access for blobs only&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/01/31/2afa2bbc-0d9a-7898-d056-d9a221d8dc1d.png?sv=2019-12-12&amp;amp;st=2021-01-30T20%3A42%3A16Z&amp;amp;se=2031-01-31T20%3A42%3A16Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=Kx6eIPJh9ZHdOvWEeP6GJl%2BChVgyrR21%2FO7qlEJ7us4%3D" alt="New Storage Collage" /&gt;&lt;/p&gt;
-&lt;h3 id="adding-recipe"&gt;Adding recipe&lt;/h3&gt;
-&lt;p&gt;In repo root create a &lt;code&gt;build.cake&lt;/code&gt; file containing&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#load &amp;quot;nuget:?package=Cake.ClickOnce.Recipe&amp;amp;version=0.2.0&amp;quot;
-
-ClickOnce.ApplicationName = &amp;quot;MyApp&amp;quot;;
-ClickOnce.Publisher = &amp;quot;devlead&amp;quot;;
-ClickOnce.PublishUrl = &amp;quot;https://cakeclickonceexample.blob.core.windows.net/publish&amp;quot;;
-ClickOnce.RunBuild();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The Recipe has three required settings&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;ApplicationName&lt;/code&gt; - in general same as project name&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Publisher&lt;/code&gt; - name of publisher&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;PublishUrl&lt;/code&gt; - base url for where application is installed from, in this case Azure Blob Storage container url&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="local-build"&gt;Local build&lt;/h2&gt;
-&lt;p&gt;We're now all set to kick of a local build using Cake&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet cake
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and if all goes well you should see something like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-text"&gt;Task                           Duration
----------------------------------------------------
-Setup                          00:00:00.0070864
-Clean                          00:00:00.0114975
-Restore                        00:00:01.0136714
-Build                          00:00:02.6537503
-Publish                        00:00:00.9728737
-ClickOnce-Launcher             00:00:00.3629962
-ClickOnce-Application-Manifest 00:00:00.5536790
-ClickOnce-Deployment-Manifest  00:00:00.5924181
----------------------------------------------------
-Total:                         00:00:06.1730701
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and a new folder in repo root called artifacts containing application ClickOnce manifest and a date versioned folder (you can override the generated version using &lt;code&gt;ClickOnce.Version&lt;/code&gt; property).&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-text"&gt;artifacts
- │   MyApp.application
- │
- └───MyApp.2021.01.31.25014
-        Launcher.exe
-        MyApp.deps.json
-        MyApp.dll
-        MyApp.exe
-        MyApp.manifest
-        MyApp.pdb
-        MyApp.runtimeconfig.json
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="github-actions"&gt;GitHub Actions&lt;/h2&gt;
-&lt;p&gt;A fairly minimal GitHub Actions could essentially be&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Checkout source&lt;/li&gt;
-&lt;li&gt;Install .NET SDK&lt;/li&gt;
-&lt;li&gt;Install &amp;amp; Execute Cake&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id="build-definition"&gt;Build definition&lt;/h3&gt;
-&lt;p&gt;The yaml build definition could look something like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-yaml"&gt;name: Build
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-      - develop
-
-jobs:
-  build:
-    name: Build
-    runs-on: windows-latest
-    steps:
-      - name: Get the sources
-        uses: actions/checkout&amp;#64;v2
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet&amp;#64;v1
-
-      - name: Run Cake script
-        env:
-          PUBLISH_STORAGE_ACCOUNT: ${{ secrets.PUBLISH_STORAGE_ACCOUNT }}
-          PUBLISH_STORAGE_CONTAINER: ${{ secrets.PUBLISH_STORAGE_CONTAINER }}
-          PUBLISH_STORAGE_KEY: ${{ secrets.PUBLISH_STORAGE_KEY }}
-        run: |
-          dotnet tool restore
-          dotnet cake
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;Run Cake script&lt;/code&gt; step has three environment variables defined&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_ACCOUNT&lt;/code&gt; - Azure storage account name i.e. &lt;code&gt;cakeclickonceexample&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_CONTAINER&lt;/code&gt; - Azure storage container name i.e. &lt;code&gt;publish&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;PUBLISH_STORAGE_KEY&lt;/code&gt; - Azure storage account secondary or primary key.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;These are fetched from your GitHub repo settings Secrets section, which means they're not publicly stored anywhere in the repo and also not available from pull requests.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/8ebf213e-1f0d-8d68-d12d-58ceafe6d728.png?sv=2019-12-12&amp;amp;st=2021-03-01T21%3A51%3A01Z&amp;amp;se=2031-03-02T21%3A51%3A01Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=U%2BCyMGwq5x66LcKonxmi%2FjD52btWXph5Ku2P33T8rGE%3D" alt="GitHub Repo Secrets settings" /&gt;&lt;/p&gt;
-&lt;h3 id="output-example-on-github-actions"&gt;Output Example on GitHub Actions&lt;/h3&gt;
-&lt;p&gt;The recipe will automatically identify that it's executing on GitHub Actions, and execute a few extra steps to upload and point the ClickOnce manifest to the new version.&lt;/p&gt;
-&lt;p&gt;If all goes well GitHub Actions output would look something like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;
-----------------------------------------
-Setup
-----------------------------------------
-Setting up version 2021.01.27.18139
-▶ &amp;quot;Clean&amp;quot;
-▶ &amp;quot;Restore&amp;quot;
-▶ &amp;quot;Build&amp;quot;
-▶ &amp;quot;Publish&amp;quot;
-▶ &amp;quot;ClickOnce-Launcher&amp;quot;
-▶ &amp;quot;ClickOnce-Application-Manifest&amp;quot;
-▶ &amp;quot;ClickOnce-Deployment-Manifest&amp;quot;
-▶ &amp;quot;ClickOnce-Deployment-UpdateManifest&amp;quot;
-▶ &amp;quot;ClickOnce-Deployment-CreateAppRef&amp;quot;
-▶ &amp;quot;ClickOnce-Upload-Version&amp;quot;
-▶ &amp;quot;ClickOnce-Upload-Application&amp;quot;
-▶ &amp;quot;Publish-ClickOnce&amp;quot;
-
-Task                                Duration
---------------------------------------------------------
-Setup                               00:00:00.0160939
-Clean                               00:00:00.0084806
-Restore                             00:00:02.1274733
-Build                               00:00:03.3076849
-Publish                             00:00:01.2192429
-ClickOnce-Launcher                  00:00:00.4506914
-ClickOnce-Application-Manifest      00:00:00.6510728
-ClickOnce-Deployment-Manifest       00:00:00.9086913
-ClickOnce-Deployment-UpdateManifest 00:00:00.6800874
-ClickOnce-Deployment-CreateAppRef   00:00:00.0112772
-ClickOnce-Upload-Version            00:00:02.1736495
-ClickOnce-Upload-Application        00:00:00.6269294
---------------------------------------------------------
-Total:                              00:00:12.1814083
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and you now have a fully automated build and release of your ClickOnce application.&lt;/p&gt;
-&lt;h2 id="installing-application"&gt;Installing application&lt;/h2&gt;
-&lt;p&gt;The recipe will automatically generate an &lt;code&gt;appref-ms&lt;/code&gt; file, downloading and opening this file from blob storage is enough to trigger the ClickOnce runtime and install the application.&lt;/p&gt;
-&lt;p&gt;Example: &lt;a href="https://cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms"&gt;cakeclickonceexample.blob.core.windows.net/publish/MyApp.appref-ms&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/02/installclickonce.gif?sp=r&amp;amp;st=2021-03-01T23:03:03Z&amp;amp;se=2031-03-03T07:03:03Z&amp;amp;spr=https&amp;amp;sv=2020-02-10&amp;amp;sr=b&amp;amp;sig=hSBI7hfdtkWR0SqdX5yiHDeE9E%2FwZzWCEHTZqp518Ls%3D" alt="ClickOnce installation example" /&gt;&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Long story short, the recipe greatly simplifies the automation of building a WPF application, getting it published and deployed using ClickOnce technologies - achieving this only configuring the bare minimum what's needed to do so.&lt;/p&gt;
-&lt;p&gt;There's still a lot of work to do with the recipe especially around signing, icons, etc.&lt;/p&gt;
-&lt;p&gt;That said it's fully functional and a good starting point.
-The recipe is open source, so I'll happily take feedback and contributions to improve it.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Recipe source on GitHub - &lt;a href="https://github.com/devlead/Cake.ClickOnce.Recipe"&gt;github.com/devlead/Cake.ClickOnce.Recipe&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Recipe on NuGet.org - &lt;a href="https://www.nuget.org/packages/Cake.ClickOnce.Recipe/"&gt;nuget.org/packages/Cake.ClickOnce.Recipe&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Example repository on GitHub - &lt;a href="https://github.com/devlead/Cake.ClickOnce.Recipe.Example"&gt;github.com/devlead/Cake.ClickOnce.Recipe.Example&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Cake - &lt;a href="https://cakebuild.net/"&gt;cakebuild.net&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-		<summary>An opinionated recipe for building and publishing .NET 5 Windows apps</summary>
 	</entry>
 </feed>
