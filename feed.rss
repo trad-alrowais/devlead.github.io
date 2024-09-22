@@ -5,8 +5,8 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2024</copyright>
-		<pubDate>Sun, 22 Sep 2024 19:39:11 GMT</pubDate>
-		<lastBuildDate>Sun, 22 Sep 2024 19:39:11 GMT</lastBuildDate>
+		<pubDate>Sun, 22 Sep 2024 21:35:30 GMT</pubDate>
+		<lastBuildDate>Sun, 22 Sep 2024 21:35:30 GMT</lastBuildDate>
 		<item>
 			<title>Preparing for .NET 9</title>
 			<link>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</link>
@@ -54,7 +54,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://www.nuget.org/packages/ARI"&gt;&lt;strong&gt;ARI&lt;/strong&gt; - Azure Resource Inventory&lt;/a&gt; .NET Tool: Inventories and documents Azure Tenant resources.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.nuget.org/packages/Blobify"&gt;&lt;strong&gt;Blobify&lt;/strong&gt; - Blobify&lt;/a&gt; .NET Tool: Archives local files to Azure Blob Storage.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/yourlink"&gt;&lt;strong&gt;BRI&lt;/strong&gt; - Bicep Registry Inventory&lt;/a&gt; .NET Tool: Inventories and documents Bicep modules in an Azure container registry.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/BRI"&gt;&lt;strong&gt;BRI&lt;/strong&gt; - Bicep Registry Inventory&lt;/a&gt; .NET Tool: Inventories and documents Bicep modules in an Azure container registry.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.nuget.org/packages/DPI"&gt;&lt;strong&gt;DPI&lt;/strong&gt; - Dependency Inventory&lt;/a&gt; .NET Tool: Inventories dependencies to Azure Log Analytics.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.nuget.org/packages/UnpackDacPac"&gt;&lt;strong&gt;UnpackDacPac&lt;/strong&gt; - Unpack DAC Package&lt;/a&gt; .NET Tool: Extracts a DACPAC and generates a deployment script to a target folder, without needing a live database.&lt;/li&gt;
 &lt;/ul&gt;
