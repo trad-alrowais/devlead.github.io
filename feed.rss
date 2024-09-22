@@ -5,15 +5,15 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2024</copyright>
-		<pubDate>Sun, 22 Sep 2024 13:37:21 GMT</pubDate>
-		<lastBuildDate>Sun, 22 Sep 2024 13:37:21 GMT</lastBuildDate>
+		<pubDate>Sun, 22 Sep 2024 13:51:47 GMT</pubDate>
+		<lastBuildDate>Sun, 22 Sep 2024 13:51:47 GMT</lastBuildDate>
 		<item>
 			<title>Preparing for .NET 9</title>
-			<link>https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9</link>
-			<description>Inital reflections after running .NET 9 in production</description>
+			<link>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</link>
+			<description>Initial reflections after running .NET 9 in production</description>
 			<author>devlead</author>
 			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2024/09/22/df979602c75a4074bff02d5d02fdb88e.jpg?sv=2023-01-03&amp;st=2024-09-22T12%253A57%253A23Z&amp;se=2035-07-29T12%253A57%253A00Z&amp;sr=b&amp;sp=r&amp;sig=V0HqKU5KQUe8JuTyKzmuxyNNyyX735PAm4M6Lx%252FaXoY%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2024/2024-09-22-prepering-for-dotnet-9</guid>
+			<guid>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</guid>
 			<pubDate>Sun, 22 Sep 2024 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;.NET 9 is just around the corner with the General Availability (GA) release scheduled for November 2024. The .NET 9 RC 1 (released September 10, 2024) already comes with a Go-Live license, meaning it’s supported by Microsoft for use in production environments.&lt;/p&gt;
 &lt;p&gt;If you’re currently running .NET 6 or newer, I’ve found the migration process to .NET 9 to be fairly straightforward. Here are some key steps to guide you through the transition.&lt;/p&gt;
