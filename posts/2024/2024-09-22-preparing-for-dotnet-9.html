@@ -139,7 +139,7 @@
 <ol>
 <li><p><strong>Source Issues</strong>: The only code issue I encountered was an <code>Index</code> extension method for <code>IEnumerable&lt;T&gt;</code>, which is now built-in with .NET 9. In my case, the method was internal and semantically different, so I simply renamed it.</p>
 </li>
-<li><p><strong>Dependency Errors/Warnings</strong>: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transient dependencies (ones you don’t directly reference) might trigger warnings. <code>dotnet nuget why</code> is helpful here. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).</p>
+<li><p><strong>Dependency Errors/Warnings</strong>: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transitive dependencies (ones you don’t directly reference) might trigger warnings. <code>dotnet nuget why &lt;solution/project folder&gt; &lt;packageid&gt;</code> command is helpful here, which is part of the .NET 9 SDK. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).</p>
 </li>
 </ol>
 <h3 id="my-experience-running.net-9-in-production">My Experience Running .NET 9 in Production</h3>
@@ -148,6 +148,7 @@
 <p>Overall, my experience running .NET 9 in production has been smooth sailing, with only minor issues. The one hiccup I encountered involved the .NET 9 base Docker images, which use a slightly newer Linux distribution, requiring some native binaries to be installed. But that’s exactly the kind of valuable lesson you want to learn early before migrating all your workloads. One common example is <a href="https://www.nuget.org/packages/System.Text.Json">System.Text.Json</a> which many packages reference old and outdated versions of, by explicitly adding a package reference to it, you're pinning the version used by your project, example:</p>
 <pre><code class="language-xml">&lt;PackageReference Include=&quot;System.Text.Json&quot; Version=&quot;8.0.4&quot; /&gt;
 </code></pre>
+<p><a href="https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management">Central Package Management (CPM)</a> is an good option to in one place for you solution handle versions of your packages including transitive.</p>
 <h3 id="adding-net9.0-to-my-open-source-tools">Adding <code>net9.0</code> to My Open-Source Tools</h3>
 <p>I’ve already started adding the <code>net9.0</code> target framework to my OSS tools. Here are a few that have been shipped and published so far:</p>
 <ul>

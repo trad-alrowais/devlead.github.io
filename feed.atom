@@ -4,7 +4,7 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2024</rights>
-	<updated>2024-09-22T21:35:30Z</updated>
+	<updated>2024-09-23T06:27:24Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
 	<entry>
 		<id>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</id>
@@ -40,7 +40,7 @@
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Source Issues&lt;/strong&gt;: The only code issue I encountered was an &lt;code&gt;Index&lt;/code&gt; extension method for &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt;, which is now built-in with .NET 9. In my case, the method was internal and semantically different, so I simply renamed it.&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Dependency Errors/Warnings&lt;/strong&gt;: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transient dependencies (ones you don’t directly reference) might trigger warnings. &lt;code&gt;dotnet nuget why&lt;/code&gt; is helpful here. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Dependency Errors/Warnings&lt;/strong&gt;: The .NET 9 SDK is more vocal about packages with security issues or deprecated dependencies. Even transitive dependencies (ones you don’t directly reference) might trigger warnings. &lt;code&gt;dotnet nuget why &amp;lt;solution/project folder&amp;gt; &amp;lt;packageid&amp;gt;&lt;/code&gt; command is helpful here, which is part of the .NET 9 SDK. You can either pin specific versions or migrate to replacement packages (especially common with Azure SDKs).&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="my-experience-running.net-9-in-production"&gt;My Experience Running .NET 9 in Production&lt;/h3&gt;
@@ -49,6 +49,7 @@
 &lt;p&gt;Overall, my experience running .NET 9 in production has been smooth sailing, with only minor issues. The one hiccup I encountered involved the .NET 9 base Docker images, which use a slightly newer Linux distribution, requiring some native binaries to be installed. But that’s exactly the kind of valuable lesson you want to learn early before migrating all your workloads. One common example is &lt;a href="https://www.nuget.org/packages/System.Text.Json"&gt;System.Text.Json&lt;/a&gt; which many packages reference old and outdated versions of, by explicitly adding a package reference to it, you're pinning the version used by your project, example:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include=&amp;quot;System.Text.Json&amp;quot; Version=&amp;quot;8.0.4&amp;quot; /&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management"&gt;Central Package Management (CPM)&lt;/a&gt; is an good option to in one place for you solution handle versions of your packages including transitive.&lt;/p&gt;
 &lt;h3 id="adding-net9.0-to-my-open-source-tools"&gt;Adding &lt;code&gt;net9.0&lt;/code&gt; to My Open-Source Tools&lt;/h3&gt;
 &lt;p&gt;I’ve already started adding the &lt;code&gt;net9.0&lt;/code&gt; target framework to my OSS tools. Here are a few that have been shipped and published so far:&lt;/p&gt;
 &lt;ul&gt;
