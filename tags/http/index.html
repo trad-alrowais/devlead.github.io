@@ -5,11 +5,10 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="devlead">
 
-  <title>@devlead - Mattias Karlsson&#x27;s Blog - Cake.Kudu.Client version 0.6.0 released</title>
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - HTTP</title>
 
-  <link rel="canonical" href="https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684">
+  <link rel="canonical" href="https://www.devlead.se/tags/http">
 
       <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
       <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
@@ -18,10 +17,10 @@
   <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
   <meta name="msapplication-starturl" content="/" />
 
-  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Cake.Kudu.Client version 0.6.0 released" />
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - HTTP" />
     <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%3A16%3A48Z&amp;se=2031-01-11T15%3A16%3A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%2Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%3D" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.devlead.se/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released" />
+  <meta property="og:url" content="https://www.devlead.se/tags/http" />
   
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -94,19 +93,10 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <div class="post-heading">
+        <div class="site-heading">
           <h1>
-            Cake.Kudu.Client version 0.6.0 released
+            HTTP
           </h1>
-              <div class="meta">Published on Sunday, 3 June 2018</div>
-                <div class="mt-3">
-                      <a href="/tags/net" class="badge badge-light"> .NET</a>
-                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
-                      <a href="/tags/c" class="badge badge-light"> C#</a>
-                      <a href="/tags/cake" class="badge badge-light"> Cake</a>
-                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
-                      <a href="/tags/release-notes" class="badge badge-light"> Release Notes</a>
-                </div>
         </div>
       </div>
     </div>
@@ -117,73 +107,67 @@
   <div class="container"> 
     <div class="row">
       <div id="content" class="col-md-12">  
-        <p>This version fixes a breaking change in the Azure App Services Run-From-Zip web app deployment feature.</p>
-<h2 id="app-service-changes">App Service Changes</h2>
-<ul>
-<li>App Setting: <code>WEBSITE_USE_ZIP</code> --&gt; <code>WEBSITE_RUN_FROM_ZIP</code></li>
-<li>Marker filename: <code>siteversion.txt</code> --&gt; <code>packagename.txt</code></li>
-</ul>
-<h2 id="action-you-need-to-take">Action you need to take</h2>
-<p>As the App Setting has change you’ll need to change you setting name to <code>WEBSITE_RUN_FROM_ZIP</code> (it’s value should still be <code>1</code> )</p>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/b0858633-3124-5aec-09c6-de238e198b19.png?sv=2019-12-12&amp;st=2021-01-10T09%3A54%3A47Z&amp;se=2031-01-11T09%3A54%3A47Z&amp;sr=b&amp;sp=r&amp;sig=D%2BroDxmN6v7WRtasetPKfTpV%2Bxj2Y%2Bx3vM0Mc97pbwo%3D" alt="App Service App Settings" /></p>
-<p>Maker filename is handled by the new version so all you need to update scripts to use Cake.Kudu.Client version <code>0.6.0</code>.</p>
-<pre><code class="language-csharp">#addin nuget:?package=Cake.Kudu.Client&amp;version=0.6.0
-</code></pre>
-<p>nothing else needs to be changed in your Cake script.</p>
-<h2 id="verifying-change">Verifying change</h2>
-<p>You can verify the publish succeeded under App Service Advanced Tools ( Kudu ) — Debug Console by navigating to <code>data/SitePackages</code> and see deployment package and the new <code>packagename.txt</code></p>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/73564b06-ae73-e415-a9f3-f34c69bbddd5.png?sv=2019-12-12&amp;st=2021-01-10T09%3A56%3A42Z&amp;se=2031-01-11T09%3A56%3A42Z&amp;sr=b&amp;sp=r&amp;sig=471bIcnxlyPDPBXWGvnPeSRQ0YHSoT4FFkcv1qb9pdQ%3D" alt="Kudu Debug Console" /></p>
-<h2 id="full-example">Full example</h2>
-<p>If you haven’t used the feature before below is a full example</p>
-<pre><code class="language-csharp">#addin nuget:?package=Cake.Kudu.Client&amp;version=0.6.0
-
-Task(&quot;Deploy-Run-From-Zip&quot;)
- .Does( ()=&gt;
- {
-    string  baseUri     = EnvironmentVariable(&quot;KUDU_CLIENT_BASEURI&quot;),
-            userName    = EnvironmentVariable(&quot;KUDU_CLIENT_USERNAME&quot;),
-            password    = EnvironmentVariable(&quot;KUDU_CLIENT_PASSWORD&quot;);
-
-    IKuduClient kuduClient = KuduClient(
-        baseUri,
-        userName,
-        password);
-
-    DirectoryPath sourceDirectoryPath = &quot;./website/&quot;;
-
-    FilePath deployFilePath = kuduClient.ZipRunFromDirectory(sourceDirectoryPath);
-
-    Information(&quot;Deployed to {0}&quot;, deployFilePath);
- });
-
- RunTarget(&quot;Deploy-Run-From-Zip&quot;);
-</code></pre>
-<p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/8ecbff75-0985-f2e0-b354-9c0095b52cdf.png?sv=2019-12-12&amp;st=2021-01-10T09%3A57%3A52Z&amp;se=2031-01-11T09%3A57%3A52Z&amp;sr=b&amp;sp=r&amp;sig=ucQsy%2B4S8GqWnr7bK9N%2BR3QarAsM%2FnUDSrJ5QeRAQTI%3D" alt="Deploy Run From Zip Cake console output log" /></p>
-<p>Related posts</p>
-<ul>
-<li><a href="https://medium.com/hackernoon/introducing-cake-kudu-client-abda40d15f38">Introducing Cake Kudu Client</a></li>
-<li><a href="https://medium.com/hackernoon/run-from-zip-with-cake-kudu-client-5c063cd72b37">“Run-From-Zip” with Cake Kudu Client</a></li>
-</ul>
+            <div class="container-sm-height">
+        <div class="row row-sm-height">
+            <div class="col-md-6 right-border col-sm-height">
+                
 
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
-                    <p><div class="sponsorship">
-    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
-        <i class="fa fa-heart"></i>
-        Sponsor Mattias
-    </a>
-</div></p>
-                </div>
+<div class="post-preview">
+    <h2 class="post-title"><a href="/posts/2025/2025-02-16-introducing-mockhttp-testing">Introducing Devlead.Testing.MockHttp</a></h2>
+    <p class="post-meta">Published on Sunday, 16 February 2025</p>
+<p>There are undoubtedly many sophisticated and comprehensive solutions out there for mocking HTTP requests in .NET applications. However, I found myself with a very specific need: I wanted a lightweight, low-friction way to mock third-party HTTP APIs within my unit tests, without a lot of ceremony or complexity. I needed something that was &quot;good enough&quot; for my use case, providing in-memory request/response simulation that would let me validate my HTTP client interactions.</p>        <p class="small"><a href="/posts/2025/2025-02-16-introducing-mockhttp-testing">Read more...</a></p>
+</div>
+
             </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2018/2018-06-03-cake.kudu.client-version-0.6.0-released.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
-                </div>
+            <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
+                    <a href="/tags/net" class="badge badge-light"> .NET (24)</a>
+                    <a href="/tags/c" class="badge badge-light"> C# (16)</a>
+                    <a href="/tags/azure" class="badge badge-light"> Azure (12)</a>
+                    <a href="/tags/devops" class="badge badge-light"> DevOps (12)</a>
+                    <a href="/tags/cake" class="badge badge-light"> Cake (7)</a>
+                    <a href="/tags/oss" class="badge badge-light"> OSS (4)</a>
+                    <a href="/tags/tool" class="badge badge-light"> Tool (4)</a>
+                    <a href="/tags/nuget" class="badge badge-light"> NuGet (4)</a>
+                    <a href="/tags/statiq" class="badge badge-light"> Statiq (4)</a>
+                    <a href="/tags/devopsdocs" class="badge badge-light"> DevOpsDocs (3)</a>
+                    <a href="/tags/devlead.statiq" class="badge badge-light"> Devlead.Statiq (3)</a>
+                    <a href="/tags/release-notes" class="badge badge-light"> Release Notes (3)</a>
+                    <a href="/tags/iaas" class="badge badge-light"> IAAS (2)</a>
+                    <a href="/tags/opinion" class="badge badge-light"> Opinion (2)</a>
+                    <a href="/tags/testing" class="badge badge-light"> Testing (1)</a>
+                    <a href="/tags/http" class="badge badge-dark"> HTTP (1)</a>
+                    <a href="/tags/storage" class="badge badge-light"> Storage (1)</a>
+                    <a href="/tags/arm" class="badge badge-light"> ARM (1)</a>
+                    <a href="/tags/sql" class="badge badge-light"> SQL (1)</a>
+                    <a href="/tags/dacpac" class="badge badge-light"> Dacpac (1)</a>
+                    <a href="/tags/dacfx" class="badge badge-light"> Dacfx (1)</a>
+                    <a href="/tags/bicep" class="badge badge-light"> Bicep (1)</a>
+                    <a href="/tags/azure-log-analytics" class="badge badge-light"> Azure Log Analytics (1)</a>
+                    <a href="/tags/wpf" class="badge badge-light"> WPF (1)</a>
+                    <a href="/tags/announcement" class="badge badge-light"> Announcement (1)</a>
+                    <a href="/tags/bitrise" class="badge badge-light"> Bitrise (1)</a>
+                    <a href="/tags/docker" class="badge badge-light"> Docker (1)</a>
+                    <a href="/tags/clean-code" class="badge badge-light"> Clean Code (1)</a>
+                    <a href="/tags/legacy" class="badge badge-light"> Legacy (1)</a>
+                    <a href="/tags/powershell" class="badge badge-light"> Powershell (1)</a>
+                    <a href="/tags/api" class="badge badge-light"> API (1)</a>
+                    <a href="/tags/azure-functions" class="badge badge-light"> Azure Functions (1)</a>
+                    <a href="/tags/ngrok" class="badge badge-light"> Ngrok (1)</a>
+                    <a href="/tags/serverless" class="badge badge-light"> Serverless (1)</a>
+                    <a href="/tags/f" class="badge badge-light"> F# (1)</a>
+                    <a href="/tags/visual-basic" class="badge badge-light"> Visual Basic (1)</a>
+                    <a href="/tags/polly" class="badge badge-light"> Polly (1)</a>
+                    <a href="/tags/sql-server" class="badge badge-light"> Sql Server (1)</a>
+                    <a href="/tags/microsoft-teams" class="badge badge-light"> Microsoft Teams (1)</a>
+                    <a href="/tags/github" class="badge badge-light"> Github (1)</a>
+                    <a href="/tags/open-source" class="badge badge-light"> Open Source (1)</a>
+                    <a href="/tags/process" class="badge badge-light"> Process (1)</a>
+                    <a href="/tags/brainstorming" class="badge badge-light"> Brainstorming (1)</a>
             </div>
         </div>
+    </div>
+
       </div>
     </div>
   </div>
@@ -195,8 +179,6 @@ Task(&quot;Deploy-Run-From-Zip&quot;)
     <div class="container">
         <div class="row">
                 <div class="col-md-12 text-center">
-                        <p class="text-center small text-muted">Originally published at <a href="https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684">https://medium.com/@devlead/cake-kudu-client-version-0-6-0-released-cb6435629684</a>.</p>
-                        <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
                     <ul class="list-inline text-center small">

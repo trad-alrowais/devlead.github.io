@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="An opinionated .NET source package for mocking HTTP client requests">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing Devlead.Testing.MockHttp</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2025/2025-02-16-introducing-mockhttp-testing">
+
+      <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing Devlead.Testing.MockHttp" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2025/02/15/48b2ec90-3c5d-4bfb-9d12-838867e50011.png?sv=2023-01-03&amp;st=2025-02-15T20%3A33%3A23Z&amp;se=2031-02-16T20%3A33%3A00Z&amp;sr=b&amp;sp=r&amp;sig=OqeViFR%2B2YKVMXEVKWn6wC0g%2B3NtrxfUcfDS%2FASFOjY%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2025/2025-02-16-introducing-mockhttp-testing" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a { text-decoration: none; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2025/02/15/48b2ec90-3c5d-4bfb-9d12-838867e50011.png?sv=2023-01-03&amp;st=2025-02-15T20%3A33%3A23Z&amp;se=2031-02-16T20%3A33%3A00Z&amp;sr=b&amp;sp=r&amp;sig=OqeViFR%2B2YKVMXEVKWn6wC0g%2B3NtrxfUcfDS%2FASFOjY%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Introducing Devlead.Testing.MockHttp
+          </h1>
+            <h2 class="subheading">An opinionated .NET source package for mocking HTTP client requests</h2>
+              <div class="meta">Published on Sunday, 16 February 2025</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/c" class="badge badge-light"> C#</a>
+                      <a href="/tags/oss" class="badge badge-light"> OSS</a>
+                      <a href="/tags/testing" class="badge badge-light"> Testing</a>
+                      <a href="/tags/http" class="badge badge-light"> HTTP</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"> 
+    <div class="row">
+      <div id="content" class="col-md-12">  
+        <p>There are undoubtedly many sophisticated and comprehensive solutions out there for mocking HTTP requests in .NET applications. However, I found myself with a very specific need: I wanted a lightweight, low-friction way to mock third-party HTTP APIs within my unit tests, without a lot of ceremony or complexity. I needed something that was &quot;good enough&quot; for my use case, providing in-memory request/response simulation that would let me validate my HTTP client interactions.</p>
+<p>That's why I created Devlead.Testing.MockHttp. It's not trying to be the most feature-complete or elegant solution; it simply aims to solve this specific testing scenario in a straightforward way, with a minimum of ceremony, mimicking how the tested code would be used in a real application. If you have similar needs for basic HTTP mocking in your unit tests, this might be useful for you too.</p>
+<p>Even though it has a fairly limited scope, it still enables testing of a wide range of scenarios, i.e., validating request headers, status codes, authentication, and even a small state machine for testing retry logic/throttling and requiring certain requests to be made before others.</p>
+<h2 id="overview-diagram">Overview diagram</h2>
+<div class="mermaid">graph TB
+    
+    subgraph unit["Unit test"]
+        direction TB
+        Test1 &lt;--"GET Index.html"--> testioc
+        Test2 &lt;--"POST Api.json"--> testioc 
+        Test3 &lt;--"PUT SecretApi.json"--> testioc
+    end
+
+    subgraph testioc["ServiceProviderFixture&amp;nbsp;(Test&amp;nbsp;Inversion&amp;nbsp;of&amp;nbsp;Control&amp;nbsp;Container)"]
+        direction TB
+        MyService{{"MyService(HttpClient&amp;nbsp;client)"}}
+        Mock{{"MockHttpClient:HttpClient&lt;br/>MockHttpClientFactory:IHttpClientFactory&lt;br/>MockHttpMessageHandlerFactory:IHttpMessageHandlerFactory"}}
+        MyService &lt;--> Mock
+    end
+
+    subgraph mockhttp["Router"]
+        direction TB
+        Router&#64;{ shape: procs, label: "HttpRequestMessage&lt;br/>to&lt;br/>HttpResponseMessage"}
+    end
+
+    subgraph assembly["Assembly&amp;nbsp;Embedded&amp;nbsp;Resources"]
+        direction BT 
+        Routes["Routes.json"]    
+        Index["Index.html"]
+        Api&#64;{ shape: doc, label: "Api.json"}
+        SecretApi&#64;{ shape: doc, label: "SecretApi.json"}
+        Index --> Routes  
+        Api --> Routes
+        SecretApi --> Routes
+    end
+
+    testioc &lt;--> mockhttp
+    mockhttp &lt;-- Routes&lt;/br>configuration --> assembly
+</div>
+<h2 id="dependency-injection-in-unit-tests">Dependency injection in unit tests?</h2>
+<p>My goal was to ensure that the unit test for constructing fixtures and object code closely resembles how they are used in real applications. For instance, if resolving your HTTP client is simply done with <code>AddHttpClient&lt;MyService&gt;()</code> in the application, then that should be all that's needed for it to be resolved in tests. By using an IOC container to resolve the services, it ensures that the same logic to construct the services is used in the tests as in the application. It also makes tests more resilient to changes in the service construction logic, especially if you use common extension methods to configure the services.</p>
+<p>Let's walk through an example of that.</p>
+<h3 id="example-service">Example Service</h3>
+<p>The service is a simple class that uses an <code>HttpClient</code> to fetch data from a couple of different endpoints.</p>
+<pre><code class="language-csharp">public class MyService(HttpClient httpClient)
+{
+    public async Task&lt;string&gt; GetData()
+    {
+        var response = await httpClient.GetAsync(&quot;https://example.com/index.txt&quot;);
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task&lt;User?&gt; GetSecret()
+    {
+        return await httpClient.GetFromJsonAsync&lt;User&gt;(&quot;https://example.com/login/secret.json&quot;);
+    }
+}
+</code></pre>
+<h3 id="example-unit-test">Example Unit Test</h3>
+<p>The unit tests below are NUnit tests that verify the behavior of the <code>MyService</code> class using <code>Devlead.Testing.MockHttp.Tests</code> provided <code>ServiceProviderFixture</code> to resolve the service. Methods are called as usual, and the results are snapshotted using <a href="https://github.com/VerifyTests/Verify">Verify</a>. Any exceptions or changes in the response are asserted and will fail the test.</p>
+<pre><code class="language-csharp">public class MyServiceTests
+{
+    [Test]
+    public async Task GetData()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&lt;MyService&gt;();
+
+        // When
+        var result = await myService.GetData();
+
+        // Then
+        await Verify(result);
+    }
+
+    [Test]
+    public async Task GetUnauthorizedSecret()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&lt;MyService&gt;();
+
+        // When 
+        var result = Assert.CatchAsync&lt;HttpRequestException&gt;(myService.GetSecret);
+
+        // Then
+        await Verify(result);
+    }
+
+    [Test]
+    public async Task GetSecret()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&lt;MyService&gt;(
+                            configure =&gt; configure.ConfigureMockHttpClient&lt;Constants&gt;(
+                                            client =&gt; client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                                                &quot;Bearer&quot;,
+                                                &quot;AccessToken&quot;
+                                                )
+                                        )
+                            );
+
+        // When
+        var result = await myService.GetSecret();
+
+        // Then
+        await Verify(result);
+    }
+}
+</code></pre>
+<h3 id="registering-the-service">Registering the service</h3>
+<p>The project provides a <code>ServiceProviderFixture</code> partial class, which contains IOC helpers and a partial method <code>InitServiceProvider</code> for you to implement to register your own registrations and any of their dependencies. In theory, your project could have multiple mocked routes within the same project, and <code>.AddMockHttpClient&lt;Constants&gt;()</code> below picks up the routes from the assembly embedded resources relative to the type parameter <code>Constants</code>.</p>
+<pre><code class="language-csharp">public static partial class ServiceProviderFixture
+{
+    static partial void InitServiceProvider(IServiceCollection services)
+    {
+        services.AddHttpClient&lt;MyService&gt;()
+                .AddMockHttpClient&lt;Constants&gt;();
+    }
+}
+</code></pre>
+<p>Services and instances registered in the <code>InitServiceProvider</code> method will be available for all unit tests and can be resolved using the <code>ServiceProviderFixture.GetRequiredService&lt;T&gt;()</code> method, as shown in the example unit test above. You can also register instances/services for a specific test or even configure the registrations using a delegate, as shown in the <code>GetSecret</code> test.</p>
+<p><code>GetRequiredService</code> can resolve up to seven different types by passing one to seven type arguments, and each call to <code>GetRequiredService</code> will create a new separate isolated IOC container instance, ensuring that each test can have its own isolated dependencies.</p>
+<pre><code class="language-csharp">var myService = ServiceProviderFixture
+                    .GetRequiredService&lt;MyService&gt;();
+
+var (
+        myService,
+        myService2
+    ) = ServiceProviderFixture
+            .GetRequiredService&lt;MyService, MyService2&gt;();
+
+...
+
+var (
+        myService,
+        myService2,
+        myService3,
+        myService4,
+        myService5,
+        myService6,
+        myService7
+    ) = ServiceProviderFixture
+            .GetRequiredService&lt;MyService, MyService2, MyService3, MyService4, MyService5, MyService6, MyService7&gt;();
+</code></pre>
+<p>This makes it easy to resolve multiple services in a single test or even resolve the same service multiple times with different configurations.</p>
+<p>For example, resolving a <code>TimeProvider</code> for testing date/time-related functionality and your service that uses it.</p>
+<pre><code class="language-csharp">// Given
+var (
+        timeProvider,
+        myService
+    ) = ServiceProviderFixture
+            .GetRequiredService&lt;FakeTimeProvider, MyService&gt;();
+
+// When
+var result = myService.GetData();
+var cachedResult = myService.GetData();
+timeProvider.Advance(TimeSpan.FromDays(1));
+var uncachedResult = myService.GetData();
+
+// Then
+await Verify(
+    new {
+        result,
+        cachedResult,
+        uncachedResult
+    }
+);
+</code></pre>
+<h3 id="registering-routes">Registering routes</h3>
+<p>Routes are configured using the <code>Routes.json</code> file, which is embedded as an assembly resource. The file is used to configure the <code>Router</code>, which is responsible for matching incoming requests to the correct response. The file is placed in a &quot;Routes&quot; folder relative to the type parameter used in <code>.AddMockHttpClient&lt;T&gt;()</code>.</p>
+<p>The example routes file below provides two endpoints available via GET requests. The secret endpoint requires an access token in the Authorization header, while the index endpoint does not.</p>
+<pre><code class="language-json">[
+  {
+    &quot;Request&quot;: {
+      &quot;Methods&quot;: [
+        {
+          &quot;Method&quot;: &quot;GET&quot;
+        }
+      ],
+      &quot;AbsoluteUri&quot;: &quot;https://example.com/login/secret.json&quot;
+    },
+    &quot;Responses&quot;: [
+      {
+        &quot;RequestHeaders&quot;: {},
+        &quot;ContentResource&quot;: &quot;Example.Login.Secret.json&quot;,
+        &quot;ContentType&quot;: &quot;application/json&quot;,
+        &quot;ContentHeaders&quot;: {},
+        &quot;StatusCode&quot;: 200
+      }
+    ],
+    &quot;Authorization&quot;: {
+      &quot;Authorization&quot;: [
+        &quot;Bearer AccessToken&quot;
+      ]
+    }
+  },
+  {
+    &quot;Request&quot;: {
+      &quot;Methods&quot;: [
+        {
+          &quot;Method&quot;: &quot;GET&quot;
+        }
+      ],
+      &quot;AbsoluteUri&quot;: &quot;https://example.com/index.txt&quot;
+    },
+    &quot;Responses&quot;: [
+      {
+        &quot;RequestHeaders&quot;: {},
+        &quot;ContentResource&quot;: &quot;Example.Index.txt&quot;,
+        &quot;ContentType&quot;: &quot;text/plain&quot;,
+        &quot;ContentHeaders&quot;: {},
+        &quot;StatusCode&quot;: 200
+      }
+    ]
+  }
+]
+</code></pre>
+<p>The <code>Router</code> will match the request to the correct response based on the request method and absolute URI. If the request doesn't match any of the routes, a 404 Not Found response is returned. If authentication is required, the <code>Authorization</code> section is used to validate the request headers against the configured values, and a 401 Unauthorized response is returned if it doesn't match.</p>
+<h3 id="route-content">Route content</h3>
+<p>The content of the response is fetched from the assembly embedded resources, which is configured using the <code>ContentResource</code> property. The content is read as a stream and converted to the appropriate content type. This means that the content can be a JSON file, a text file, an image, or even a binary file. The files specified in <code>ContentResource</code> are relative to the <code>Routes.json</code> file, i.e., the above configuration would have a folder structure like this:</p>
+<pre><code>Constants.cs
+Resources/Routes.json
+Resources/Example/Index.txt
+Resources/Example/Login/Secret.json
+</code></pre>
+<p>As with any embedded resource, directory separators are normalized to <code>.</code> in the <code>ContentResource</code> path. For example, <code>Example/Login/Secret.json</code> above would be <code>Example.Login.Secret.json</code> in the <code>Routes.json</code> file.</p>
+<p>In your <code>.csproj</code>, it would be configured something like this:</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+    &lt;None Remove=&quot;Resources\Example\index.txt&quot; /&gt;
+    &lt;None Remove=&quot;Resources\Example\Login\Secret.json&quot; /&gt;
+    &lt;None Remove=&quot;Resources\Routes.json&quot; /&gt;
+&lt;/ItemGroup&gt;
+
+&lt;ItemGroup&gt;
+    &lt;EmbeddedResource Include=&quot;Resources\Example\Index.txt&quot; /&gt;
+    &lt;EmbeddedResource Include=&quot;Resources\Routes.json&quot; /&gt;
+    &lt;EmbeddedResource Include=&quot;Resources\Example\Login\Secret.json&quot; /&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<h2 id="advanced-scenarios">Advanced scenarios</h2>
+<h3 id="state-machine">State machine</h3>
+<p>Routes can be configured to require certain requests to be made before others. This is done by setting the request to disabled:</p>
+<pre><code class="language-json">...
+    &quot;Request&quot;: {
+      &quot;Methods&quot;: [
+        {
+          &quot;Method&quot;: &quot;HEAD&quot;
+        }
+      ],
+      &quot;AbsoluteUri&quot;: &quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&quot;,
+      &quot;Disabled&quot;: true
+    },
+...
+</code></pre>
+<p>In another route response, configure it to enable the above request using the <code>EnableRequests</code> property:</p>
+<pre><code class="language-json">...
+    &quot;Request&quot;: {
+      &quot;Methods&quot;: [
+        {
+          &quot;Method&quot;: &quot;PUT&quot;
+        }
+      ],
+      &quot;AbsoluteUri&quot;: &quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&quot;
+    },
+    &quot;Responses&quot;: [
+      {
+        &quot;RequestHeaders&quot;: {},
+        &quot;ContentType&quot;: &quot;application/json&quot;,
+        &quot;ContentResource&quot;: &quot;Commands.ArchiveCommandTests.NewFiles.NewFile.json&quot;,
+        &quot;StatusCode&quot;: 201,
+        &quot;EnableRequests&quot;: [
+          {
+            &quot;Method&quot;: &quot;HEAD&quot;,
+            &quot;AbsoluteUri&quot;: &quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&quot;
+          }
+        ]
+      }
+    ],
+...
+</code></pre>
+<p>So, the HEAD request will result in a 404 Not Found response, but the PUT request will result in a 201 Created response, and the HEAD request will be enabled.</p>
+<h3 id="throttling">Throttling</h3>
+<p>Throttling can be configured by calling the <code>SimulateRetryAfter</code> extension while registering your services.</p>
+<pre><code class="language-csharp">// Given
+var (httpClient, timeProvider) = ServiceProviderFixture
+                                .GetRequiredService&lt;HttpClient, FakeTimeProvider&gt;(
+                                    services =&gt; services.SimulateRetryAfter&lt;Constants&gt;(
+                                        rateLimitOccurrenceCount: rateLimitOccurrenceCount,
+                                        retryAfterInterval: TimeSpan.FromMinutes(1)
+                                    )
+                                );
+TimeSpan timeAdvance = TimeSpan.FromMinutes(timeMinutesAdvance);
+var responses = new List&lt;HttpResponseMessage&gt;();
+
+// When
+for (int i = 0; i &lt;= rateLimitOccurrenceCount * 2; i++, timeProvider.Advance(timeAdvance))
+{
+    responses.Add(await httpClient.GetAsync(&quot;https://example.com/index.txt&quot;));
+}
+
+// Then
+await Verify(responses);
+</code></pre>
+<p>The above example will simulate a rate limit by advancing the time and checking the response status code. <code>rateLimitOccurrenceCount</code> is the number of requests that will be allowed before the rate limit is applied, and <code>retryAfterInterval</code> is for how long the rate limit will be applied once it occurs.</p>
+<h3 id="request-headers">Request headers</h3>
+<p>Request headers can be configured to validate the request headers against the configured values, and different responses can be configured based on the request headers.</p>
+<pre><code class="language-json">...
+  {
+    &quot;Request&quot;: {
+      &quot;Methods&quot;: [
+        {
+          &quot;Method&quot;: &quot;PUT&quot;
+        }
+      ],
+      &quot;AbsoluteUri&quot;: &quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&quot;
+    },
+    &quot;Responses&quot;: [
+      {
+        &quot;RequestHeaders&quot;: {
+          &quot;Content-Type&quot;: [ &quot;application/json&quot; ],
+          &quot;Content-Length&quot;: [ &quot;9&quot; ],
+          &quot;x-ms-blob-type&quot;: [ &quot;BlockBlob&quot; ],
+          &quot;Content-MD5&quot;: [ &quot;uasiD3l1Rg7NApFvCBOV1Q==&quot; ]
+        },
+        &quot;ContentType&quot;: &quot;application/json&quot;,
+        &quot;ContentResource&quot;: &quot;Commands.ArchiveCommandTests.NewFiles.NewFile.json&quot;,
+        &quot;ContentHeaders&quot;: {},
+        &quot;StatusCode&quot;: 201
+      }
+    ],
+    &quot;Authorization&quot;: {
+      &quot;Authorization&quot;: [
+        &quot;Bearer AccessToken&quot;
+      ]
+    }
+  },
+...
+</code></pre>
+<p>In the above example, a 201 Created response is returned for PUT requests to the storage account blob container, but the request headers are validated against the configured values.</p>
+<h3 id="md5-checksum">MD5 checksum</h3>
+<p>The Content-MD5 header is calculated and returned for all content responses.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>The package is available on <a href="https://www.nuget.org/packages/Devlead.Testing.MockHttp/">NuGet</a> and can be installed using the following command:</p>
+<pre><code>dotnet add package Devlead.Testing.MockHttp
+</code></pre>
+<p>The package is a source package and is supported on .NET 8 and above.</p>
+<h3 id="example-projects">Example projects</h3>
+<p>The package is used in the following example projects:</p>
+<ul>
+<li><a href="https://github.com/devlead/Devlead.Testing.MockHttp/tree/main/src/Devlead.Testing.MockHttp.Tests">Devlead.Testing.MockHttp.Tests</a> - contains examples of many of the features.</li>
+<li><a href="https://github.com/devlead/Blobify">Blobify</a> - its tests contain examples like enabling requests, request headers filtering, MD5 checksum validation, and more.</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>The project is open source, and contributions are welcome. Please feel free to submit a PR or an issue. You'll find the project on <a href="https://github.com/devlead/Devlead.Testing.MockHttp">GitHub</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I hope you find this package useful. Feel free to let me know if you have any feedback or suggestions.</p>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2025/2025-02-16-introducing-mockhttp-testing.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

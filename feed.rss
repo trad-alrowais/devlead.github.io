@@ -5,8 +5,375 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2025</copyright>
-		<pubDate>Sun, 16 Feb 2025 01:50:01 GMT</pubDate>
-		<lastBuildDate>Sun, 16 Feb 2025 01:50:01 GMT</lastBuildDate>
+		<pubDate>Sun, 16 Feb 2025 01:58:54 GMT</pubDate>
+		<lastBuildDate>Sun, 16 Feb 2025 01:58:54 GMT</lastBuildDate>
+		<item>
+			<title>Introducing Devlead.Testing.MockHttp</title>
+			<link>https://www.devlead.se/posts/2025/2025-02-16-introducing-mockhttp-testing</link>
+			<description>An opinionated .NET source package for mocking HTTP client requests</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2025/02/15/48b2ec90-3c5d-4bfb-9d12-838867e50011.png?sv=2023-01-03&amp;st=2025-02-15T20%253A33%253A23Z&amp;se=2031-02-16T20%253A33%253A00Z&amp;sr=b&amp;sp=r&amp;sig=OqeViFR%252B2YKVMXEVKWn6wC0g%252B3NtrxfUcfDS%252FASFOjY%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2025/2025-02-16-introducing-mockhttp-testing</guid>
+			<pubDate>Sun, 16 Feb 2025 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;There are undoubtedly many sophisticated and comprehensive solutions out there for mocking HTTP requests in .NET applications. However, I found myself with a very specific need: I wanted a lightweight, low-friction way to mock third-party HTTP APIs within my unit tests, without a lot of ceremony or complexity. I needed something that was &amp;quot;good enough&amp;quot; for my use case, providing in-memory request/response simulation that would let me validate my HTTP client interactions.&lt;/p&gt;
+&lt;p&gt;That's why I created Devlead.Testing.MockHttp. It's not trying to be the most feature-complete or elegant solution; it simply aims to solve this specific testing scenario in a straightforward way, with a minimum of ceremony, mimicking how the tested code would be used in a real application. If you have similar needs for basic HTTP mocking in your unit tests, this might be useful for you too.&lt;/p&gt;
+&lt;p&gt;Even though it has a fairly limited scope, it still enables testing of a wide range of scenarios, i.e., validating request headers, status codes, authentication, and even a small state machine for testing retry logic/throttling and requiring certain requests to be made before others.&lt;/p&gt;
+&lt;h2 id="overview-diagram"&gt;Overview diagram&lt;/h2&gt;
+&lt;div class="mermaid"&gt;graph TB
+    
+    subgraph unit["Unit test"]
+        direction TB
+        Test1 &amp;lt;--"GET Index.html"--&gt; testioc
+        Test2 &amp;lt;--"POST Api.json"--&gt; testioc 
+        Test3 &amp;lt;--"PUT SecretApi.json"--&gt; testioc
+    end
+
+    subgraph testioc["ServiceProviderFixture&amp;amp;nbsp;(Test&amp;amp;nbsp;Inversion&amp;amp;nbsp;of&amp;amp;nbsp;Control&amp;amp;nbsp;Container)"]
+        direction TB
+        MyService{{"MyService(HttpClient&amp;amp;nbsp;client)"}}
+        Mock{{"MockHttpClient:HttpClient&amp;lt;br/&gt;MockHttpClientFactory:IHttpClientFactory&amp;lt;br/&gt;MockHttpMessageHandlerFactory:IHttpMessageHandlerFactory"}}
+        MyService &amp;lt;--&gt; Mock
+    end
+
+    subgraph mockhttp["Router"]
+        direction TB
+        Router&amp;#64;{ shape: procs, label: "HttpRequestMessage&amp;lt;br/&gt;to&amp;lt;br/&gt;HttpResponseMessage"}
+    end
+
+    subgraph assembly["Assembly&amp;amp;nbsp;Embedded&amp;amp;nbsp;Resources"]
+        direction BT 
+        Routes["Routes.json"]    
+        Index["Index.html"]
+        Api&amp;#64;{ shape: doc, label: "Api.json"}
+        SecretApi&amp;#64;{ shape: doc, label: "SecretApi.json"}
+        Index --&gt; Routes  
+        Api --&gt; Routes
+        SecretApi --&gt; Routes
+    end
+
+    testioc &amp;lt;--&gt; mockhttp
+    mockhttp &amp;lt;-- Routes&amp;lt;/br&gt;configuration --&gt; assembly
+&lt;/div&gt;
+&lt;h2 id="dependency-injection-in-unit-tests"&gt;Dependency injection in unit tests?&lt;/h2&gt;
+&lt;p&gt;My goal was to ensure that the unit test for constructing fixtures and object code closely resembles how they are used in real applications. For instance, if resolving your HTTP client is simply done with &lt;code&gt;AddHttpClient&amp;lt;MyService&amp;gt;()&lt;/code&gt; in the application, then that should be all that's needed for it to be resolved in tests. By using an IOC container to resolve the services, it ensures that the same logic to construct the services is used in the tests as in the application. It also makes tests more resilient to changes in the service construction logic, especially if you use common extension methods to configure the services.&lt;/p&gt;
+&lt;p&gt;Let's walk through an example of that.&lt;/p&gt;
+&lt;h3 id="example-service"&gt;Example Service&lt;/h3&gt;
+&lt;p&gt;The service is a simple class that uses an &lt;code&gt;HttpClient&lt;/code&gt; to fetch data from a couple of different endpoints.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class MyService(HttpClient httpClient)
+{
+    public async Task&amp;lt;string&amp;gt; GetData()
+    {
+        var response = await httpClient.GetAsync(&amp;quot;https://example.com/index.txt&amp;quot;);
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task&amp;lt;User?&amp;gt; GetSecret()
+    {
+        return await httpClient.GetFromJsonAsync&amp;lt;User&amp;gt;(&amp;quot;https://example.com/login/secret.json&amp;quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="example-unit-test"&gt;Example Unit Test&lt;/h3&gt;
+&lt;p&gt;The unit tests below are NUnit tests that verify the behavior of the &lt;code&gt;MyService&lt;/code&gt; class using &lt;code&gt;Devlead.Testing.MockHttp.Tests&lt;/code&gt; provided &lt;code&gt;ServiceProviderFixture&lt;/code&gt; to resolve the service. Methods are called as usual, and the results are snapshotted using &lt;a href="https://github.com/VerifyTests/Verify"&gt;Verify&lt;/a&gt;. Any exceptions or changes in the response are asserted and will fail the test.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class MyServiceTests
+{
+    [Test]
+    public async Task GetData()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&amp;lt;MyService&amp;gt;();
+
+        // When
+        var result = await myService.GetData();
+
+        // Then
+        await Verify(result);
+    }
+
+    [Test]
+    public async Task GetUnauthorizedSecret()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&amp;lt;MyService&amp;gt;();
+
+        // When 
+        var result = Assert.CatchAsync&amp;lt;HttpRequestException&amp;gt;(myService.GetSecret);
+
+        // Then
+        await Verify(result);
+    }
+
+    [Test]
+    public async Task GetSecret()
+    {
+        // Given
+        var myService = ServiceProviderFixture.GetRequiredService&amp;lt;MyService&amp;gt;(
+                            configure =&amp;gt; configure.ConfigureMockHttpClient&amp;lt;Constants&amp;gt;(
+                                            client =&amp;gt; client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                                                &amp;quot;Bearer&amp;quot;,
+                                                &amp;quot;AccessToken&amp;quot;
+                                                )
+                                        )
+                            );
+
+        // When
+        var result = await myService.GetSecret();
+
+        // Then
+        await Verify(result);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="registering-the-service"&gt;Registering the service&lt;/h3&gt;
+&lt;p&gt;The project provides a &lt;code&gt;ServiceProviderFixture&lt;/code&gt; partial class, which contains IOC helpers and a partial method &lt;code&gt;InitServiceProvider&lt;/code&gt; for you to implement to register your own registrations and any of their dependencies. In theory, your project could have multiple mocked routes within the same project, and &lt;code&gt;.AddMockHttpClient&amp;lt;Constants&amp;gt;()&lt;/code&gt; below picks up the routes from the assembly embedded resources relative to the type parameter &lt;code&gt;Constants&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public static partial class ServiceProviderFixture
+{
+    static partial void InitServiceProvider(IServiceCollection services)
+    {
+        services.AddHttpClient&amp;lt;MyService&amp;gt;()
+                .AddMockHttpClient&amp;lt;Constants&amp;gt;();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Services and instances registered in the &lt;code&gt;InitServiceProvider&lt;/code&gt; method will be available for all unit tests and can be resolved using the &lt;code&gt;ServiceProviderFixture.GetRequiredService&amp;lt;T&amp;gt;()&lt;/code&gt; method, as shown in the example unit test above. You can also register instances/services for a specific test or even configure the registrations using a delegate, as shown in the &lt;code&gt;GetSecret&lt;/code&gt; test.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GetRequiredService&lt;/code&gt; can resolve up to seven different types by passing one to seven type arguments, and each call to &lt;code&gt;GetRequiredService&lt;/code&gt; will create a new separate isolated IOC container instance, ensuring that each test can have its own isolated dependencies.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var myService = ServiceProviderFixture
+                    .GetRequiredService&amp;lt;MyService&amp;gt;();
+
+var (
+        myService,
+        myService2
+    ) = ServiceProviderFixture
+            .GetRequiredService&amp;lt;MyService, MyService2&amp;gt;();
+
+...
+
+var (
+        myService,
+        myService2,
+        myService3,
+        myService4,
+        myService5,
+        myService6,
+        myService7
+    ) = ServiceProviderFixture
+            .GetRequiredService&amp;lt;MyService, MyService2, MyService3, MyService4, MyService5, MyService6, MyService7&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This makes it easy to resolve multiple services in a single test or even resolve the same service multiple times with different configurations.&lt;/p&gt;
+&lt;p&gt;For example, resolving a &lt;code&gt;TimeProvider&lt;/code&gt; for testing date/time-related functionality and your service that uses it.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;// Given
+var (
+        timeProvider,
+        myService
+    ) = ServiceProviderFixture
+            .GetRequiredService&amp;lt;FakeTimeProvider, MyService&amp;gt;();
+
+// When
+var result = myService.GetData();
+var cachedResult = myService.GetData();
+timeProvider.Advance(TimeSpan.FromDays(1));
+var uncachedResult = myService.GetData();
+
+// Then
+await Verify(
+    new {
+        result,
+        cachedResult,
+        uncachedResult
+    }
+);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="registering-routes"&gt;Registering routes&lt;/h3&gt;
+&lt;p&gt;Routes are configured using the &lt;code&gt;Routes.json&lt;/code&gt; file, which is embedded as an assembly resource. The file is used to configure the &lt;code&gt;Router&lt;/code&gt;, which is responsible for matching incoming requests to the correct response. The file is placed in a &amp;quot;Routes&amp;quot; folder relative to the type parameter used in &lt;code&gt;.AddMockHttpClient&amp;lt;T&amp;gt;()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The example routes file below provides two endpoints available via GET requests. The secret endpoint requires an access token in the Authorization header, while the index endpoint does not.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;[
+  {
+    &amp;quot;Request&amp;quot;: {
+      &amp;quot;Methods&amp;quot;: [
+        {
+          &amp;quot;Method&amp;quot;: &amp;quot;GET&amp;quot;
+        }
+      ],
+      &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://example.com/login/secret.json&amp;quot;
+    },
+    &amp;quot;Responses&amp;quot;: [
+      {
+        &amp;quot;RequestHeaders&amp;quot;: {},
+        &amp;quot;ContentResource&amp;quot;: &amp;quot;Example.Login.Secret.json&amp;quot;,
+        &amp;quot;ContentType&amp;quot;: &amp;quot;application/json&amp;quot;,
+        &amp;quot;ContentHeaders&amp;quot;: {},
+        &amp;quot;StatusCode&amp;quot;: 200
+      }
+    ],
+    &amp;quot;Authorization&amp;quot;: {
+      &amp;quot;Authorization&amp;quot;: [
+        &amp;quot;Bearer AccessToken&amp;quot;
+      ]
+    }
+  },
+  {
+    &amp;quot;Request&amp;quot;: {
+      &amp;quot;Methods&amp;quot;: [
+        {
+          &amp;quot;Method&amp;quot;: &amp;quot;GET&amp;quot;
+        }
+      ],
+      &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://example.com/index.txt&amp;quot;
+    },
+    &amp;quot;Responses&amp;quot;: [
+      {
+        &amp;quot;RequestHeaders&amp;quot;: {},
+        &amp;quot;ContentResource&amp;quot;: &amp;quot;Example.Index.txt&amp;quot;,
+        &amp;quot;ContentType&amp;quot;: &amp;quot;text/plain&amp;quot;,
+        &amp;quot;ContentHeaders&amp;quot;: {},
+        &amp;quot;StatusCode&amp;quot;: 200
+      }
+    ]
+  }
+]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;Router&lt;/code&gt; will match the request to the correct response based on the request method and absolute URI. If the request doesn't match any of the routes, a 404 Not Found response is returned. If authentication is required, the &lt;code&gt;Authorization&lt;/code&gt; section is used to validate the request headers against the configured values, and a 401 Unauthorized response is returned if it doesn't match.&lt;/p&gt;
+&lt;h3 id="route-content"&gt;Route content&lt;/h3&gt;
+&lt;p&gt;The content of the response is fetched from the assembly embedded resources, which is configured using the &lt;code&gt;ContentResource&lt;/code&gt; property. The content is read as a stream and converted to the appropriate content type. This means that the content can be a JSON file, a text file, an image, or even a binary file. The files specified in &lt;code&gt;ContentResource&lt;/code&gt; are relative to the &lt;code&gt;Routes.json&lt;/code&gt; file, i.e., the above configuration would have a folder structure like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Constants.cs
+Resources/Routes.json
+Resources/Example/Index.txt
+Resources/Example/Login/Secret.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As with any embedded resource, directory separators are normalized to &lt;code&gt;.&lt;/code&gt; in the &lt;code&gt;ContentResource&lt;/code&gt; path. For example, &lt;code&gt;Example/Login/Secret.json&lt;/code&gt; above would be &lt;code&gt;Example.Login.Secret.json&lt;/code&gt; in the &lt;code&gt;Routes.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;In your &lt;code&gt;.csproj&lt;/code&gt;, it would be configured something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;ItemGroup&amp;gt;
+    &amp;lt;None Remove=&amp;quot;Resources\Example\index.txt&amp;quot; /&amp;gt;
+    &amp;lt;None Remove=&amp;quot;Resources\Example\Login\Secret.json&amp;quot; /&amp;gt;
+    &amp;lt;None Remove=&amp;quot;Resources\Routes.json&amp;quot; /&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+
+&amp;lt;ItemGroup&amp;gt;
+    &amp;lt;EmbeddedResource Include=&amp;quot;Resources\Example\Index.txt&amp;quot; /&amp;gt;
+    &amp;lt;EmbeddedResource Include=&amp;quot;Resources\Routes.json&amp;quot; /&amp;gt;
+    &amp;lt;EmbeddedResource Include=&amp;quot;Resources\Example\Login\Secret.json&amp;quot; /&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="advanced-scenarios"&gt;Advanced scenarios&lt;/h2&gt;
+&lt;h3 id="state-machine"&gt;State machine&lt;/h3&gt;
+&lt;p&gt;Routes can be configured to require certain requests to be made before others. This is done by setting the request to disabled:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;...
+    &amp;quot;Request&amp;quot;: {
+      &amp;quot;Methods&amp;quot;: [
+        {
+          &amp;quot;Method&amp;quot;: &amp;quot;HEAD&amp;quot;
+        }
+      ],
+      &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&amp;quot;,
+      &amp;quot;Disabled&amp;quot;: true
+    },
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In another route response, configure it to enable the above request using the &lt;code&gt;EnableRequests&lt;/code&gt; property:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;...
+    &amp;quot;Request&amp;quot;: {
+      &amp;quot;Methods&amp;quot;: [
+        {
+          &amp;quot;Method&amp;quot;: &amp;quot;PUT&amp;quot;
+        }
+      ],
+      &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&amp;quot;
+    },
+    &amp;quot;Responses&amp;quot;: [
+      {
+        &amp;quot;RequestHeaders&amp;quot;: {},
+        &amp;quot;ContentType&amp;quot;: &amp;quot;application/json&amp;quot;,
+        &amp;quot;ContentResource&amp;quot;: &amp;quot;Commands.ArchiveCommandTests.NewFiles.NewFile.json&amp;quot;,
+        &amp;quot;StatusCode&amp;quot;: 201,
+        &amp;quot;EnableRequests&amp;quot;: [
+          {
+            &amp;quot;Method&amp;quot;: &amp;quot;HEAD&amp;quot;,
+            &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&amp;quot;
+          }
+        ]
+      }
+    ],
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So, the HEAD request will result in a 404 Not Found response, but the PUT request will result in a 201 Created response, and the HEAD request will be enabled.&lt;/p&gt;
+&lt;h3 id="throttling"&gt;Throttling&lt;/h3&gt;
+&lt;p&gt;Throttling can be configured by calling the &lt;code&gt;SimulateRetryAfter&lt;/code&gt; extension while registering your services.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;// Given
+var (httpClient, timeProvider) = ServiceProviderFixture
+                                .GetRequiredService&amp;lt;HttpClient, FakeTimeProvider&amp;gt;(
+                                    services =&amp;gt; services.SimulateRetryAfter&amp;lt;Constants&amp;gt;(
+                                        rateLimitOccurrenceCount: rateLimitOccurrenceCount,
+                                        retryAfterInterval: TimeSpan.FromMinutes(1)
+                                    )
+                                );
+TimeSpan timeAdvance = TimeSpan.FromMinutes(timeMinutesAdvance);
+var responses = new List&amp;lt;HttpResponseMessage&amp;gt;();
+
+// When
+for (int i = 0; i &amp;lt;= rateLimitOccurrenceCount * 2; i++, timeProvider.Advance(timeAdvance))
+{
+    responses.Add(await httpClient.GetAsync(&amp;quot;https://example.com/index.txt&amp;quot;));
+}
+
+// Then
+await Verify(responses);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The above example will simulate a rate limit by advancing the time and checking the response status code. &lt;code&gt;rateLimitOccurrenceCount&lt;/code&gt; is the number of requests that will be allowed before the rate limit is applied, and &lt;code&gt;retryAfterInterval&lt;/code&gt; is for how long the rate limit will be applied once it occurs.&lt;/p&gt;
+&lt;h3 id="request-headers"&gt;Request headers&lt;/h3&gt;
+&lt;p&gt;Request headers can be configured to validate the request headers against the configured values, and different responses can be configured based on the request headers.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;...
+  {
+    &amp;quot;Request&amp;quot;: {
+      &amp;quot;Methods&amp;quot;: [
+        {
+          &amp;quot;Method&amp;quot;: &amp;quot;PUT&amp;quot;
+        }
+      ],
+      &amp;quot;AbsoluteUri&amp;quot;: &amp;quot;https://azurestorageaccount.blob.core.windows.net/AzureStorageAccountContainer/NewFile.json&amp;quot;
+    },
+    &amp;quot;Responses&amp;quot;: [
+      {
+        &amp;quot;RequestHeaders&amp;quot;: {
+          &amp;quot;Content-Type&amp;quot;: [ &amp;quot;application/json&amp;quot; ],
+          &amp;quot;Content-Length&amp;quot;: [ &amp;quot;9&amp;quot; ],
+          &amp;quot;x-ms-blob-type&amp;quot;: [ &amp;quot;BlockBlob&amp;quot; ],
+          &amp;quot;Content-MD5&amp;quot;: [ &amp;quot;uasiD3l1Rg7NApFvCBOV1Q==&amp;quot; ]
+        },
+        &amp;quot;ContentType&amp;quot;: &amp;quot;application/json&amp;quot;,
+        &amp;quot;ContentResource&amp;quot;: &amp;quot;Commands.ArchiveCommandTests.NewFiles.NewFile.json&amp;quot;,
+        &amp;quot;ContentHeaders&amp;quot;: {},
+        &amp;quot;StatusCode&amp;quot;: 201
+      }
+    ],
+    &amp;quot;Authorization&amp;quot;: {
+      &amp;quot;Authorization&amp;quot;: [
+        &amp;quot;Bearer AccessToken&amp;quot;
+      ]
+    }
+  },
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the above example, a 201 Created response is returned for PUT requests to the storage account blob container, but the request headers are validated against the configured values.&lt;/p&gt;
+&lt;h3 id="md5-checksum"&gt;MD5 checksum&lt;/h3&gt;
+&lt;p&gt;The Content-MD5 header is calculated and returned for all content responses.&lt;/p&gt;
+&lt;h2 id="getting-started"&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;The package is available on &lt;a href="https://www.nuget.org/packages/Devlead.Testing.MockHttp/"&gt;NuGet&lt;/a&gt; and can be installed using the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dotnet add package Devlead.Testing.MockHttp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The package is a source package and is supported on .NET 8 and above.&lt;/p&gt;
+&lt;h3 id="example-projects"&gt;Example projects&lt;/h3&gt;
+&lt;p&gt;The package is used in the following example projects:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Testing.MockHttp/tree/main/src/Devlead.Testing.MockHttp.Tests"&gt;Devlead.Testing.MockHttp.Tests&lt;/a&gt; - contains examples of many of the features.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/devlead/Blobify"&gt;Blobify&lt;/a&gt; - its tests contain examples like enabling requests, request headers filtering, MD5 checksum validation, and more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="contributing"&gt;Contributing&lt;/h2&gt;
+&lt;p&gt;The project is open source, and contributions are welcome. Please feel free to submit a PR or an issue. You'll find the project on &lt;a href="https://github.com/devlead/Devlead.Testing.MockHttp"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;I hope you find this package useful. Feel free to let me know if you have any feedback or suggestions.&lt;/p&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Preparing for .NET 9</title>
 			<link>https://www.devlead.se/posts/2024/2024-09-22-preparing-for-dotnet-9</link>
@@ -488,523 +855,6 @@ tabs:
 &lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;/ul&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Introducing DPI</title>
-			<link>https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi</link>
-			<description>A DevOps tool to inspect dependencies and report to Azure Log Analytics</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/03/16/5e783ec1-b7cf-aaac-bf41-582e4110dfa9.png?sv=2019-12-12&amp;st=2021-03-15T19%253A51%253A42Z&amp;se=2031-03-16T19%253A51%253A42Z&amp;sr=b&amp;sp=r&amp;sig=0jvdk30dmb7ba7dKnLlfNMvY32nKHI1kqCxXzz3VhXo%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2021/2021-03-20-introducing-dpi</guid>
-			<pubDate>Sat, 20 Mar 2021 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;When brought in as DevOps consultant or a new employee for that matter, one is often tasked with getting a clear picture of the current state of projects, how they work and fit together.&lt;br /&gt;&lt;br /&gt;
-A big part of this initial and ongoing is to analyze and audit dependencies, which is why I've created &lt;code&gt;dpi&lt;/code&gt; a tool that both locally and as part of your DevOps pipeline can analyze your repository projects dependencies and report to Azure Log Analytics, console, and files.&lt;/p&gt;
-&lt;h2 id="the-tools-initial-scope"&gt;The tool's initial scope&lt;/h2&gt;
-&lt;p&gt;In this initial version, focus has been fairly complete support for C# .NET NuGet package dependencies, and the tool currently supports analyzing and reporting NuGet package dependencies for:&lt;/p&gt;
-&lt;ul class="contains-task-list"&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; C# project files&lt;/li&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; MS Build Project assets&lt;/li&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; NuGet Package config files&lt;/li&gt;
-&lt;li&gt;Cake script
-&lt;ul class="contains-task-list"&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Addins&lt;/li&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Tools&lt;/li&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Modules&lt;/li&gt;
-&lt;li class="task-list-item"&gt;&lt;input disabled="disabled" type="checkbox" checked="checked" /&gt; Recipes&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="tool-value-proposition"&gt;Tool value proposition?&lt;/h2&gt;
-&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/17/0f47c134-5029-94f4-7a4e-07d4cd5b5d77.png?sv=2019-12-12&amp;st=2021-03-16T20%3A08%3A30Z&amp;se=2031-03-17T20%3A08%3A30Z&amp;sr=b&amp;sp=r&amp;sig=ZXq2a0u1x0ows1MPnkzgCWtLMz8fjvJLXvGtyVeu0dE%3D" alt="KQL Collage" align="right" width="600" height="426" /&gt;
-&lt;p&gt;Analyzing and reporting dependencies to a central place enables you to discover, correlate, and aggregate dependencies across multiple locations. &lt;code&gt;dpi&lt;/code&gt; reports its findings to an Azure Log Analytics workspace, which provides an efficient way to store and query large amounts of tabular data using &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677"&gt;KQL - Kusto Query Language&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;This enables you to quickly tackle several scenarios i.e&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Find which repositories have certain dependencies&lt;/li&gt;
-&lt;li&gt;Identify which versions of dependencies used&lt;/li&gt;
-&lt;li&gt;Most / least used dependencies&lt;/li&gt;
-&lt;li&gt;If a dependency is used anywhere&lt;/li&gt;
-&lt;li&gt;Follow dependency usage over time&lt;/li&gt;
-&lt;li&gt;Only limited outbound/one-way http traffic with analytics data to one common endpoint&lt;/li&gt;
-&lt;/ul&gt;
-&lt;br /&gt;
-&lt;h2 id="acquiring-the-tool"&gt;Acquiring the tool&lt;/h2&gt;
-&lt;h3 id="requirements"&gt;Requirements&lt;/h3&gt;
-&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/64b64f7a-9eaa-3753-71e5-781a58a6d188.png?sv=2019-12-12&amp;st=2021-03-17T17%3A08%3A25Z&amp;se=2031-03-18T17%3A08%3A25Z&amp;sr=b&amp;sp=r&amp;sig=1iNd2EAsow19wsG8M2Av69Y52BjqUpzKl13bXiQxZ%2FY%3D" alt="Azure Log Analytics Workspace Agents management" align="right" /&gt;
-&lt;p&gt;&lt;code&gt;dpi&lt;/code&gt; is a .NET 5 Tool, so .NET 5 SDK is required to be installed - you can find the download and install the latest version of the .NET SDK from &lt;a href="https://get.dot.net/"&gt;get.dot.net&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The tool is published to and distributed via &lt;a href="https://www.nuget.org/packages/DPI/"&gt;NuGet.org&lt;/a&gt;, but you could also upload it to your internal NuGet feed and have your users and pipelines obtain it from there.&lt;/p&gt;
-&lt;p&gt;To report you also need an Azure Log Analytics workspace, and the tool uses Workspace Id and Key (either primary or secondary, both work), you'll find those under &amp;quot;Agents management&amp;quot;&lt;/p&gt;
-&lt;br /&gt;
-&lt;h3 id="installing-globally"&gt;Installing globally&lt;/h3&gt;
-&lt;p&gt;.NET Tools can be installed globally for the current user using the .NET SDK CLI&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global DPI
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once installed the tool will be available anywhere for the current user as &lt;code&gt;dotnet tool run dpi&lt;/code&gt;, &lt;code&gt;dotnet dpi&lt;/code&gt;, or just &lt;code&gt;dpi&lt;/code&gt;.&lt;/p&gt;
-&lt;h3 id="installing-via-tool-manifest"&gt;Installing via Tool manifest&lt;/h3&gt;
-&lt;p&gt;My preferred way to install and maintain a .NET tool is using a .NET local tool manifest file added to your repository, this means which tools are used and their specific versions is maintained within the repository.&lt;/p&gt;
-&lt;p&gt;If you don't have a manifest in your repository already, the easiest way to create a new manifest is by using the .NET SDK CLI in your repo root.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new tool-manifest
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;then or if you already have a manifest you add the tool&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install DPI
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;And the tool is now within the repository available as &lt;code&gt;dotnet tool run dpi&lt;/code&gt; or &lt;code&gt;dotnet dpi&lt;/code&gt;, then your pipelines and anyone cloning your repository can obtain all your specified tools with the same versions as you're using by executing&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool restore
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
-&lt;h3 id="nuget-analyze-command"&gt;NuGet Analyze command&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;dpi nuget [SourcePath] [NUGET OPTIONS] analyze [ANALYZE OPTIONS]&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;The NuGet analyze command will inventory the specified path recursively for known files containing references to NuGet packages and output its findings to the console, the current directory will be used if no path specified.&lt;/p&gt;
-&lt;h4 id="example-analyzing-current-directory"&gt;Example analyzing current directory&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget analyze
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="example-analyzing-specific-directory"&gt;Example analyzing specific directory&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget ./path/to/folder analyze
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="nuget-report-command"&gt;NuGet Report command&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;dpi nuget [SourcePath] [NUGET OPTIONS] report [REPORT OPTIONS]&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;The NuGet report command will beyond analyze also report tools findings as a custom log to Azure Log Analytics.&lt;/p&gt;
-&lt;h4 id="example-analyzing-and-reporting-current-directory"&gt;Example analyzing and reporting current directory&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget report --workspace &amp;lt;WORKSPACEID&amp;gt; --sharedkey &amp;lt;SHAREDKEY&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="example-analyzing-and-reporting-specific-directory"&gt;Example analyzing and reporting specific directory&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget ./path/to/folder report --workspace &amp;lt;WORKSPACEID&amp;gt; --sharedkey &amp;lt;SHAREDKEY&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Azure Log Analytics Workspace ID and Key can also be passed as environment variables &lt;code&gt;NuGetReportSettings_WorkspaceId&lt;/code&gt; and &lt;code&gt;NuGetReportSettings_SharedKey&lt;/code&gt;, which is the preferred way when passing secrets in a DevOps pipeline, the result of nuget analyze is reported to custom log &lt;code&gt;NuGetReport_CL&lt;/code&gt; in the specified workspace.&lt;/p&gt;
-&lt;h3 id="console-output-formats"&gt;Console output formats&lt;/h3&gt;
-&lt;p&gt;By using the &lt;code&gt;--output &amp;lt;FORMAT&amp;gt;&lt;/code&gt; option you can change the console output of the tools analyze result, currently, the tool supports the following formats&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;JSON - output in a machine consumable JSON format&lt;/li&gt;
-&lt;li&gt;TABLE - outputs a nicely formatted table format&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;(You can use the &lt;code&gt;--file &amp;lt;FILEPATH&amp;gt;&lt;/code&gt; option to output to file instead of console)&lt;/p&gt;
-&lt;h4 id="example-analyzing-and-outputting-as-json"&gt;Example analyzing and outputting as json&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget --output json analyze
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code class="language-json"&gt;[
-  {
-    &amp;quot;sessionId&amp;quot;: &amp;quot;b770baf0-8eb7-496f-aa19-770f36838689&amp;quot;,
-    &amp;quot;buildProvider&amp;quot;: &amp;quot;Local&amp;quot;,
-    &amp;quot;platformFamily&amp;quot;: &amp;quot;Windows&amp;quot;,
-    &amp;quot;buildNo&amp;quot;: &amp;quot;202103181806&amp;quot;,
-    &amp;quot;buildSCM&amp;quot;: &amp;quot;dpi&amp;quot;,
-    &amp;quot;buildVersion&amp;quot;: null,
-    &amp;quot;sourceType&amp;quot;: &amp;quot;CSProj&amp;quot;,
-    &amp;quot;source&amp;quot;: &amp;quot;TestProj/TestProj.csproj&amp;quot;,
-    &amp;quot;targetFramework&amp;quot;: &amp;quot;net5.0&amp;quot;,
-    &amp;quot;packageId&amp;quot;: &amp;quot;Microsoft.Extensions.DependencyInjection&amp;quot;,
-    &amp;quot;version&amp;quot;: &amp;quot;5.0.1&amp;quot;,
-    &amp;quot;timestamp&amp;quot;: &amp;quot;2021-03-18T18:06:30.0178489+00:00&amp;quot;,
-    &amp;quot;Computer&amp;quot;: &amp;quot;HAL&amp;quot;
-  },
-  {
-    &amp;quot;sessionId&amp;quot;: &amp;quot;b770baf0-8eb7-496f-aa19-770f36838689&amp;quot;,
-    &amp;quot;buildProvider&amp;quot;: &amp;quot;Local&amp;quot;,
-    &amp;quot;platformFamily&amp;quot;: &amp;quot;Windows&amp;quot;,
-    &amp;quot;buildNo&amp;quot;: &amp;quot;202103181806&amp;quot;,
-    &amp;quot;buildSCM&amp;quot;: &amp;quot;dpi&amp;quot;,
-    &amp;quot;buildVersion&amp;quot;: null,
-    &amp;quot;sourceType&amp;quot;: &amp;quot;CSProj&amp;quot;,
-    &amp;quot;source&amp;quot;: &amp;quot;TestProj/TestProj.csproj&amp;quot;,
-    &amp;quot;targetFramework&amp;quot;: &amp;quot;net5.0&amp;quot;,
-    &amp;quot;packageId&amp;quot;: &amp;quot;Cake.Core&amp;quot;,
-    &amp;quot;version&amp;quot;: &amp;quot;1.1.0&amp;quot;,
-    &amp;quot;timestamp&amp;quot;: &amp;quot;2021-03-18T18:06:30.0178489+00:00&amp;quot;,
-    &amp;quot;Computer&amp;quot;: &amp;quot;HAL&amp;quot;
-  }
-]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This means that you as an example in PowerShell could do something like the below script to get all versions of &lt;code&gt;YamlDotNet&lt;/code&gt; used.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-powershell"&gt;dotnet dpi nuget --output json analyze `
-  | ConvertFrom-Json `
-  | ForEach-Object { $_ } `
-  | Where-Object { $_.packageId -eq 'YamlDotNet' } `
-  | ForEach-Object version
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="example-analyzing-and-outputting-as-table"&gt;Example analyzing and outputting as table&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet dpi nuget --output table analyze
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/18/2465161d-a1c7-5401-b67e-8d84cf66911a.png?sv=2019-12-12&amp;amp;st=2021-03-17T18%3A21%3A33Z&amp;amp;se=2031-03-18T18%3A21%3A33Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=hsF2ReevVLx3mEaRmTumGikNQGuAJNGVD3FDB7zEOWM%3D" alt="Console example dpi table format" /&gt;&lt;/p&gt;
-&lt;br /&gt;
-&lt;h2 id="pipeline-examples"&gt;Pipeline examples&lt;/h2&gt;
-&lt;p&gt;As &lt;code&gt;dpi&lt;/code&gt; is just a command-line tool, you can just use the same commands in your build pipeline as you use in your shell of choice locally.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;dotnet tool restore&lt;/code&gt; - Restore .NET Tools (i.e. download and install &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;dotnet dpi &amp;lt;COMMAND&amp;gt; [COMMAND OPTIONS] &amp;lt;SUBCOMMAND&amp;gt; [SUB COMMAND OPTIONS]&lt;/code&gt; - Execute &lt;code&gt;dpi&lt;/code&gt; i.e. &lt;code&gt;nuget&lt;/code&gt; &lt;code&gt;analyze&lt;/code&gt; / &lt;code&gt;report&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The below pipeline examples you'll see two options not previously mentioned&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;--silent&lt;/code&gt; - Silent removes all console log output except the &lt;code&gt;table&lt;/code&gt; (&lt;code&gt;json&lt;/code&gt; will bet &amp;quot;silent&amp;quot; by default so output can be parsed by another tool.)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--buildversion&lt;/code&gt; - Build version is an option to pass metadata unique to the workflow, in this case, the unique run number from GitHub Action workflow, but could i.e. be asserted version from a tool like GitVersion.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="github-action-workflow-example"&gt;GitHub Action workflow example&lt;/h3&gt;
-&lt;p&gt;Below YAML example will&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Checks out code from the repository&lt;/li&gt;
-&lt;li&gt;Installs .NET SDK based on &lt;a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677"&gt;global.json&lt;/a&gt; in repository&lt;/li&gt;
-&lt;li&gt;Restore .NET Tools (i.e. &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Build project&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Analyze if secrets &lt;strong&gt;aren't&lt;/strong&gt; available (i.e. a fork pull request)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Report if secrets &lt;strong&gt;are&lt;/strong&gt; available (i.e. merged into &lt;code&gt;main&lt;/code&gt;)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code class="language-yaml"&gt;name: Build
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-
-env:
-  NuGetReportSettings_SharedKey: ${{ secrets.NUGETREPORTSETTINGS_SHAREDKEY }}
-  NuGetReportSettings_WorkspaceId: ${{ secrets.NUGETREPORTSETTINGS_WORKSPACEID }}
-
-jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - name: Get the sources
-        uses: actions/checkout&amp;#64;v2
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet&amp;#64;v1
-
-      - name: Restore .NET Tools
-        run: dotnet tool restore
-
-      - name: Build Project
-        run: dotnet build
-
-      - name: Run DPI Analyze
-        if: ${{ env.NuGetReportSettings_SharedKey == null || env.NuGetReportSettings_WorkspaceId == null }}
-        shell: bash
-        run: dotnet dpi nuget --silent --output table analyze --buildversion $GITHUB_RUN_NUMBER
-
-      - name: Run DPI Report
-        if: ${{ env.NuGetReportSettings_SharedKey != null &amp;amp;&amp;amp; env.NuGetReportSettings_WorkspaceId != null }}
-        shell: bash
-        run: dotnet dpi nuget --silent --output table report --buildversion $GITHUB_RUN_NUMBER
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;h3 id="azure-devops-pipelines-example"&gt;Azure DevOps Pipelines example&lt;/h3&gt;
-&lt;p&gt;Below YAML example will&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Checks out code from the repository&lt;/li&gt;
-&lt;li&gt;Installs .NET SDK based on &lt;a href="https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?WT.mc_id=DT-MVP-5002677"&gt;global.json&lt;/a&gt; in the repository&lt;/li&gt;
-&lt;li&gt;Restore .NET Tools (i.e. &lt;code&gt;dpi&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Build project&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Analyze if it's a pull request&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;dpi&lt;/code&gt; Report if executing in the &lt;code&gt;main&lt;/code&gt; branch&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code class="language-yaml"&gt;name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
-trigger:
-- main
-
-pool:
-  vmImage: 'windows-latest'
-
-steps:
-- task: UseDotNet&amp;#64;2
-  displayName: 'Install .NET Core SDK'
-  inputs:
-    packageType: sdk
-    useGlobalJson: true
-
-- script: dotnet tool restore
-  displayName: 'Restore .NET Tools'
-
-- script: dotnet build src
-  displayName: 'Build Project'
-
-- script: dotnet dpi nuget --silent --output table analyze --buildversion &amp;quot;$(Build.BuildNumber)&amp;quot;
-  displayName: Run DPI Analyze
-  condition: eq(variables['Build.Reason'], 'PullRequest')
-
-- script: dotnet dpi nuget --silent --output table report --buildversion &amp;quot;$(Build.BuildNumber)&amp;quot;
-  displayName: Run DPI Report
-  env:
-    NuGetReportSettings_SharedKey: $(NUGETREPORTSETTINGS_SHAREDKEY)
-    NuGetReportSettings_WorkspaceId: $(NUGETREPORTSETTINGS_WORKSPACEID)
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-&lt;/code&gt;&lt;/pre&gt;
-&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/659e0331-59b9-a7b6-1a72-81c04208beaa.png?sv=2019-12-12&amp;st=2021-03-18T12%3A51%3A01Z&amp;se=2031-03-19T12%3A51%3A01Z&amp;sr=b&amp;sp=r&amp;sig=zEkSEyMfWQ5u4lJLxrPQHgooMxD10VmDNijiwnGkax0%3D" alt="Azure Pipelines Secrets" align="right" /&gt;
-&lt;br /&gt;
-&lt;p&gt;In the above example, the Azure Log Analytics Workspace Key and Id are passed as environment variables&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;NuGetReportSettings_SharedKey&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NuGetReportSettings_WorkspaceId&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;which are populated from pipeline secret variables&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;NUGETREPORTSETTINGS_SHAREDKEY&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NUGETREPORTSETTINGS_WORKSPACEID&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Pipeline variables are administrated under your Pipeline details -&amp;gt; Edit -&amp;gt; Variables, they're made secrets by checking the &amp;quot;Keep this value secret&amp;quot; checkbox.&lt;/p&gt;
-&lt;p&gt;Secrets need to be explicitly defined in YAML to be accessible from tasks.&lt;/p&gt;
-&lt;br /&gt;
-&lt;h3 id="cake-build-examples"&gt;Cake build examples&lt;/h3&gt;
-&lt;p&gt;There's not yet a Cake addin or built-in support for &lt;code&gt;dpi&lt;/code&gt;, but still, it's fairly straightforward to use &lt;code&gt;dpi&lt;/code&gt; from a Cake script.&lt;/p&gt;
-&lt;h4 id="example-cake-script-dpi-installed-globally-via.net-tool-manifest"&gt;Example Cake script DPI installed globally / via .NET tool manifest&lt;/h4&gt;
-&lt;p&gt;The Cake script below will&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Setup context
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Version&lt;/code&gt; - Date based here but normally fetched from build provider or asserted from a tool (&lt;em&gt;i.e. GitVersion&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Analyze&lt;/code&gt; - flag for if &lt;code&gt;analyze&lt;/code&gt; or &lt;code&gt;report&lt;/code&gt; based on presence of environment variables&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Build project&lt;/li&gt;
-&lt;li&gt;Analyze or Report based on context &lt;code&gt;Analyze&lt;/code&gt; flag&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;public record BuildData(string Version, bool Analyze);
-
-Setup(
-  static context =&amp;gt; new BuildData(
-    Version: FormattableString.Invariant(
-                $&amp;quot;{DateTime.UtcNow:yyyy.M.d}&amp;quot;
-              ),
-    Analyze: new[] {
-              &amp;quot;NuGetReportSettings_SharedKey&amp;quot;,
-              &amp;quot;NuGetReportSettings_WorkspaceId&amp;quot;
-            }
-            .Select(key =&amp;gt; context.EnvironmentVariable(key))
-            .Where(string.IsNullOrWhiteSpace)
-            .Any()
-  )
-);
-
-Task(&amp;quot;Build&amp;quot;)
-    .Does&amp;lt;BuildData&amp;gt;(
-        static (context, data) =&amp;gt; context.DotNetCoreBuild(
-          &amp;quot;src&amp;quot;,
-          new DotNetCoreBuildSettings {
-            MSBuildSettings = new DotNetCoreMSBuildSettings()
-              .WithProperty(&amp;quot;Version&amp;quot;, data.Version)
-          }
-    )
-  );
-
-Task(&amp;quot;DPI&amp;quot;)
-  .IsDependentOn(&amp;quot;Build&amp;quot;)
-  .Does&amp;lt;BuildData&amp;gt;(
-      static (context, data) =&amp;gt; context.DotNetCoreTool(
-        &amp;quot;dpi&amp;quot;,
-        new DotNetCoreToolSettings {
-            ArgumentCustomization = args =&amp;gt; args
-                                              .Append(&amp;quot;nuget&amp;quot;)
-                                              .Append(&amp;quot;--silent&amp;quot;)
-                                              .AppendSwitchQuoted(&amp;quot;--output&amp;quot;, &amp;quot;table&amp;quot;)
-                                              .Append(data.Analyze ? &amp;quot;analyze&amp;quot; : &amp;quot;report&amp;quot;)
-                                              .AppendSwitchQuoted(&amp;quot;--buildversion&amp;quot;, data.Version)
-        }
-      )
-  );
-
-Task(&amp;quot;Default&amp;quot;)
-  .IsDependentOn(&amp;quot;DPI&amp;quot;);
-
-RunTarget(Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="example-self-contained-cake-script"&gt;Example Self-contained Cake script&lt;/h4&gt;
-&lt;p&gt;The Cake script below will&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Install the specified version of &lt;code&gt;dpi&lt;/code&gt; into Cake tool directory from NuGet&lt;/li&gt;
-&lt;li&gt;Setup context
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Version&lt;/code&gt; - Date based here but normally fetched from build provider or asserted from a tool (&lt;em&gt;i.e. GitVersion&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Analyze&lt;/code&gt; - flag for if &lt;code&gt;analyze&lt;/code&gt; or &lt;code&gt;report&lt;/code&gt; based on presence of environment variables&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Build project&lt;/li&gt;
-&lt;li&gt;Analyze or Report based on context &lt;code&gt;Analyze&lt;/code&gt; flag&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;#tool dotnet:?package=DPI&amp;amp;version=2021.3.16.28
-
-public record BuildData(string Version, bool Analyze);
-
-Setup(
-  static context =&amp;gt; new BuildData(
-    Version: FormattableString.Invariant(
-                $&amp;quot;{DateTime.UtcNow:yyyy.M.d}&amp;quot;
-              ),
-    Analyze: new[] {
-              &amp;quot;NuGetReportSettings_SharedKey&amp;quot;,
-              &amp;quot;NuGetReportSettings_WorkspaceId&amp;quot;
-            }
-            .Select(key =&amp;gt; context.EnvironmentVariable(key))
-            .Where(string.IsNullOrWhiteSpace)
-            .Any()
-  )
-);
-
-Task(&amp;quot;Build&amp;quot;)
-    .Does&amp;lt;BuildData&amp;gt;(
-        static (context, data) =&amp;gt; context.DotNetCoreBuild(
-          &amp;quot;src&amp;quot;,
-          new DotNetCoreBuildSettings {
-            MSBuildSettings = new DotNetCoreMSBuildSettings()
-              .WithProperty(&amp;quot;Version&amp;quot;, data.Version)
-          }
-    )
-  );
-
-Task(&amp;quot;DPI&amp;quot;)
-  .IsDependentOn(&amp;quot;Build&amp;quot;)
-  .Does&amp;lt;BuildData&amp;gt;(
-      static (context, data) =&amp;gt; context.StartProcess(
-        context.Tools.Resolve(&amp;quot;dpi&amp;quot;) ?? context.Tools.Resolve(&amp;quot;dpi.exe&amp;quot;),
-        new ProcessSettings {
-            Arguments = new ProcessArgumentBuilder()
-                                                .Append(&amp;quot;nuget&amp;quot;)
-                                                .Append(&amp;quot;--silent&amp;quot;)
-                                                .AppendSwitchQuoted(&amp;quot;--output&amp;quot;, &amp;quot;table&amp;quot;)
-                                                .Append(data.Analyze ? &amp;quot;analyze&amp;quot; : &amp;quot;report&amp;quot;)
-                                                .AppendSwitchQuoted(&amp;quot;--buildversion&amp;quot;, data.Version)
-        }
-    )
-  );
-
-Task(&amp;quot;Default&amp;quot;)
-  .IsDependentOn(&amp;quot;DPI&amp;quot;);
-
-RunTarget(Argument(&amp;quot;target&amp;quot;, &amp;quot;Default&amp;quot;));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;h2 id="analyzing-the-data"&gt;Analyzing the data&lt;/h2&gt;
-&lt;p&gt;NuGet package references end up as a custom log named &lt;code&gt;NuGetReport_CL&lt;/code&gt; in your Azure Log Analytics Workspace, it will automatically as data is ingested infer types (&lt;code&gt;dates&lt;/code&gt;,&lt;code&gt;strings&lt;/code&gt;, &lt;code&gt;guids&lt;/code&gt;, etc.) and using &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5002677"&gt;KQL (Kusto Query Language)&lt;/a&gt; you can now start to explore discover, correlate and aggregate.&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/19/927adaa4-2902-74f1-e587-44377b7131e2.png?sv=2019-12-12&amp;amp;st=2021-03-18T14%3A49%3A47Z&amp;amp;se=2031-03-19T14%3A49%3A47Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=4eUp0%2F4y2jRxH1rCXJbz25%2BteDLSKSuiNv0V9oWti20%3D" alt="Azure Log Analytics Workspace General Logs NuGetReport_CL" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;(Tip there's a &lt;a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677"&gt;Log Analytics tutorial&lt;/a&gt; on &lt;a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial?WT.mc_id=AZ-MVP-5002677"&gt;Microsoft Docs&lt;/a&gt; if you're new to Azure Log Analytics)&lt;/em&gt;&lt;/p&gt;
-&lt;h3 id="top-5-used-packages"&gt;Top 5 used packages&lt;/h3&gt;
-&lt;p&gt;The below query counts unique repositories group by package id and returns the five with the highest package count.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-fsharp"&gt;NuGetReport_CL
-| where TimeGenerated &amp;gt;= ago(2d)
-| summarize Count = dcount(buildSCM_s) by packageId_s
-| order by Count desc, packageId_s asc
-| take 5
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;h3 id="top-5-used-packages-by-last-report-per-repository"&gt;Top 5 used packages by last report per repository&lt;/h3&gt;
-&lt;p&gt;When querying you in general just want the latest set of data per repository, to solve this you can use the fact that each report execution has a unique session-id, and each log has a date/time when ingested.&lt;/p&gt;
-&lt;p&gt;By fetching the last session-id we can get a more correct picture of package usage, as a package could have been removed/updated between reports. There are several ways to solve this, in the example below, we use the &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/arg-max-aggfunction?WT.mc_id=AZ-MVP-5002677"&gt;arg_max&lt;/a&gt; aggregation function to get the session id based on the highest time generated grouped by repository name using the &lt;a href="https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/summarizeoperator?WT.mc_id=AZ-MVP-5002677"&gt;summarize&lt;/a&gt; operator.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-fsharp"&gt;NuGetReport_CL
-| where TimeGenerated &amp;gt;= ago(2d)
-| summarize arg_max(TimeGenerated, sessionId_g) by buildSCM_s
-| join NuGetReport_CL on $left.sessionId_g == $right.sessionId_g
-| summarize Count = dcount(buildSCM_s) by packageId_s
-| order by Count desc, packageId_s asc
-| take 5
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br /&gt;
-&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2021/03/20/top5packagesquery.gif?sp=r&amp;amp;st=2021-03-19T11:32:00Z&amp;amp;se=2031-03-21T11:32:00Z&amp;amp;sv=2020-02-10&amp;amp;sr=b&amp;amp;sig=hMWNA6rshw2MfQ8WmufiaLcJ%2FaektrDjnhsu6qotrSo%3D" alt="Query Top 5 used packages by last report per repository" /&gt;&lt;/p&gt;
-&lt;br /&gt;
-&lt;h3 id="custom-log-nugetreport_cl-columns"&gt;Custom log NuGetReport_CL columns&lt;/h3&gt;
-&lt;p&gt;Above were just a couple of examples of NuGet package references queries, but there are almost endless possibilities, and the columns to your disposable are&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
-&lt;th&gt;Example value&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;TimeGenerated&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Date/time &lt;strong&gt;UTC&lt;/strong&gt; data ingested&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;2021-03-18T15:07:06.46Z&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;Computer&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Machine name log generated on&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;fv-az68-89&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;buildVersion_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Value passed using &lt;code&gt;--buildversion&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;2021.03.18.18138&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;buildNo_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Build number from build provider&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;664953123-3544&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;timestamp_t&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Date/time &lt;strong&gt;UTC&lt;/strong&gt; data reported&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;2021-03-18T15:07:04.798Z&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;platformFamily_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Operating system reported from&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Linux&lt;/code&gt;, &lt;code&gt;OSX&lt;/code&gt;, &lt;code&gt;Window&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;buildSCM_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Source control reference&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;devlead/DPI&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;buildProvider_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Build provider&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;GitHubActions&lt;/code&gt;, &lt;code&gt;AppVeyor&lt;/code&gt;, &lt;code&gt;AzurePipelinesHosted&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;source_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Relative file path where references found&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;src/DPI/DPI.csproj&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;sourceType_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Type of source file&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;CSProj&lt;/code&gt;, &lt;code&gt;Cake&lt;/code&gt;, &lt;code&gt;DotNetToolsManifest&lt;/code&gt;, &lt;code&gt;PackagesConfig&lt;/code&gt;, &lt;code&gt;ProjectAssets&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;packageId_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;NuGet package id&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Cake.Bridge.DependencyInjection&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;version_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;NuGet package version&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;0.5.0&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;sessionId_g&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Unique correlation id for each report&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;b85f687f-9e34-43c6-8a45-f8b803b373ce&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;targetFramework_s&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Package .NET target framework&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;net5.0&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;br /&gt;
-&lt;h2 id="future"&gt;Future&lt;/h2&gt;
-&lt;p&gt;This project was initially done for my own fun and profit, and during that process realized that this can be really useful.&lt;/p&gt;
-&lt;p&gt;There's currently no set roadmap, but there are a few things on my radar that I would like to add support for:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Docker images&lt;/li&gt;
-&lt;li&gt;NPM packages&lt;/li&gt;
-&lt;li&gt;More .NET project types&lt;/li&gt;
-&lt;li&gt;SDK versions&lt;/li&gt;
-&lt;li&gt;Reporting to more services and formats&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;And that I would happily take contributions in form of PRs and issues, the code is open-source and available on GitHub at &lt;a href="https://github.com/devlead/DPI"&gt;github.com/devlead/DPI&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;dpi&lt;/code&gt; is starting to become a really versatile tool, it's a bit abstract to explain, and I've struggled with that a bit with this blog post, but hopefully, I've at least somewhat painted a picture of what's possible, and what problems it can help to solve. I've personally found the process of ingesting &amp;quot;raw&amp;quot; data and then querying both powerful and inspirational, some answers have led to going down rabbit holes of answering new questions.&lt;/p&gt;
-&lt;p&gt;Please take it for a spin and if you have any questions, suggestions, or even opinions please feel free to reach out.&lt;/p&gt;
-&lt;h2 id="thanks"&gt;Thanks&lt;/h2&gt;
-&lt;p&gt;This tool was made possible thanks to a couple of excellent open source projects, special thanks go out to:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/spectresystems/spectre.console"&gt;Spectre.Console&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/agc93/spectre.cli.extensions.dependencyinjection"&gt;Spectre.Cli.Extensions.DependencyInjection&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/dotnet/reactive"&gt;Reactive Extensions&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/cake-build/cake/"&gt;Cake&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/Cake.Bridge.DependencyInjection"&gt;Cake.Bridge.DependencyInjection&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
