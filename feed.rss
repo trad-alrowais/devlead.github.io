@@ -5,8 +5,36 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2025</copyright>
-		<pubDate>Sun, 16 Feb 2025 01:58:54 GMT</pubDate>
-		<lastBuildDate>Sun, 16 Feb 2025 01:58:54 GMT</lastBuildDate>
+		<pubDate>Wed, 19 Feb 2025 20:06:16 GMT</pubDate>
+		<lastBuildDate>Wed, 19 Feb 2025 20:06:16 GMT</lastBuildDate>
+		<item>
+			<title>Long paths in Git on Windows</title>
+			<link>https://www.devlead.se/posts/2025/2025-02-19-git-windows-long-paths</link>
+			<description>How to deal with long paths in Git on Windows</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2025/02/19/d6040277-0b3f-4d2d-96be-356c4b5e8625.png?sv=2023-01-03&amp;st=2025-02-19T19%253A10%253A42Z&amp;se=2035-01-19T19%253A10%253A00Z&amp;sr=b&amp;sp=r&amp;sig=f7JFWYHcFzUGKxOb4ihKJe9rt2bP%252BbIm%252Bk5LfJaTH6E%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2025/2025-02-19-git-windows-long-paths</guid>
+			<pubDate>Wed, 19 Feb 2025 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;On Windows, it's not unlikely that you'll encounter issues where you either have a repo that won't clone or files that won't commit. One common scenario that causes this is when doing snapshot testing, particularly with parameterized tests. These tests often generate snapshot files with names that include the test parameters, resulting in very long filenames.
+One workaround is to move folders into the root of drives or create shorter names, but ultimately, this will cause issues sooner or later.&lt;/p&gt;
+&lt;p&gt;Fortunately, Windows can handle long files, but it's opt-in for legacy and compatibility reasons.&lt;/p&gt;
+&lt;h2 id="enabling-long-paths-in-git"&gt;Enabling Long Paths in Git&lt;/h2&gt;
+&lt;p&gt;To enable long paths in Git, you can set the following system configuration:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;git config --system core.longpaths true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="enabling-long-paths-in-visual-studio"&gt;Enabling Long Paths in Visual Studio&lt;/h2&gt;
+&lt;p&gt;For Visual Studio, you need to enable long paths by setting a Windows Registry Key. You can do this using PowerShell with the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-PowerShell"&gt;New-ItemProperty `
+    -Path &amp;quot;HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem&amp;quot; `
+    -Name &amp;quot;LongPathsEnabled&amp;quot; `
+    -Value 1 `
+    -PropertyType DWORD `
+    -Force
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;By following these steps, you can avoid the common pitfalls associated with long file and directory names in your Git repositories on Windows.&lt;/p&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Introducing Devlead.Testing.MockHttp</title>
 			<link>https://www.devlead.se/posts/2025/2025-02-16-introducing-mockhttp-testing</link>
@@ -772,72 +800,6 @@ await Bootstrapper
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;IMHO this results in a fairly clean way to reuse themes between sites and makes it easy to contribute to a site using this method - all the setup a contributor needs to be able to test/preview the site clone the repository and run the project.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Devlead.Statiq - Part 1 - Tabs</title>
-			<link>https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs</link>
-			<description>An .NET assembly extending the static site generator Statiq with new core features</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/04/05/390eeb4b-ad66-7406-860f-44ed05918873.png?sv=2019-12-12&amp;st=2021-04-04T18%253A20%253A27Z&amp;se=2031-04-05T18%253A20%253A27Z&amp;sr=b&amp;sp=r&amp;sig=yLJRew2YKzfdLNObjcb3I6kkwfWiegYX%252FP68MwmoX3k%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs</guid>
-			<pubDate>Fri, 09 Apr 2021 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;Earlier this year I blogged about that my &lt;a href="https://www.devlead.se/posts/2021/2021-01-11-blog-migrated-to-statiq"&gt;"Blog migrated to Statiq"&lt;/a&gt;, one advantage with &lt;a href="https://statiq.dev/"&gt;Statiq&lt;/a&gt; is that it's through .NET code really customizable and lets you adapt it fully to your needs. Code that can be packaged and distributed as a NuGet package, making it straightforward to share and reuse functionality between sites.&lt;br&gt; &lt;br&gt; In a three-part blog post series, I'll start going through the features of the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; created for my own Statiq based sites - but probably useful for others too, and this first part will be about the TabGroup Shortcode.&lt;/p&gt;
-&lt;h2 id="tabgroup-shortcode"&gt;TabGroup Shortcode&lt;/h2&gt;
-&lt;!--?# TabGroup ?--&gt;
-&lt;!--?*
-tabs:
-  - name: Introduction
-    content: |
-      Statiq [shortcodes](https://statiq.dev/framework/content/shortcodes) are small but powerful macros that can generate content or add metadata to your documents.
-
-      The `TabGroup` shortcode, is a CSS-only solution to simplify adding tabs in your Statiq input files.
-
-      Why add tabs? Well with some content, a good example of that is code samples, tabs make it easier to group content together, keep things more focused and reduce user vertical scrolling.
-
-      With the `TabGroup` shortcode tab content can be defined as either
-
-      - Content - markdown defined directly in the shortcode content
-      - Include - markdown fetched and processed from a external file
-      - Code - fetch external file into markdown code fence
-
-      the shortcode content is defined as `YAML`, you can within a single tab combine all variants (`content`, `include`, and `code`), and it'll render in the following order
-
-      1. `content`
-      1. `include`
-      1. `code`
-
-  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/prerequisites.md
-
-  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/content.md
-
-  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/include.md
-
-  - include: ./../includes/posts/2021/devlead-statiq/tabgroup/code.md
-
-?--&gt;
-&lt;!--?#/ TabGroup ?--&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;I'm really happy how flexible and versatile the &lt;code&gt;TabGroup&lt;/code&gt; shortcode ended up being, while still keeping my markdown files nice and tidy, abstracting away the complexity.&lt;/p&gt;
 &lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Statiq
