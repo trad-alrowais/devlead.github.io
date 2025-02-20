@@ -4,7 +4,7 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2025</rights>
-	<updated>2025-02-19T20:06:16Z</updated>
+	<updated>2025-02-20T06:43:48Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
 	<entry>
 		<id>https://www.devlead.se/posts/2025/2025-02-19-git-windows-long-paths</id>
@@ -32,6 +32,8 @@ One workaround is to move folders into the root of drives or create shorter name
     -Force
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;By following these steps, you can avoid the common pitfalls associated with long file and directory names in your Git repositories on Windows.&lt;/p&gt;
+&lt;h3 id="disclaimer"&gt;Disclaimer&lt;/h3&gt;
+&lt;p&gt;This isn't a silver bullet. While enabling long paths in Windows and Git helps in most scenarios, it's not a complete solution for all situations. Some workloads in Visual Studio can still encounter issues, particularly when paths are passed to other processes like legacy .NET Framework-based tools. If this is your process, you might want to consider using the &lt;a href="https://www.nuget.org/packages/Pri.LongPath"&gt;Pri.LongPath NuGet package&lt;/a&gt;, which provides drop-in replacements for System.IO APIs that handle long paths correctly.&lt;/p&gt;
 </content>
 		<summary>How to deal with long paths in Git on Windows</summary>
 	</entry>
