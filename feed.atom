@@ -4,8 +4,120 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2025</rights>
-	<updated>2025-02-20T06:43:48Z</updated>
+	<updated>2025-02-24T08:31:30Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2025/2025-02-24-slnx-finally-here</id>
+		<title>SLNX Finally here📄</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2025/2025-02-24-slnx-finally-here" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2025/02/24/b83c06ea-69c7-be32-31cd-da3c5e6a5173.png?sv=2025-01-05&amp;st=2025-02-23T06%253A49%253A41Z&amp;se=2035-02-24T06%253A49%253A41Z&amp;sr=b&amp;sp=r&amp;sig=B0uwPpXawEe%252BfbdTgsiNHrULc3f6zv%252BUgHR%252Fdk3tlQA%253D" />
+		<updated>2025-02-24T00:00:00Z</updated>
+		<content>&lt;p&gt;The Visual Studio solution files have long been an explicit and messy format, with lots of configuration that could be inferred from conventions. However, with the release of the latest .NET 9 SDK (9.0.200) earlier this month, things have changed. The new XML-based solution format, SLNX, is now out of preview, bringing clean, convention-based defaults while still allowing for explicit configuration when needed.&lt;/p&gt;
+&lt;h2 id="what-has-changed"&gt;What has changed?&lt;/h2&gt;
+&lt;p&gt;Let's look at a simple &amp;quot;Hello World&amp;quot; example to illustrate the difference between the old and new formats.&lt;/p&gt;
+&lt;h3 id="traditional.sln-file-helloworld.sln"&gt;Traditional .sln file - HelloWorld.sln&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-ini"&gt;Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project(&amp;quot;{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}&amp;quot;) = &amp;quot;HelloWorld&amp;quot;, &amp;quot;HelloWorld\HelloWorld.csproj&amp;quot;, &amp;quot;{979C8E48-A2EA-4647-A3A1-8647AB5F20C6}&amp;quot;
+EndProject
+Project(&amp;quot;{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}&amp;quot;) = &amp;quot;HelloWorld.Tests&amp;quot;, &amp;quot;HelloWorld.Tests\HelloWorld.Tests.csproj&amp;quot;, &amp;quot;{3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}&amp;quot;
+EndProject
+Global
+        GlobalSection(SolutionConfigurationPlatforms) = preSolution
+                Debug|Any CPU = Debug|Any CPU
+                Debug|x64 = Debug|x64
+                Debug|x86 = Debug|x86
+                Release|Any CPU = Release|Any CPU
+                Release|x64 = Release|x64
+                Release|x86 = Release|x86
+        EndGlobalSection
+        GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|x64.ActiveCfg = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|x64.Build.0 = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|x86.ActiveCfg = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Debug|x86.Build.0 = Debug|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|Any CPU.Build.0 = Release|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|x64.ActiveCfg = Release|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|x64.Build.0 = Release|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|x86.ActiveCfg = Release|Any CPU
+                {979C8E48-A2EA-4647-A3A1-8647AB5F20C6}.Release|x86.Build.0 = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|x64.ActiveCfg = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|x64.Build.0 = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|x86.ActiveCfg = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Debug|x86.Build.0 = Debug|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|Any CPU.Build.0 = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|x64.ActiveCfg = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|x64.Build.0 = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|x86.ActiveCfg = Release|Any CPU
+                {3B7AB8F1-88C0-4303-856B-A1E1EDE0A736}.Release|x86.Build.0 = Release|Any CPU
+        EndGlobalSection
+        GlobalSection(SolutionProperties) = preSolution
+                HideSolutionNode = FALSE
+        EndGlobalSection
+EndGlobal
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="new-slnx-file-helloworld.slnx"&gt;New SLNX file - HelloWorld.slnx&lt;/h3&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Solution&amp;gt;
+    &amp;lt;Project Path=&amp;quot;HelloWorld/HelloWorld.csproj&amp;quot; /&amp;gt;
+    &amp;lt;Project Path=&amp;quot;HelloWorld.Tests/HelloWorld.Tests.csproj&amp;quot; /&amp;gt;
+&amp;lt;/Solution&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The code speaks for itself. The SLNX file is much cleaner and easier to read, with sensible defaults mean you only add exceptions when needed.&lt;/p&gt;
+&lt;h2 id="getting-started"&gt;Getting started&lt;/h2&gt;
+&lt;h3 id="prerequisites"&gt;Prerequisites&lt;/h3&gt;
+&lt;p&gt;To get started with the new SLNX format, you need to update your .NET SDK to version &lt;code&gt;9.0.200&lt;/code&gt; or later. You can verify your current version by running the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet --version
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you need to update, you can download the latest version from &lt;a href="https://get.dot.net/"&gt;https://get.dot.net/&lt;/a&gt; or update using the Visual Studio installer.&lt;/p&gt;
+&lt;p&gt;For Visual Studio you might still need to enable the new format under &lt;code&gt;Tools&lt;/code&gt; -&amp;gt; &lt;code&gt;Options&lt;/code&gt; -&amp;gt; &lt;code&gt;Environment&lt;/code&gt; -&amp;gt; &lt;code&gt;Preview Features&lt;/code&gt; -&amp;gt; &lt;code&gt;Use Solution File Persistence Model&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2025/02/24/a21f4139-6e77-b134-9d45-efefaced787e.png?sv=2025-01-05&amp;amp;st=2025-02-23T07%3A22%3A06Z&amp;amp;se=2035-02-24T07%3A22%3A06Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=IPOH7kSyA1xh2njkGtiwEA6OPmalNNGKd2pJz348ZKw%3D" alt="Visual Studio Tools Options - Enable SLNX" /&gt;&lt;/p&gt;
+&lt;h3 id="create-a-new-slnx-file"&gt;Create a new SLNX file&lt;/h3&gt;
+&lt;p&gt;To create a new &lt;code&gt;SLNX&lt;/code&gt; file, you can use the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet new sln --format slnx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will create a new solution file with the SLNX format.&lt;/p&gt;
+&lt;h3 id="convert-an-existing.sln-file-to-slnx"&gt;Convert an existing &lt;code&gt;.sln&lt;/code&gt; file to SLNX&lt;/h3&gt;
+&lt;p&gt;To convert an existing &lt;code&gt;.sln&lt;/code&gt; file to SLNX, you can use the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet sln migrate &amp;lt;SLN_FILE&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;i.e.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet sln migrate HelloWorld.sln
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will create a new solution file with the SLNX format based on the existing &lt;code&gt;.sln&lt;/code&gt; file.&lt;/p&gt;
+&lt;h2 id="working-with-slnx-programmatically"&gt;Working with SLNX programmatically&lt;/h2&gt;
+&lt;p&gt;Microsoft provides the &lt;a href="https://www.nuget.org/packages/Microsoft.VisualStudio.SolutionPersistence"&gt;Microsoft.VisualStudio.SolutionPersistence&lt;/a&gt; NuGet package, which provides a clean API for working with both traditional &lt;code&gt;.sln&lt;/code&gt; and new &lt;code&gt;.slnx&lt;/code&gt; files programmatically.&lt;/p&gt;
+&lt;p&gt;The entry point to serializers can be found on the &lt;code&gt;SolutionSerializers&lt;/code&gt; static class. This has the helper &lt;code&gt;GetSerializerByMoniker&lt;/code&gt; that can pick the serializer for a file extension, or a specific serializers can be used.&lt;/p&gt;
+&lt;p&gt;Here's a simple example of how to read and write SLNX files:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Microsoft.VisualStudio.SolutionPersistence.Serializer;
+
+// Open and deserialize the SLNX file
+var solution = await SolutionSerializers.SlnXml.OpenAsync(&amp;quot;HelloWorld.slnx&amp;quot;, cancellationToken);
+
+// Iterate through all projects in the solution
+foreach (var project in solution.SolutionProjects)
+{
+        // Print the file path of each project
+        Console.WriteLine(project.FilePath);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;More examples can be found in the project GitHub wiki at &lt;a href="https://github.com/microsoft/vs-solutionpersistence/wiki/Samples"&gt;github.com/microsoft/vs-solutionpersistence/wiki/Samples&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The new SLNX format is a great step forward, bringing clean, convention-based defaults while still allowing explicit configuration when needed. I belive this longterm will improve tooling and maintainability of solution files. It will also improve the developer experience by simplifying authoring and maintenance, reducing merge conflicts, and making it easier to sort them when they occur.&lt;/p&gt;
+&lt;p&gt;So if you haven't already, give it a try and let me know what you think!&lt;/p&gt;
+</content>
+		<summary>The new .NET solution format has evolved from being messy and bloated to being focused and clean</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2025/2025-02-19-git-windows-long-paths</id>
 		<title>Long paths in Git on Windows</title>
@@ -752,65 +864,6 @@ This includes the Board of Directors, which in my opinion isn't representative -
 &lt;!--?# Include "./../includes/posts/2021/devlead-statiq/includecode/includecode.md" /?--&gt;
 &lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;IncludeCode&lt;/code&gt; shortcode is a small addition, but it keeps my content DRY which I've learned to really appreciate as it not only reduces typing, but also reduces risk of inconsistencies and errors.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri</id>
-		<title>Devlead.Statiq - Part 2 - Theme from external web resource</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/04/08/04e3408e-5295-3d37-0421-11c3ec60a691.png?sv=2019-12-12&amp;st=2021-04-07T20%253A30%253A55Z&amp;se=2031-04-08T20%253A30%253A55Z&amp;sr=b&amp;sp=r&amp;sig=VI8xA0tYLfkNIsS%252FQx%252B9HDbDPU3n1TckpRJFflxg4sg%253D" />
-		<updated>2021-04-10T00:00:00Z</updated>
-		<content>&lt;p&gt;Sometimes you just want things your way, in this second part of the three-part introductory blog post series about the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt;, I'll go through how it can enable having your Statiq web theme reside as a common external web resource.&lt;/p&gt;
-&lt;h2 id="the-problem"&gt;The problem&lt;/h2&gt;
-&lt;p&gt;Themes in Statiq are essentially a folder alongside your &lt;code&gt;input&lt;/code&gt; folder. An example of such a theme is &lt;a href="https://github.com/statiqdev/CleanBlog"&gt;statiqdev/CleanBlog&lt;/a&gt;, the official recommended way to use it as a GIT sub-module like below&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;git submodule add https://github.com/statiqdev/CleanBlog.git theme
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;But I wanted a way to just clone and build without the hassle of sub-modules, but I also didn't want to just "copy-and-paste" the theme. I still wanted to with ease take the benefits of any updates to the upstream repository.&lt;/p&gt;
-&lt;h2 id="the-solution"&gt;The solution&lt;/h2&gt;
-&lt;p&gt;My solution ended up to extend Statiq so I could just configure the theme to a specific external uri, pointing to a web resource containing a zip archive of that theme, and Statiq would then transparently download, extract and cache that theme as the site was generated. Changing the uri would invalidate the cache and fetch the theme again.&lt;/p&gt;
-&lt;p&gt;Fortunately, GitHub provides the functionality to serve any commit/tag/release as a zip archive using the &lt;code&gt;https://github.com/{owner}/{repo}/archive/{reference}&lt;/code&gt; syntax, i.e. &lt;code&gt;https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip&lt;/code&gt;, making it really easy to obtain a specific immutable version of an upstream theme.&lt;/p&gt;
-&lt;p&gt;I then "gitignored" my &lt;code&gt;theme&lt;/code&gt; folder - so it would never be added to the site's repository. I made sure any site-specific modifications only existed within my Statiq content &lt;code&gt;input&lt;/code&gt; folder - ensuring new versions of the theme could be fetched without losing my tweaks to the theme.&lt;/p&gt;
-&lt;h2 id="example-usage"&gt;Example usage&lt;/h2&gt;
-&lt;p&gt;First of all in your Statiq App you need to add the &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; NuGet package to your Statiq web application.&lt;/p&gt;
-&lt;p&gt;Then theme from uri support in Statiq is enabled like below by invoking the &lt;code&gt;AddThemeFromUri&lt;/code&gt; extension on the Statiq app &lt;a href="https://statiq.dev/framework/configuration/bootstrapper/"&gt;Bootstrapper&lt;/a&gt;, and as a parameter to it specifying the uri where the theme zip archive is located&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-csharp"&gt;using System;
-using Devlead.Statiq.Themes;
-using Statiq.App;
-using Statiq.Common;
-using Statiq.Web;
-
-await Bootstrapper
-    .Factory
-    .CreateDefault(args)
-    .AddThemeFromUri(new Uri("https://github.com/statiqdev/CleanBlog/archive/ceb5055f3d0f7a330708494ed21eb469cde62ce2.zip"))
-    .AddWeb()
-    .RunAsync();
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;IMHO this results in a fairly clean way to reuse themes between sites and makes it easy to contribute to a site using this method - all the setup a contributor needs to be able to test/preview the site clone the repository and run the project.&lt;/p&gt;
 &lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Statiq
