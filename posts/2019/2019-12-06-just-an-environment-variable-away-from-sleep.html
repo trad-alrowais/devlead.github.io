@@ -56,6 +56,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -113,9 +114,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>It’s a quarter past midnight, you should be going to sleep, but there’s that one unit test that fails only on GitHub Action macOS build agent — it’s mocking you so you stay awake just a bit longer…</p>
 <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/002a2a50-81cb-491e-145e-bc8ef7ceb2bd.png?sv=2019-12-12&amp;st=2021-01-10T09%3A13%3A54Z&amp;se=2031-01-11T09%3A13%3A54Z&amp;sr=b&amp;sp=r&amp;sig=QDRIJM%2FTAGDrRbSk7zA%2FrdfRBNBxhZoIZuIkrmbWEQg%3D" alt="Failed MacOS build on GitHub PR" /></p>
 <p>You bring out you Mac and execute tests, fortunately we can reproduce — the test fails on your machine too! A quick inspection of test output informs you that error only occurs on .NET Core.</p>
@@ -183,6 +184,8 @@ Process Id: 32723, Name: dotnet
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -203,6 +206,12 @@ Process Id: 32723, Name: dotnet
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

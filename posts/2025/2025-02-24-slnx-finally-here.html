@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -112,9 +113,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>The Visual Studio solution files have long been an explicit and messy format, with lots of configuration that could be inferred from conventions. However, with the release of the latest .NET 9 SDK (9.0.200) earlier this month, things have changed. The new XML-based solution format, SLNX, is now out of preview, bringing clean, convention-based defaults while still allowing for explicit configuration when needed.</p>
 <h2 id="what-has-changed">What has changed?</h2>
 <p>Let's look at a simple &quot;Hello World&quot; example to illustrate the difference between the old and new formats.</p>
@@ -248,6 +249,8 @@ foreach (var project in solution.SolutionProjects)
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -268,6 +271,12 @@ foreach (var project in solution.SolutionProjects)
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

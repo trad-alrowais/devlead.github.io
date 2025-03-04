@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -112,9 +113,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>Yesterday the .NET Foundation <a href="https://dotnetfoundation.org/blog/2021/09/22/net-foundation-election-results-2021">announced</a> the results from the 2021 Board of Directors Election. An election where the Foundation's members choose who they want to represent them on the board and this election set out to fill four out of seven seats.</p>
 <p>And I'm deeply honored to announce that I have this election been elected along with</p>
 <ul>
@@ -189,6 +190,8 @@ This includes the Board of Directors, which in my opinion isn't representative -
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -209,6 +212,12 @@ This includes the Board of Directors, which in my opinion isn't representative -
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

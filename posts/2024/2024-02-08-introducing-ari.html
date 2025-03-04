@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -117,9 +118,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>If you are working with Azure, you might have encountered the challenge of keeping track of all the subscriptions, resource groups, and resources that you have in your tenant. You might also want to document them in a clear and consistent way, for example, for compliance, auditing, or reporting purposes.</p>
 <p>That's why I created ARI, a .NET tool that inventories and documents your Azure tenant's subscriptions, resource groups, and resources. ARI stands for Azure Resource Inventory, and it is a free and open source tool that you can install and use with the .NET 7 or 8 SDK.</p>
 <h2 id="how-to-install-ari">How to install ARI</h2>
@@ -186,6 +187,8 @@
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -206,6 +209,12 @@
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

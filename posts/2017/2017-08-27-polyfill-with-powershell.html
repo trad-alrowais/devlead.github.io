@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -115,9 +116,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>When writing scripts, targeting multiple runtime versions can be really painful, scripts can be forked in different files or contain hairy conditional statements to handle differences/missing between versions of PowerShell runtime/modules, resulting in unreadable and unmaintainable spaghetti code.</p>
 <p>What if you instead detect missing commands and supply an implementation for those when needed? This would allow you to have your scripts look the same and basically be agnostic to the which runtime it’s running on, making code more concise and easier to maintain.</p>
 <p>The technique for this is called polyfilling and is common practise in web development where things can differ between browser versions and vendors.</p>
@@ -184,6 +185,8 @@ Such a polyfill could look something like below:</p>
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -204,6 +207,12 @@ Such a polyfill could look something like below:</p>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

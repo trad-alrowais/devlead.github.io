@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -115,9 +116,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>A couple of years ago I blogged <a href="/posts/2017/2017-07-09-dispelling-the-magic">Dispelling the magic!</a>, a post explaining the internals of the <a href="https://cakebuild.net/">Cake</a> build orchestration tool, with that post as a proof of concept I created <a href="https://www.nuget.org/packages/Cake.Bridge">Cake.Bridge</a> assembly which provided an easy way from any .NET language get access to Cake abstractions and addins from a single instance static class.</p>
 <h2 id="the-need">The Need</h2>
 <p>Cake has some real nice testable abstractions around working with the filesystem, processes, tools, etc. and for a .NET project, we had just that need. But a static instance isn't very testable, and for most of our .NET projects (console apps, APIs, Azure Functions, WPF, etc.) we now use dependency injection using <a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/">Microsoft.Extensions.DependencyInjection</a>.</p>
@@ -263,6 +264,8 @@ Total:                        00:00:00.0228957
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -283,6 +286,12 @@ Total:                        00:00:00.0228957
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -116,9 +117,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>A little over a decade ago I did a lot of business applications with .NET Framework WPF and ClickOnce was in many cases used as a convenient way to deploy and update Windows applications. ClickOnce hasn't gotten much love over the years, and when .NET Core 3 introduced support for WPF applications ClickOnce support was nowhere to be found. But guess what, that's changed with .NET 5 and in this post, I'll go through my recipe for simplifying the building and publishing .NET 5 Windows application using GitHub Actions, Cake, and ClickOnce to Azure Blob Storage.</p>
 <h2 id="cake-recipe">Cake Recipe?</h2>
 <p>So what is a Cake recipe? Regardless of what it sounds like, it in this case has nothing to do with baking, but it's a set of <a href="https://cakebuild.net/">Cake</a> scripts packaged as NuGet package and published on NuGet.org, providing a highly reusable way to with just a few lines of code get access to rich functionality.</p>
@@ -356,6 +357,8 @@ The recipe is open source, so I'll happily take feedback and contributions to im
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -376,6 +379,12 @@ The recipe is open source, so I'll happily take feedback and contributions to im
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

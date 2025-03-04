@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -115,9 +116,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/29bf78b1-94f2-6301-ec83-fd4541c438b7.png?sv=2019-12-12&amp;st=2021-01-10T12%3A37%3A03Z&amp;se=2031-01-11T12%3A37%3A03Z&amp;sr=b&amp;sp=r&amp;sig=eyImi7f1xhlW0EtOsWQOS5NhsBgUv6fWlKtF03AqOXc%3D" alt="Ship at sea" /></p>
 <pre><code>Update! Since this post was written, there’s been some breaking changes to Azure App Services Run-From-Zip feature, this was fixed in Cake.Kudu.Client version 0.6.0 you can read more about that at the post below
 </code></pre>
@@ -200,6 +201,8 @@ In a nutshell the method will:</p>
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -220,6 +223,12 @@ In a nutshell the method will:</p>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

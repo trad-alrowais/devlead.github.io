@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -115,9 +116,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>So I'm lazy... when doing a blog post, or documentation I don't want to repeat my self, and a prime example of that is when documenting Statiq features I found my self to want to both display both the &quot;source&quot; and the &quot;result&quot; without having to type the same thing twice nor update in multiple places and that's why I created the <code>IncludeCode</code> Shortcode and in this last of the three-part introductory blog post series about the NuGet package <a href="https://www.nuget.org/packages/Devlead.Statiq">Devlead.Statiq</a> I'll tell you all about it.</p>
 <h2 id="includecode-shortcode">IncludeCode Shortcode</h2>
 <p>Code include shortcode - A Statiq <a href="https://statiq.dev/framework/content/shortcodes">shortcode</a> enables you fetch an external file into a markdown code fence block.</p>
@@ -187,6 +188,8 @@
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -207,6 +210,12 @@
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

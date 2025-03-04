@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -114,9 +115,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>There's type of application that has followed me since I learned to code in the mid-'80s, and that's the console application. For years they looked the same a <code>Main(string[] args)</code> and some naive inconsistent command line parser. That gradually improved with the adoption of various OSS helper libraries. In this post, I'll walk through what today is my alternative starting point to <code>dotnet new console</code>, a way that greatly reduces the boilerplate code needed for logging, parsing, and validation of arguments, letting me focus on the problem to solve and not the plumbing.</p>
 <h2 id="templates">Templates</h2>
 <p>A convenient way to scaffold a new project is using the template function of .NET SDK CLI, it comes preloaded with several templates like <code>console</code>, <code>classlib</code>, etc., but beyond that, it's possible to create your own templates, which I've for my and your convenience created, so given <a href="https://dotnet.microsoft.com/download/dotnet/5.0">.NET 5 SDK</a> installed, easily yourself can try and take a look at everything discussed in this post.</p>
@@ -350,6 +351,8 @@ namespace MyConsoleApp.Commands.Validation
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -370,6 +373,12 @@ namespace MyConsoleApp.Commands.Validation
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -115,9 +116,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>If you work with SQL Server databases, you may have encountered DAC packages, or dacpacs, which are a way of packaging a database's schema and seed data for deployment or migration. Dacpacs are useful for deploying databases to different environments, such as development, testing, or production, but it's tooling comes with some limitations. For example, you cannot easily inspect the contents of a dacpac file without having a running instance of SQL Server.</p>
 <p>That's why I created UnpackDacPac, a .NET tool that enables you to extract a dacpac file and generate a deployment script to a target folder without the need to deploy it to an actual database. A really useful for example when you need to debug a failed deployment or retrieve an old version of a SQL object from just a DevOps build artifact.
 UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (<em>If you don't have the .NET SDK installed, you can get it from <a href="https://get.dot.net/">here</a></em>).</p>
@@ -183,6 +184,8 @@ UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (<em>If 
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -203,6 +206,12 @@ UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (<em>If 
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

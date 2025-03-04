@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -117,9 +118,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p>Are you looking for a way to document your Azure <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep">Bicep</a> <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/modules">modules</a> in a simple and elegant way? If so, you might want to check out BRI, a .NET tool that I created to help you with that.</p>
 <h2 id="what-is-bri">What is BRI?</h2>
 <p>BRI stands for Bicep registry inventory, and it does exactly what the name suggests: it scans a provided Azure Container Registry for any published Bicep modules and generates markdown files for each module version. These markdown files contain information about the module's input parameters, output values, and example usage. You can then use these files with any static site generator that supports markdown, such as <a href="https://statiq.dev/">Statiq</a>, to create a beautiful documentation site for your modules.</p>
@@ -197,6 +198,8 @@
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -217,6 +220,12 @@
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 

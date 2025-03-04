@@ -57,6 +57,7 @@
 .sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
 </style>
 <link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 
 
   
@@ -114,9 +115,9 @@
 </header>
 
   <!-- Main Content -->
-  <div class="container"> 
+  <div class="container"y> 
     <div class="row">
-      <div id="content" class="col-md-12">  
+      <div id="content" class="col-md-12" data-pagefind-body >  
         <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/951390f9-0c34-4f66-bd22-ddb9e8ad6810.png?sv=2019-12-12&amp;st=2021-01-10T14%3A35%3A12Z&amp;se=2031-01-11T14%3A35%3A12Z&amp;sr=b&amp;sp=r&amp;sig=aOrx%2FnFtHtbsqHd3SVonTweauFt3w%2FqAoJwNRQVq0R4%3D" alt="Microsoft Teams message from Cake" /></p>
 <p>Even though Teams at Microsoft would appreciate you bringing them that’s not what this post is about, but notifications to the Microsoft Teams collaboration / team chat product.</p>
 <p><img src="https://cdn.devlead.se/clipimg-vscode/2021/01/11/53899274-3404-8df9-4c59-85cb29b5a673.png?sv=2019-12-12&amp;st=2021-01-10T13%3A16%3A42Z&amp;se=2031-01-11T13%3A16%3A42Z&amp;sr=b&amp;sp=r&amp;sig=1vvUx7y%2FZV2df%2FQdO04t6h6SE3eM9J%2B4OB2gSqQCyvY%3D" alt="Cake logo" /></p>
@@ -321,6 +322,8 @@ RunTarget(&quot;Publish&quot;);
                         <br />
                     <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
                     <br />
+                    <div id="search"></div>
+                    <br />
                     <ul class="list-inline text-center small">
                             <li class="list-inline-item">
                                 <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
@@ -341,6 +344,12 @@ RunTarget(&quot;Publish&quot;);
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
 
   
 
