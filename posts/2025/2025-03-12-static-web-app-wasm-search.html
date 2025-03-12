@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Discover how to add blazing-fast, bandwidth-friendly search to your static website using Pagefind - no backend required!">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Static Web App WASM Search</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2025/2025-03-12-static-web-app-wasm-search">
+
+      <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Static Web App WASM Search" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2025/03/12/1a8c12b5-f5c2-9a13-1296-879a0995898a.png?sv=2025-01-05&amp;st=2025-03-11T06%3A09%3A49Z&amp;se=2035-03-12T06%3A09%3A49Z&amp;sr=b&amp;sp=r&amp;sig=tyhiRLHe1gghBnxLo45yhnSUsSiaUbuMQbHAM1pUNG8%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2025/2025-03-12-static-web-app-wasm-search" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a { text-decoration: none; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2025/03/12/1a8c12b5-f5c2-9a13-1296-879a0995898a.png?sv=2025-01-05&amp;st=2025-03-11T06%3A09%3A49Z&amp;se=2035-03-12T06%3A09%3A49Z&amp;sr=b&amp;sp=r&amp;sig=tyhiRLHe1gghBnxLo45yhnSUsSiaUbuMQbHAM1pUNG8%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Static Web App WASM Search
+          </h1>
+            <h2 class="subheading">Discover how to add blazing-fast, bandwidth-friendly search to your static website using Pagefind - no backend required!</h2>
+              <div class="meta">Published on Wednesday, 12 March 2025</div>
+                <div class="mt-3">
+                      <a href="/tags/statiq" class="badge badge-light"> Statiq</a>
+                      <a href="/tags/wasm" class="badge badge-light"> WASM</a>
+                      <a href="/tags/pagefind" class="badge badge-light"> Pagefind</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"y> 
+    <div class="row">
+      <div id="content" class="col-md-12" data-pagefind-body >  
+        <p>Static web apps excel at delivering pre-rendered content quickly, efficiently, and cost-effectively.
+However, implementing search functionality with these same benefits has traditionally required compromising the static nature by using a backend or third-party service for a good experience. In this post, I'll demonstrate how to add powerful client-side search to a static website using WebAssembly. For my blog, I'm using the <a href="https://www.statiq.dev/">Statiq</a> as my static site generator together with GitHub Pages as my hosting provider, but the approach described should work across most static site generators and hosting platforms.</p>
+<h2 id="static-web-app-model">Static web app model</h2>
+<p>At its core, static web apps follow a simple yet powerful pattern. Content (the model) typically exists as markdown documents with metadata, while templates (the view) define how that content should be presented. The static site generator acts as the orchestrator, processing this separation of concerns by applying the templates to the content. The result is pre-generated static HTML files for every possible route on the site, ready to be served efficiently to visitors without any runtime processing.</p>
+<div class="mermaid">graph LR
+    subgraph Input
+        direction LR
+        I_M[Markdown]
+        I_IMG[Images]
+        I_CSS[CSS]
+        I_JS[JavaScript]
+        I_HTML[Dynamic&lt;br/>HTML Templates]
+    end
+    
+    subgraph Generator
+        direction LR
+        S[Static Site Generator]
+    end
+    
+    subgraph Output
+        direction LR
+        O_IMG[Images]
+        O_CSS[CSS]
+        O_JS[JavaScript]
+        O_HTML[HTML]
+    end
+
+    subgraph Hosting
+        direction LR
+        H[Static Hosting Provider]
+    end
+    
+    Input --> Generator
+    Generator --> Output
+    Output --> Hosting
+</div>
+<h2 id="adding-static-search">Adding static search</h2>
+<p>In this post, we'll implement search functionality by introducing an indexing step that runs after the static site generator has completed its work but before deployment to the hosting provider. This additional step analyzes the generated content and creates a search index that gets included with the site's static assets.</p>
+<div class="mermaid">graph LR
+    subgraph Input
+        direction LR
+        I_M[Markdown]
+        I_IMG[Images]
+        I_CSS[CSS]
+        I_JS[JavaScript]
+        I_HTML[Dynamic&lt;br/>HTML Templates]
+    end
+    
+    subgraph Generator
+        direction LR
+        S[Static Site Generator]
+    end
+
+    subgraph Indexer
+        direction LR
+        I[Search Indexer]
+    end
+    
+    subgraph Output
+        direction LR
+        O_IMG[Images]
+        O_CSS[CSS]
+        O_JS[JavaScript]
+        O_HTML[HTML]
+        O_INDEX[Search index]
+    end
+
+    subgraph Hosting
+        direction LR
+        H[Static Hosting Provider]
+    end
+    
+    Input --> Generator
+    Generator --> Indexer
+    Indexer --> Output
+    Output --> Hosting
+</div>
+<h2 id="pagefind">Pagefind</h2>
+<p>For this implementation, we'll use Pagefind - a powerful static search solution written in Rust. Pagefind works by analyzing your static HTML content, generating a WebAssembly-powered search index, and providing a JavaScript API for seamless integration.</p>
+<h3 id="installing">Installing</h3>
+<p>Easiest way to obtain Pagefind is via <a href="https://www.npmjs.com/package/pagefind">NPM</a> (<em>binaries also available via its GitHub <a href="https://github.com/CloudCannon/pagefind/releases">releases</a> and wrapper package through <a href="https://pypi.org/project/pagefind/">pypi</a></em>).</p>
+<pre><code class="language-bash">npm install -g pagefind
+</code></pre>
+<h3 id="creating-index">Creating index</h3>
+<p>Pagefind has several parameters and configuration options available, but to get started you can simply point it to your static site's generated content. The basic command is:</p>
+<pre><code class="language-bash">pagefind --site &quot;path to generated site&quot;
+</code></pre>
+<p>This will create a <code>pagefind</code> folder in your site output directory containing:</p>
+<ul>
+<li>Compressed WebAssembly search indexes</li>
+<li>JavaScript API files</li>
+<li>CSS styles for the default UI components</li>
+</ul>
+<h3 id="adding-to-your-site">Adding to your site</h3>
+<p>To add the search functionality to your site, you'll need to:</p>
+<ol>
+<li>Reference the Pagefind CSS stylesheet</li>
+<li>Include the Pagefind JavaScript file</li>
+<li>Add a placeholder <code>&lt;div&gt;</code> element where the search UI will be rendered</li>
+<li>Initialize the Pagefind UI when the page loads</li>
+</ol>
+<p>Here's an example of the minimal HTML code needed:</p>
+<pre><code class="language-html">&lt;link href=&quot;/pagefind/pagefind-ui.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;/pagefind/pagefind-ui.js&quot;&gt;&lt;/script&gt;
+&lt;div id=&quot;search&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+    window.addEventListener('DOMContentLoaded', (event) =&gt; {
+        new PagefindUI({ element: &quot;#search&quot;, showSubResults: true });
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="integrating-with-statiq">Integrating with Statiq</h2>
+<p>Statiq has support for executing <a href="https://www.statiq.dev/guide/web/external-processes">External Processes</a>, these can be executed during</p>
+<ol>
+<li>Initialization: The process should be started only once before other processes on the first engine execution.</li>
+<li>BeforeExecution: The process should be started before each pipeline execution.</li>
+<li>AfterExecution: The process should be started after all pipelines have executed.</li>
+<li>BeforeDeployment: The process should be started after normal pipelines are executed and before deployment</li>
+</ol>
+<p>Looking at my <a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/Program.cs#L12C1-L21C6">Program.cs</a> the integration was just a matter of adding two process steps:</p>
+<ol>
+<li>Install Pagefind during initialization</li>
+<li>Execute Pagefind before deployment</li>
+</ol>
+<pre><code class="language-csharp">    .AddProcess(
+        ProcessTiming.Initialization,
+        launcher =&gt; new ProcessLauncher(&quot;npm&quot;, &quot;install&quot;, &quot;-g&quot;, &quot;pagefind&quot;) { 
+            ContinueOnError = true
+        }
+    )
+    .AddProcess(
+        ProcessTiming.BeforeDeployment,
+         launcher =&gt; new ProcessLauncher(&quot;pagefind&quot;, &quot;--site&quot;, $&quot;\&quot;{launcher.FileSystem.OutputPath.FullPath}\&quot;&quot;)
+    )
+</code></pre>
+<p>Then I added the CSS to my theme's <a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_head.cshtml#L12">header template</a></p>
+<pre><code class="language-html">&lt;link href=&quot;/pagefind/pagefind-ui.css&quot; rel=&quot;stylesheet&quot;&gt;
+</code></pre>
+<p>Followed by placholder div to my theme's <a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_footer.cshtml#L12">footer template</a> where I wanted the search UI to appear.</p>
+<pre><code class="language-html"> &lt;div id=&quot;search&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>Finally added the pagefind script and init code to my theme's <a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_scripts.cshtml#L2-L7">scripts template</a></p>
+<pre><code class="language-html">&lt;script src=&quot;/pagefind/pagefind-ui.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    window.addEventListener('DOMContentLoaded', (event) =&gt; {
+        new PagefindUI({ element: &quot;#search&quot;, showSubResults: true });
+    });
+&lt;/script&gt;
+</code></pre>
+<p>And voilá, my site is indexed and searchable, even locally in preview mode🏆</p>
+<p><img src="https://cdn.devlead.se/clipimg-vscode/2025/03/12/1f36ee83-1f85-ab43-221c-68249a605612.png?sv=2025-01-05&amp;st=2025-03-11T10%3A21%3A50Z&amp;se=2035-03-12T10%3A21%3A50Z&amp;sr=b&amp;sp=r&amp;sig=OipymFsUbYq2wNpcIGeYBFPe1WJgqgds233ZMRLeErY%3D" alt="Screenshot of search UI" /></p>
+<h2 id="whats-indexed">What's indexed?!</h2>
+<p>By default, Pagefind will index all content it finds in your static site, which can sometimes lead to duplicate results if you have content repeated across multiple pages (like tag pages or summaries). However, Pagefind provides several HTML attributes that give you fine-grained control over what gets indexed:</p>
+<ul>
+<li><p><code>data-pagefind-body</code>: When added to an element, only content within elements with this attribute will be indexed. If used anywhere on your site, pages without this attribute are excluded entirely.</p>
+</li>
+<li><p><code>data-pagefind-ignore</code>: Add this to any element you want to exclude from indexing. This works even if the element is inside a <code>data-pagefind-body</code> section.</p>
+</li>
+<li><p><code>data-pagefind-index-attrs</code>: Allows you to specify HTML attributes to index, like image alt text or link titles.</p>
+</li>
+</ul>
+<p>These attributes gave me precise control over my search index. For example, to avoid duplicate results from tag pages and summaries, I added <code>data-pagefind-body</code> only to the main content of my blog posts in my <a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_layout.cshtml#L90">layout template</a></p>
+<pre><code class="language-c#"> &lt;div id=&quot;content&quot; class=&quot;col-md-12&quot; &#64;(Document.GetBool(&quot;IsPost&quot;) ? &quot;data-pagefind-body&quot; : &quot;&quot;) &gt;  
+</code></pre>
+<h2 id="potential-gotchas">Potential gotchas</h2>
+<h3 id="cdn">CDN</h3>
+<p>Images in search results are HTML encoded, which worked with local images but caused issues with my CDN. Fortunately, the Pagefind JS API provides a <code>processResult</code> callback so you can post-process the search result data model before it's returned to the search result UI. I modified my <a href="https://github.com/devlead/devlead.se/blob/0b464f8f8abfbcdb0f478955bcefbed1f046d9c1/src/DevLead/input/_scripts.cshtml#L8-L11">scripts template</a> in the Pagefind initialization to unencode the characters causing issues with my CDN.</p>
+<pre><code class="language-html">&lt;script&gt;
+    window.addEventListener('DOMContentLoaded', (event) =&gt; {
+        new PagefindUI({ 
+            element: &quot;#search&quot;,
+            showSubResults: true,
+             processResult: function (result) { 
+                result.meta.image = result.meta.image.replaceAll(&quot;&amp;amp;&quot;, &quot;&amp;&quot;);
+                return result;
+            }
+        });
+        
+    });
+&lt;/script&gt;
+</code></pre>
+<h3 id="compression">Compression</h3>
+<p>Pagefind compresses its index files during indexing so they can be served as-is without the need to be compressed by the HTTP server. This generally works seamlessly with hosting providers like GitHub Pages and Azure Static Web Apps. However, in some situations, depending on your configuration, you might need to either:</p>
+<ul>
+<li>Opt-out of compression for these already compressed files, or</li>
+<li>Add headers to indicate that they're compressed / should be served</li>
+</ul>
+<p>For example, with Azure App Service, your <code>web.config</code> needs to add the MIME types and headers to indicate compression. Here's how that configuration might look:</p>
+<pre><code class="language-xml">&lt;configuration&gt;
+  &lt;system.webServer&gt;
+    &lt;staticContent&gt;
+      &lt;mimeMap fileExtension=&quot;.pf_fragment&quot; mimeType=&quot;application/pf_fragment&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.pf_index&quot; mimeType=&quot;application/pf_index&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.pf_meta&quot; mimeType=&quot;application/pf_meta&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.pagefind&quot; mimeType=&quot;application/pagefind&quot; /&gt;
+    &lt;/staticContent&gt;
+    &lt;rewrite&gt;
+      &lt;outboundRules&gt;
+        &lt;rule name=&quot;Add gzip Content-Encoding for specific extensions&quot;&gt;
+          &lt;match serverVariable=&quot;RESPONSE_Content-Encoding&quot; pattern=&quot;.*&quot; /&gt;
+          &lt;conditions logicalGrouping=&quot;MatchAny&quot;&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;\.pf_fragment$&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;\.pf_index$&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;\.pf_meta$&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;\.pagefind$&quot; /&gt;
+          &lt;/conditions&gt;
+          &lt;action type=&quot;Rewrite&quot; value=&quot;gzip&quot; /&gt;
+        &lt;/rule&gt;
+      &lt;/outboundRules&gt;
+    &lt;/rewrite&gt;
+  &lt;/system.webServer&gt;
+&lt;/configuration&gt;
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Adding search functionality to a static website no longer requires compromising its static nature. <a href="https://pagefind.app/">Pagefind</a> provides a straightforward solution that maintains the benefits of static sites through its WebAssembly-powered approach. With excellent <a href="https://pagefind.app/">documentation</a> and an active open-source <a href="https://github.com/cloudcannon/pagefind">project</a>, implementing powerful client-side search has never been more accessible.</p>
+<p>By following the steps outlined in this post, you can add robust search functionality to your static site while maintaining its performance, efficiency, and cost-effectiveness.</p>
+<p>So Pagefind is worth taking for a spin, and feel free to let me know what you think!</p>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2025/2025-03-12-static-web-app-wasm-search.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
+                    <br />
+                    <div id="search"></div>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ 
+            element: "#search",
+            showSubResults: true,
+             processResult: function (result) { 
+                result.meta.image = result.meta.image.replaceAll("&amp;", "&");
+                return result;
+            }
+        });
+        
+    });
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

@@ -4,8 +4,237 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2025</rights>
-	<updated>2025-03-12T09:14:45Z</updated>
+	<updated>2025-03-12T12:59:34Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2025/2025-03-12-static-web-app-wasm-search</id>
+		<title>Static Web App WASM Search</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2025/2025-03-12-static-web-app-wasm-search" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2025/03/12/1a8c12b5-f5c2-9a13-1296-879a0995898a.png?sv=2025-01-05&amp;st=2025-03-11T06%253A09%253A49Z&amp;se=2035-03-12T06%253A09%253A49Z&amp;sr=b&amp;sp=r&amp;sig=tyhiRLHe1gghBnxLo45yhnSUsSiaUbuMQbHAM1pUNG8%253D" />
+		<updated>2025-03-12T00:00:00Z</updated>
+		<content>&lt;p&gt;Static web apps excel at delivering pre-rendered content quickly, efficiently, and cost-effectively.
+However, implementing search functionality with these same benefits has traditionally required compromising the static nature by using a backend or third-party service for a good experience. In this post, I'll demonstrate how to add powerful client-side search to a static website using WebAssembly. For my blog, I'm using the &lt;a href="https://www.statiq.dev/"&gt;Statiq&lt;/a&gt; as my static site generator together with GitHub Pages as my hosting provider, but the approach described should work across most static site generators and hosting platforms.&lt;/p&gt;
+&lt;h2 id="static-web-app-model"&gt;Static web app model&lt;/h2&gt;
+&lt;p&gt;At its core, static web apps follow a simple yet powerful pattern. Content (the model) typically exists as markdown documents with metadata, while templates (the view) define how that content should be presented. The static site generator acts as the orchestrator, processing this separation of concerns by applying the templates to the content. The result is pre-generated static HTML files for every possible route on the site, ready to be served efficiently to visitors without any runtime processing.&lt;/p&gt;
+&lt;div class="mermaid"&gt;graph LR
+    subgraph Input
+        direction LR
+        I_M[Markdown]
+        I_IMG[Images]
+        I_CSS[CSS]
+        I_JS[JavaScript]
+        I_HTML[Dynamic&amp;lt;br/&gt;HTML Templates]
+    end
+    
+    subgraph Generator
+        direction LR
+        S[Static Site Generator]
+    end
+    
+    subgraph Output
+        direction LR
+        O_IMG[Images]
+        O_CSS[CSS]
+        O_JS[JavaScript]
+        O_HTML[HTML]
+    end
+
+    subgraph Hosting
+        direction LR
+        H[Static Hosting Provider]
+    end
+    
+    Input --&gt; Generator
+    Generator --&gt; Output
+    Output --&gt; Hosting
+&lt;/div&gt;
+&lt;h2 id="adding-static-search"&gt;Adding static search&lt;/h2&gt;
+&lt;p&gt;In this post, we'll implement search functionality by introducing an indexing step that runs after the static site generator has completed its work but before deployment to the hosting provider. This additional step analyzes the generated content and creates a search index that gets included with the site's static assets.&lt;/p&gt;
+&lt;div class="mermaid"&gt;graph LR
+    subgraph Input
+        direction LR
+        I_M[Markdown]
+        I_IMG[Images]
+        I_CSS[CSS]
+        I_JS[JavaScript]
+        I_HTML[Dynamic&amp;lt;br/&gt;HTML Templates]
+    end
+    
+    subgraph Generator
+        direction LR
+        S[Static Site Generator]
+    end
+
+    subgraph Indexer
+        direction LR
+        I[Search Indexer]
+    end
+    
+    subgraph Output
+        direction LR
+        O_IMG[Images]
+        O_CSS[CSS]
+        O_JS[JavaScript]
+        O_HTML[HTML]
+        O_INDEX[Search index]
+    end
+
+    subgraph Hosting
+        direction LR
+        H[Static Hosting Provider]
+    end
+    
+    Input --&gt; Generator
+    Generator --&gt; Indexer
+    Indexer --&gt; Output
+    Output --&gt; Hosting
+&lt;/div&gt;
+&lt;h2 id="pagefind"&gt;Pagefind&lt;/h2&gt;
+&lt;p&gt;For this implementation, we'll use Pagefind - a powerful static search solution written in Rust. Pagefind works by analyzing your static HTML content, generating a WebAssembly-powered search index, and providing a JavaScript API for seamless integration.&lt;/p&gt;
+&lt;h3 id="installing"&gt;Installing&lt;/h3&gt;
+&lt;p&gt;Easiest way to obtain Pagefind is via &lt;a href="https://www.npmjs.com/package/pagefind"&gt;NPM&lt;/a&gt; (&lt;em&gt;binaries also available via its GitHub &lt;a href="https://github.com/CloudCannon/pagefind/releases"&gt;releases&lt;/a&gt; and wrapper package through &lt;a href="https://pypi.org/project/pagefind/"&gt;pypi&lt;/a&gt;&lt;/em&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;npm install -g pagefind
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="creating-index"&gt;Creating index&lt;/h3&gt;
+&lt;p&gt;Pagefind has several parameters and configuration options available, but to get started you can simply point it to your static site's generated content. The basic command is:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;pagefind --site &amp;quot;path to generated site&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will create a &lt;code&gt;pagefind&lt;/code&gt; folder in your site output directory containing:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Compressed WebAssembly search indexes&lt;/li&gt;
+&lt;li&gt;JavaScript API files&lt;/li&gt;
+&lt;li&gt;CSS styles for the default UI components&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="adding-to-your-site"&gt;Adding to your site&lt;/h3&gt;
+&lt;p&gt;To add the search functionality to your site, you'll need to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Reference the Pagefind CSS stylesheet&lt;/li&gt;
+&lt;li&gt;Include the Pagefind JavaScript file&lt;/li&gt;
+&lt;li&gt;Add a placeholder &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt; element where the search UI will be rendered&lt;/li&gt;
+&lt;li&gt;Initialize the Pagefind UI when the page loads&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Here's an example of the minimal HTML code needed:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;link href=&amp;quot;/pagefind/pagefind-ui.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;
+&amp;lt;script src=&amp;quot;/pagefind/pagefind-ui.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;div id=&amp;quot;search&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;script&amp;gt;
+    window.addEventListener('DOMContentLoaded', (event) =&amp;gt; {
+        new PagefindUI({ element: &amp;quot;#search&amp;quot;, showSubResults: true });
+    });
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="integrating-with-statiq"&gt;Integrating with Statiq&lt;/h2&gt;
+&lt;p&gt;Statiq has support for executing &lt;a href="https://www.statiq.dev/guide/web/external-processes"&gt;External Processes&lt;/a&gt;, these can be executed during&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Initialization: The process should be started only once before other processes on the first engine execution.&lt;/li&gt;
+&lt;li&gt;BeforeExecution: The process should be started before each pipeline execution.&lt;/li&gt;
+&lt;li&gt;AfterExecution: The process should be started after all pipelines have executed.&lt;/li&gt;
+&lt;li&gt;BeforeDeployment: The process should be started after normal pipelines are executed and before deployment&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Looking at my &lt;a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/Program.cs#L12C1-L21C6"&gt;Program.cs&lt;/a&gt; the integration was just a matter of adding two process steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install Pagefind during initialization&lt;/li&gt;
+&lt;li&gt;Execute Pagefind before deployment&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;    .AddProcess(
+        ProcessTiming.Initialization,
+        launcher =&amp;gt; new ProcessLauncher(&amp;quot;npm&amp;quot;, &amp;quot;install&amp;quot;, &amp;quot;-g&amp;quot;, &amp;quot;pagefind&amp;quot;) { 
+            ContinueOnError = true
+        }
+    )
+    .AddProcess(
+        ProcessTiming.BeforeDeployment,
+         launcher =&amp;gt; new ProcessLauncher(&amp;quot;pagefind&amp;quot;, &amp;quot;--site&amp;quot;, $&amp;quot;\&amp;quot;{launcher.FileSystem.OutputPath.FullPath}\&amp;quot;&amp;quot;)
+    )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I added the CSS to my theme's &lt;a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_head.cshtml#L12"&gt;header template&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;link href=&amp;quot;/pagefind/pagefind-ui.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Followed by placholder div to my theme's &lt;a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_footer.cshtml#L12"&gt;footer template&lt;/a&gt; where I wanted the search UI to appear.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt; &amp;lt;div id=&amp;quot;search&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally added the pagefind script and init code to my theme's &lt;a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_scripts.cshtml#L2-L7"&gt;scripts template&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;script src=&amp;quot;/pagefind/pagefind-ui.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script&amp;gt;
+    window.addEventListener('DOMContentLoaded', (event) =&amp;gt; {
+        new PagefindUI({ element: &amp;quot;#search&amp;quot;, showSubResults: true });
+    });
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And voilá, my site is indexed and searchable, even locally in preview mode🏆&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2025/03/12/1f36ee83-1f85-ab43-221c-68249a605612.png?sv=2025-01-05&amp;amp;st=2025-03-11T10%3A21%3A50Z&amp;amp;se=2035-03-12T10%3A21%3A50Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=OipymFsUbYq2wNpcIGeYBFPe1WJgqgds233ZMRLeErY%3D" alt="Screenshot of search UI" /&gt;&lt;/p&gt;
+&lt;h2 id="whats-indexed"&gt;What's indexed?!&lt;/h2&gt;
+&lt;p&gt;By default, Pagefind will index all content it finds in your static site, which can sometimes lead to duplicate results if you have content repeated across multiple pages (like tag pages or summaries). However, Pagefind provides several HTML attributes that give you fine-grained control over what gets indexed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;data-pagefind-body&lt;/code&gt;: When added to an element, only content within elements with this attribute will be indexed. If used anywhere on your site, pages without this attribute are excluded entirely.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;data-pagefind-ignore&lt;/code&gt;: Add this to any element you want to exclude from indexing. This works even if the element is inside a &lt;code&gt;data-pagefind-body&lt;/code&gt; section.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;data-pagefind-index-attrs&lt;/code&gt;: Allows you to specify HTML attributes to index, like image alt text or link titles.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These attributes gave me precise control over my search index. For example, to avoid duplicate results from tag pages and summaries, I added &lt;code&gt;data-pagefind-body&lt;/code&gt; only to the main content of my blog posts in my &lt;a href="https://github.com/devlead/devlead.se/blob/c58f61579cac0ad5700ba44440d75c69534fcca7/src/DevLead/input/_layout.cshtml#L90"&gt;layout template&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-c#"&gt; &amp;lt;div id=&amp;quot;content&amp;quot; class=&amp;quot;col-md-12&amp;quot; &amp;#64;(Document.GetBool(&amp;quot;IsPost&amp;quot;) ? &amp;quot;data-pagefind-body&amp;quot; : &amp;quot;&amp;quot;) &amp;gt;  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="potential-gotchas"&gt;Potential gotchas&lt;/h2&gt;
+&lt;h3 id="cdn"&gt;CDN&lt;/h3&gt;
+&lt;p&gt;Images in search results are HTML encoded, which worked with local images but caused issues with my CDN. Fortunately, the Pagefind JS API provides a &lt;code&gt;processResult&lt;/code&gt; callback so you can post-process the search result data model before it's returned to the search result UI. I modified my &lt;a href="https://github.com/devlead/devlead.se/blob/0b464f8f8abfbcdb0f478955bcefbed1f046d9c1/src/DevLead/input/_scripts.cshtml#L8-L11"&gt;scripts template&lt;/a&gt; in the Pagefind initialization to unencode the characters causing issues with my CDN.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;script&amp;gt;
+    window.addEventListener('DOMContentLoaded', (event) =&amp;gt; {
+        new PagefindUI({ 
+            element: &amp;quot;#search&amp;quot;,
+            showSubResults: true,
+             processResult: function (result) { 
+                result.meta.image = result.meta.image.replaceAll(&amp;quot;&amp;amp;amp;&amp;quot;, &amp;quot;&amp;amp;&amp;quot;);
+                return result;
+            }
+        });
+        
+    });
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="compression"&gt;Compression&lt;/h3&gt;
+&lt;p&gt;Pagefind compresses its index files during indexing so they can be served as-is without the need to be compressed by the HTTP server. This generally works seamlessly with hosting providers like GitHub Pages and Azure Static Web Apps. However, in some situations, depending on your configuration, you might need to either:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Opt-out of compression for these already compressed files, or&lt;/li&gt;
+&lt;li&gt;Add headers to indicate that they're compressed / should be served&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example, with Azure App Service, your &lt;code&gt;web.config&lt;/code&gt; needs to add the MIME types and headers to indicate compression. Here's how that configuration might look:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;configuration&amp;gt;
+  &amp;lt;system.webServer&amp;gt;
+    &amp;lt;staticContent&amp;gt;
+      &amp;lt;mimeMap fileExtension=&amp;quot;.pf_fragment&amp;quot; mimeType=&amp;quot;application/pf_fragment&amp;quot; /&amp;gt;
+      &amp;lt;mimeMap fileExtension=&amp;quot;.pf_index&amp;quot; mimeType=&amp;quot;application/pf_index&amp;quot; /&amp;gt;
+      &amp;lt;mimeMap fileExtension=&amp;quot;.pf_meta&amp;quot; mimeType=&amp;quot;application/pf_meta&amp;quot; /&amp;gt;
+      &amp;lt;mimeMap fileExtension=&amp;quot;.pagefind&amp;quot; mimeType=&amp;quot;application/pagefind&amp;quot; /&amp;gt;
+    &amp;lt;/staticContent&amp;gt;
+    &amp;lt;rewrite&amp;gt;
+      &amp;lt;outboundRules&amp;gt;
+        &amp;lt;rule name=&amp;quot;Add gzip Content-Encoding for specific extensions&amp;quot;&amp;gt;
+          &amp;lt;match serverVariable=&amp;quot;RESPONSE_Content-Encoding&amp;quot; pattern=&amp;quot;.*&amp;quot; /&amp;gt;
+          &amp;lt;conditions logicalGrouping=&amp;quot;MatchAny&amp;quot;&amp;gt;
+            &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; pattern=&amp;quot;\.pf_fragment$&amp;quot; /&amp;gt;
+            &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; pattern=&amp;quot;\.pf_index$&amp;quot; /&amp;gt;
+            &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; pattern=&amp;quot;\.pf_meta$&amp;quot; /&amp;gt;
+            &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; pattern=&amp;quot;\.pagefind$&amp;quot; /&amp;gt;
+          &amp;lt;/conditions&amp;gt;
+          &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;gzip&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+      &amp;lt;/outboundRules&amp;gt;
+    &amp;lt;/rewrite&amp;gt;
+  &amp;lt;/system.webServer&amp;gt;
+&amp;lt;/configuration&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Adding search functionality to a static website no longer requires compromising its static nature. &lt;a href="https://pagefind.app/"&gt;Pagefind&lt;/a&gt; provides a straightforward solution that maintains the benefits of static sites through its WebAssembly-powered approach. With excellent &lt;a href="https://pagefind.app/"&gt;documentation&lt;/a&gt; and an active open-source &lt;a href="https://github.com/cloudcannon/pagefind"&gt;project&lt;/a&gt;, implementing powerful client-side search has never been more accessible.&lt;/p&gt;
+&lt;p&gt;By following the steps outlined in this post, you can add robust search functionality to your static site while maintaining its performance, efficiency, and cost-effectiveness.&lt;/p&gt;
+&lt;p&gt;So Pagefind is worth taking for a spin, and feel free to let me know what you think!&lt;/p&gt;
+</content>
+		<summary>Discover how to add blazing-fast, bandwidth-friendly search to your static website using Pagefind - no backend required!</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2025/2025-02-24-slnx-finally-here</id>
 		<title>SLNX Finally here📄</title>
@@ -843,46 +1072,5 @@ This includes the Board of Directors, which in my opinion isn't representative -
 &lt;p&gt;Thanks for the confidence! this will be an interesting journey, and truly hope I can represent you well. I will need some time to be the &amp;quot;new person&amp;quot; - hear people out, ask stupid questions, inventory which tools are at hand, and so on.&lt;/p&gt;
 </content>
 		<summary>A reflection on the results from the 2021 Board of Directors Election</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode</id>
-		<title>Devlead.Statiq - Part 3 - IncludeCode 🤺</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2021/04/08/985368ff-3b5e-5079-00b1-2d01c433f6b8.png?sv=2019-12-12&amp;st=2021-04-07T21%253A28%253A53Z&amp;se=2031-04-08T21%253A28%253A53Z&amp;sr=b&amp;sp=r&amp;sig=yJSMzQzEuAd%252B1IyVh9Hsn%252FBBJE4iLet9Ymg6nOqFmCA%253D" />
-		<updated>2021-04-11T00:00:00Z</updated>
-		<content>&lt;p&gt;So I'm lazy... when doing a blog post, or documentation I don't want to repeat my self, and a prime example of that is when documenting Statiq features I found my self to want to both display both the "source" and the "result" without having to type the same thing twice nor update in multiple places and that's why I created the &lt;code&gt;IncludeCode&lt;/code&gt; Shortcode and in this last of the three-part introductory blog post series about the NuGet package &lt;a href="https://www.nuget.org/packages/Devlead.Statiq"&gt;Devlead.Statiq&lt;/a&gt; I'll tell you all about it.&lt;/p&gt;
-&lt;h2 id="includecode-shortcode"&gt;IncludeCode Shortcode&lt;/h2&gt;
-&lt;p&gt;Code include shortcode - A Statiq &lt;a href="https://statiq.dev/framework/content/shortcodes"&gt;shortcode&lt;/a&gt; enables you fetch an external file into a markdown code fence block.&lt;/p&gt;
-&lt;p&gt;Statiq comes with a built in &lt;code&gt;Include&lt;/code&gt; shortcode, which will just merge in the source of another document into the document utilizing the shortcode. This is really handy as it'll for example lets you edit content in one place, but you can use it in multiple places keeping things dry.&lt;/p&gt;
-&lt;p&gt;The issue and feature with &lt;code&gt;Include&lt;/code&gt; is that it'll be executed as part of your Statiq App pipeline, any code in it will be rendered. Which might not be what you want for a code sample. So I created the &lt;code&gt;IncludeCode&lt;/code&gt; shortcode which will process and include the external document within a markdown code fence.&lt;/p&gt;
-&lt;h3 id="example-usage"&gt;Example usage&lt;/h3&gt;
-&lt;!--?# IncludeCode "./../includes/posts/2021/devlead-statiq/includecode/includecode.md" /?--&gt;
-&lt;h3 id="result"&gt;Result&lt;/h3&gt;
-&lt;!--?# Include "./../includes/posts/2021/devlead-statiq/includecode/includecode.md" /?--&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;IncludeCode&lt;/code&gt; shortcode is a small addition, but it keeps my content DRY which I've learned to really appreciate as it not only reduces typing, but also reduces risk of inconsistencies and errors.&lt;/p&gt;
-&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/statiqdev"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://statiq.dev/"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Devlead.Statiq
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/devlead/Devlead.Statiq"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.nuget.org/packages/Devlead.Statiq/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-09-devlead-statiq-part1-tabs"&gt;Part 1 - Tabs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-10-devlead-statiq-part2-theme-from-uri"&gt;Part 2 - Theme from external web resource&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.devlead.se/posts/2021/2021-04-11-devlead-statiq-part3-includecode"&gt;Part 3 - IncludeCode 🤺&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-		<summary>An .NET assembly extending the static site generator Statiq with new core features</summary>
 	</entry>
 </feed>
