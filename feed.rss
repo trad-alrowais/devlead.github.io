@@ -5,8 +5,217 @@
 		<link>https://www.devlead.se/</link>
 		<description />
 		<copyright>© Mattias Karlsson 2025</copyright>
-		<pubDate>Sat, 15 Mar 2025 18:41:58 GMT</pubDate>
-		<lastBuildDate>Sat, 15 Mar 2025 18:41:58 GMT</lastBuildDate>
+		<pubDate>Sat, 22 Mar 2025 23:05:53 GMT</pubDate>
+		<lastBuildDate>Sat, 22 Mar 2025 23:05:53 GMT</lastBuildDate>
+		<item>
+			<title>Introducing AZDOI</title>
+			<link>https://www.devlead.se/posts/2025/2025-03-22-introducing-azdoi</link>
+			<description>A DevOps tool to document a Azure DevOps organization</description>
+			<author>devlead</author>
+			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2025/03/21/70d7054b-ef89-cdf6-88ba-45a98ccc5d6f.png?sv=2025-01-05&amp;st=2025-03-20T18%253A45%253A56Z&amp;se=2035-03-21T18%253A45%253A56Z&amp;sr=b&amp;sp=r&amp;sig=7cf9wdEo49wQF3T9ZJjMkEmLCOeukU6xHW9bQID019Q%253D" length="0" type="image" />
+			<guid>https://www.devlead.se/posts/2025/2025-03-22-introducing-azdoi</guid>
+			<pubDate>Sat, 22 Mar 2025 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;For the last couple of months, I've had the pleasure of mentoring two talented .NET students, &lt;a href="https://se.linkedin.com/in/andreassiggelin"&gt;Andreas Siggelin&lt;/a&gt; and &lt;a href="https://se.linkedin.com/in/elie-bou-absi-5b722123a"&gt;Elie Bou Absi&lt;/a&gt;. They've been working on various internal and customer projects, gaining practical experience in real-world software development. One project we've been collaborating on is AZDOI, a tool designed to document an Azure DevOps organization. After seeing its value in our work, we've decided to open source AZDOI, and in this blog post, I'll walk you through what it is and how you can use it.&lt;/p&gt;
+&lt;h1 id="what-azdoi-does"&gt;What AZDOI Does&lt;/h1&gt;
+&lt;p&gt;AZDOI (Azure DevOps Inventory) is a .NET tool designed to create documentation for Azure DevOps organizations. The tool connects to the Azure DevOps REST API and iterates over all projects in an organization it has access to, using either personal access token or Azure Entra ID authentication i.e. using a service principle.&lt;/p&gt;
+&lt;p&gt;For each project, AZDOI systematically inventories all repositories, fetching useful data including default branch, size, and URIs. It goes deeper by also collecting each repository's branches, tags, and README content.&lt;/p&gt;
+&lt;div class="mermaid"&gt;graph LR
+    Projects[Iterate Projects]
+    Repos[Iterate Repositories]
+    Branches[Iterate Branches]
+    Tags[Iterate Tags]
+    Tag[Fetch tag annotation]
+    Readme[Fetch README.md]
+    Markdown[Generate Markdown]
+
+    Projects --&gt; Repos
+    Repos --&gt; Branches --&gt; Markdown
+    Repos --&gt; Tags --&gt; Tag --&gt; Markdown
+    Repos --&gt; Readme --&gt; Markdown
+&lt;/div&gt;
+&lt;p&gt;The output is a well-organized set of Markdown files structured at the organization, project, and repository levels. These generated Markdown files can then serve as source input for a static site generator to create comprehensive, easily navigable, searchable documentation of your entire Azure DevOps organization.&lt;/p&gt;
+&lt;p&gt;An example of the end result published to GitHub Pages can be found at &lt;a href="https://wcomab.github.io/AZDOI/AZDOI/"&gt;https://wcomab.github.io/AZDOI/AZDOI/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;While AZDOI currently focuses on documenting Azure Repos, future versions may expand to cover other aspects of Azure DevOps like work items, pipelines, and release definitions to provide a more complete organizational view.&lt;/p&gt;
+&lt;h2 id="getting-started"&gt;Getting Started&lt;/h2&gt;
+&lt;p&gt;AZDOI is a .NET tool distributed via &lt;a href="https://www.nuget.org/packages/AZDOI/"&gt;NuGet.org&lt;/a&gt;. You can install it either as a globally available tool or as a local tool using a tool manifest.&lt;/p&gt;
+&lt;h3 id="global-installation"&gt;Global Installation&lt;/h3&gt;
+&lt;p&gt;To install AZDOI as a global tool, run the following command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global AZDOI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once installed globally, you can invoke AZDOI simply by using the command:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;azdoi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="local-installation"&gt;Local Installation&lt;/h3&gt;
+&lt;p&gt;If you prefer to install AZDOI locally (per repository), you can set up a tool manifest and install it with the following commands:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;# Create tool manifest (only needed first time when setting up local/repo-versioned tools)
+dotnet new tool-manifest
+
+# Install tool into manifest
+dotnet tool install --local AZDOI
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After installing, make sure to commit the manifest file located at &lt;code&gt;.config/dotnet-tools.json&lt;/code&gt; into your repository. This allows anyone cloning the repo or using a DevOps pipeline to restore all versioned tools by executing:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool restore
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As a local tool, you can invoke AZDOI using:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet azdoi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;p&gt;The basic usage of AZDOI is as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;azdoi inventory repositories &amp;lt;devopsorg&amp;gt; &amp;lt;outputpath&amp;gt; [OPTIONS]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;azdoi inventory repositories AZDOI /path/to/output
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="options"&gt;Options&lt;/h3&gt;
+&lt;p&gt;Here are some of the available options you can use with AZDOI inventory repositories command:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;Default Value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--help&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Used to get help with parameters&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--pat&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Personal Access Token for authentication&lt;/td&gt;
+&lt;td&gt;Environment variable: AZDOI_PAT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--entra-id-auth&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Use Entra ID for Azure DevOps Authentication&lt;/td&gt;
+&lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--azure-tenant-id&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Entra Azure Tenant ID for authentication&lt;/td&gt;
+&lt;td&gt;Environment variable: AZURE_TENANT_ID&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--include-project&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Include specific projects&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--exclude-project&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Exclude specific projects&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--include-repository&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Include specific repositories&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--exclude-repository&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Exclude specific repositories&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--include-repository-readme&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Include specific repository README&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--exclude-repository-readme&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Exclude specific repository README&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;--run-in-parallel&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Enable parallel processing of projects&lt;/td&gt;
+&lt;td&gt;False&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;When the &lt;code&gt;--entra-id-auth&lt;/code&gt; option is specified, AZDOI will attempt to authenticate using the &lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet"&gt;DefaultAzureCredential&lt;/a&gt;, which tries to authorize in the following order based on your environment:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.environmentcredential?view=azure-dotnet"&gt;EnvironmentCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.workloadidentitycredential?view=azure-dotnet"&gt;WorkloadIdentityCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.managedidentitycredential?view=azure-dotnet"&gt;ManagedIdentityCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.sharedtokencachecredential?view=azure-dotnet"&gt;SharedTokenCacheCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocredential?view=azure-dotnet"&gt;VisualStudioCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocodecredential?view=azure-dotnet"&gt;VisualStudioCodeCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azureclicredential?view=azure-dotnet"&gt;AzureCliCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azurepowershellcredential?view=azure-dotnet"&gt;AzurePowerShellCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azuredeveloperclicredential?view=azure-dotnet"&gt;AzureDeveloperCliCredential&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.interactivebrowsercredential?view=azure-dotnet"&gt;InteractiveBrowserCredential&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="devops-pipeline"&gt;DevOps Pipeline&lt;/h2&gt;
+&lt;p&gt;Below is a fairly minimal Azure Pipeline that runs daily to generate an inventory of Azure DevOps repositories. This pipeline uses Azure CLI authentication and uploads the results as a pipeline artifact.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;# azure-pipelines.yml
+trigger:
+  - main
+
+schedules:
+- cron: &amp;quot;0 22 * * *&amp;quot;
+  displayName: &amp;quot;Daily build at 22:00&amp;quot;
+  branches:
+    include:
+      - main
+  always: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI&amp;#64;2
+  displayName: 'Generate Azure DevOps Inventory'
+  inputs:
+    azureSubscription: 'azure-devops-inventory-tool'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      URL=&amp;quot;$(System.CollectionUri)&amp;quot;
+      ORG_NAME=${URL#https://dev.azure.com/}
+      ORG_NAME=${ORG_NAME%/}
+      echo &amp;quot;Organization name is: $ORG_NAME&amp;quot;
+
+      dotnet tool restore \
+        &amp;amp;&amp;amp; dotnet AZDOI inventory repositories $ORG_NAME &amp;quot;$(Build.ArtifactStagingDirectory)&amp;quot; --entra-id-auth --run-in-parallel \
+        &amp;amp;&amp;amp; echo '##vso[artifact.upload artifactname=AzureDevOpsDocs]$(Build.ArtifactStagingDirectory)'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="pipeline-configuration-explanation"&gt;Pipeline Configuration Explanation&lt;/h3&gt;
+&lt;p&gt;The Azure Pipeline configuration above does the following:&lt;/p&gt;
+&lt;h4 id="trigger"&gt;Trigger&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;The pipeline runs automatically when changes are pushed to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/li&gt;
+&lt;li&gt;It is scheduled to run daily at 22:00 (10 PM) UTC through a cron schedule.&lt;/li&gt;
+&lt;li&gt;The schedule is set to always run, even if there are no code changes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="environment"&gt;Environment&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;It uses the latest version of Ubuntu as the build agent.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="steps"&gt;Steps&lt;/h4&gt;
+&lt;p&gt;The pipeline has a single step using the Azure CLI task that:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Extracts the Azure DevOps organization name from the collection URI.&lt;/li&gt;
+&lt;li&gt;Runs the AZDOI tool to generate an inventory of repositories by:
+&lt;ul&gt;
+&lt;li&gt;Restoring .NET tools.&lt;/li&gt;
+&lt;li&gt;Running the &lt;code&gt;inventory repositories&lt;/code&gt; command for the organization.&lt;/li&gt;
+&lt;li&gt;Using Entra ID (formerly Azure AD) authentication.&lt;/li&gt;
+&lt;li&gt;Running operations in parallel for better performance.&lt;/li&gt;
+&lt;li&gt;Saving output to the build artifacts directory.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Uploads the generated documentation as a build artifact named 'AzureDevOpsDocs'.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The pipeline requires an Azure service connection named 'azure-devops-inventory-tool' with appropriate permissions to access Azure DevOps resources.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we introduced AZDOI, a .NET tool designed to document Azure DevOps organizations by generating a set of Markdown files. You can find the code for AZDOI at &lt;a href="https://github.com/WCOMAB/AZDOI/"&gt;GitHub&lt;/a&gt;, and the tool is available for installation via &lt;a href="https://www.nuget.org/packages/AZDOI/"&gt;NuGet&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;An example of the generated documentation can be viewed at &lt;a href="https://wcomab.github.io/AZDOI/AZDOI/"&gt;AZDOI Example Documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Take it for a spin, and feel free to let us know what you think!&lt;/p&gt;
+</content:encoded>
+			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
+		</item>
 		<item>
 			<title>Static Web App WASM Search</title>
 			<link>https://www.devlead.se/posts/2025/2025-03-12-static-web-app-wasm-search</link>
@@ -1009,58 +1218,6 @@ UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (&lt;em&
 &lt;p&gt;BRI is open source and licensed under the MIT license, so you can use it freely and modify it as you wish. You can find the source code on &lt;a href="https://github.com/devlead/BRI"&gt;GitHub&lt;/a&gt; and the NuGet package at &lt;a href="https://www.nuget.org/packages/bri"&gt;NuGet.org&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="feedback-and-suggestions"&gt;Feedback and suggestions&lt;/h2&gt;
 &lt;p&gt;I hope you find BRI useful and that it helps you with your Bicep module development. If you have any feedback or suggestions, please feel free to open an issue or a pull request on GitHub. Happy coding!&lt;/p&gt;
-</content:encoded>
-			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
-		</item>
-		<item>
-			<title>Joining the .NET Foundation Board of Directors</title>
-			<link>https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors</link>
-			<description>A reflection on the results from the 2021 Board of Directors Election</description>
-			<author>devlead</author>
-			<enclosure url="https://cdn.devlead.se/clipimg-vscode/2021/09/23/468b4b6e-3ecd-c723-3323-8ffce93ac433.png?sv=2019-12-12&amp;st=2021-09-22T14%253A02%253A54Z&amp;se=2031-09-23T14%253A02%253A54Z&amp;sr=b&amp;sp=r&amp;sig=kN9k556DBbpI5pYPbI2tLDpXGiLFIJRsBsZ07Pf1LEc%253D" length="0" type="image" />
-			<guid>https://www.devlead.se/posts/2021/2021-09-23-joining-the-net-foundation-board-of-directors</guid>
-			<pubDate>Thu, 23 Sep 2021 00:00:00 GMT</pubDate>
-			<content:encoded>&lt;p&gt;Yesterday the .NET Foundation &lt;a href="https://dotnetfoundation.org/blog/2021/09/22/net-foundation-election-results-2021"&gt;announced&lt;/a&gt; the results from the 2021 Board of Directors Election. An election where the Foundation's members choose who they want to represent them on the board and this election set out to fill four out of seven seats.&lt;/p&gt;
-&lt;p&gt;And I'm deeply honored to announce that I have this election been elected along with&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/frank-arkhurst-odoom"&gt;Frank Odoom&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/javier-lozano"&gt;Javier Lozano&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://dotnetfoundation.org/about/election/campaign-2021/rob-prouse"&gt;Rob Prouse&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="the-new-board-of-directors"&gt;The new Board of Directors&lt;/h2&gt;
-&lt;p&gt;This means that as a result of the election the board will have the following members&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Bill Wagner&lt;/li&gt;
-&lt;li&gt;Frank Odoom&lt;/li&gt;
-&lt;li&gt;Javier Lozano&lt;/li&gt;
-&lt;li&gt;Mattias Karlsson&lt;/li&gt;
-&lt;li&gt;Rich Lander&lt;/li&gt;
-&lt;li&gt;Rob Prouse&lt;/li&gt;
-&lt;li&gt;Shawn Wildermuth&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="changes-to-the-board-of-directors"&gt;Changes to the Board of Directors&lt;/h2&gt;
-&lt;p&gt;Javier Lozano was re-elected, so leaving the board are&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Beth Massi&lt;/li&gt;
-&lt;li&gt;Jeff Strauss&lt;/li&gt;
-&lt;li&gt;Layla Porter&lt;/li&gt;
-&lt;li&gt;Rodney Littles II&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Beth, Jeff, Layla, Rodney thanks you for your hard work! ❤️&lt;/p&gt;
-&lt;h2 id="personal-reflections"&gt;Personal reflections&lt;/h2&gt;
-&lt;p&gt;I'm truly humbled by the confidence placed in me by the Foundation members, so thank you!❤️&lt;/p&gt;
-&lt;p&gt;I just got the news at the same time as the rest of the world, so I'm far from onboarded yet, and honestly don't have a 100% clear picture of what to expect and what's expected of me.&lt;/p&gt;
-&lt;p&gt;But at the same time, I know too well how much hard and frustrating work it can be from years of experience participating in various boards, non-profits, communities, and open source projects. And I've got huge respect for the tasks and challenges at hand. The board speaks in one voice but consists of several voices, yours included.
-There are several challenges we face, some issues may be small, others unacceptable which clearly need to be addressed, key problem areas in my mind are:&lt;/p&gt;
-&lt;h3 id="diversity"&gt;Diversity&lt;/h3&gt;
-&lt;p&gt;We need for the  .NET community to be welcoming safe, inclusive, and representative for current and new participants. And it's clear there's room for improvement here.
-This includes the Board of Directors, which in my opinion isn't representative - so here we will need your, members, committees, and the community help to hold us accountable and provide us honest constructive feedback. We can be good allies and champions, even if we're not serving in any official capacity. And truly hope we'll have a more representative board post next election.&lt;/p&gt;
-&lt;h3 id="sustainability"&gt;Sustainability&lt;/h3&gt;
-&lt;p&gt;Sustainability isn't just about adding members, projects, and responsibilities, it's also what happens after you've joined or promises have been made. It's not sustainable if members, maintainers, and community leaders burn out, feel unwelcome or unheard. We can't grow if we at the same time have a churn of people and projects. Don't set things in motion you don't have a plan for how to maintain it - or clearly scope that it's time-limited.&lt;/p&gt;
-&lt;h3 id="transparency"&gt;Transparency&lt;/h3&gt;
-&lt;p&gt;For me, this is hugely centered around communication, only promise what you can deliver on, clearly communicate what can be expected and when to expect it. If you're unsure, clarify. If you can't communicate yet - communicate that - silence isn't respectful and just fuels misinformation.&lt;/p&gt;
-&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Thanks for the confidence! this will be an interesting journey, and truly hope I can represent you well. I will need some time to be the &amp;quot;new person&amp;quot; - hear people out, ask stupid questions, inventory which tools are at hand, and so on.&lt;/p&gt;
 </content:encoded>
 			<comments xmlns="http://purl.org/rss/1.0/modules/slash/">0</comments>
 		</item>

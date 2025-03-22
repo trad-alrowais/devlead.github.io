@@ -1,0 +1,397 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A DevOps tool to document a Azure DevOps organization">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Introducing AZDOI</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2025/2025-03-22-introducing-azdoi">
+
+      <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Introducing AZDOI" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2025/03/21/70d7054b-ef89-cdf6-88ba-45a98ccc5d6f.png?sv=2025-01-05&amp;st=2025-03-20T18%3A45%3A56Z&amp;se=2035-03-21T18%3A45%3A56Z&amp;sr=b&amp;sp=r&amp;sig=7cf9wdEo49wQF3T9ZJjMkEmLCOeukU6xHW9bQID019Q%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2025/2025-03-22-introducing-azdoi" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a { text-decoration: none; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2025/03/21/70d7054b-ef89-cdf6-88ba-45a98ccc5d6f.png?sv=2025-01-05&amp;st=2025-03-20T18%3A45%3A56Z&amp;se=2035-03-21T18%3A45%3A56Z&amp;sr=b&amp;sp=r&amp;sig=7cf9wdEo49wQF3T9ZJjMkEmLCOeukU6xHW9bQID019Q%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Introducing AZDOI
+          </h1>
+            <h2 class="subheading">A DevOps tool to document a Azure DevOps organization</h2>
+              <div class="meta">Published on Saturday, 22 March 2025</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/azure" class="badge badge-light"> Azure</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                      <a href="/tags/tool" class="badge badge-light"> Tool</a>
+                      <a href="/tags/devopsdocs" class="badge badge-light"> DevOpsDocs</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"y> 
+    <div class="row">
+      <div id="content" class="col-md-12" data-pagefind-body >  
+        <p>For the last couple of months, I've had the pleasure of mentoring two talented .NET students, <a href="https://se.linkedin.com/in/andreassiggelin">Andreas Siggelin</a> and <a href="https://se.linkedin.com/in/elie-bou-absi-5b722123a">Elie Bou Absi</a>. They've been working on various internal and customer projects, gaining practical experience in real-world software development. One project we've been collaborating on is AZDOI, a tool designed to document an Azure DevOps organization. After seeing its value in our work, we've decided to open source AZDOI, and in this blog post, I'll walk you through what it is and how you can use it.</p>
+<h1 id="what-azdoi-does">What AZDOI Does</h1>
+<p>AZDOI (Azure DevOps Inventory) is a .NET tool designed to create documentation for Azure DevOps organizations. The tool connects to the Azure DevOps REST API and iterates over all projects in an organization it has access to, using either personal access token or Azure Entra ID authentication i.e. using a service principle.</p>
+<p>For each project, AZDOI systematically inventories all repositories, fetching useful data including default branch, size, and URIs. It goes deeper by also collecting each repository's branches, tags, and README content.</p>
+<div class="mermaid">graph LR
+    Projects[Iterate Projects]
+    Repos[Iterate Repositories]
+    Branches[Iterate Branches]
+    Tags[Iterate Tags]
+    Tag[Fetch tag annotation]
+    Readme[Fetch README.md]
+    Markdown[Generate Markdown]
+
+    Projects --> Repos
+    Repos --> Branches --> Markdown
+    Repos --> Tags --> Tag --> Markdown
+    Repos --> Readme --> Markdown
+</div>
+<p>The output is a well-organized set of Markdown files structured at the organization, project, and repository levels. These generated Markdown files can then serve as source input for a static site generator to create comprehensive, easily navigable, searchable documentation of your entire Azure DevOps organization.</p>
+<p>An example of the end result published to GitHub Pages can be found at <a href="https://wcomab.github.io/AZDOI/AZDOI/">https://wcomab.github.io/AZDOI/AZDOI/</a></p>
+<p>While AZDOI currently focuses on documenting Azure Repos, future versions may expand to cover other aspects of Azure DevOps like work items, pipelines, and release definitions to provide a more complete organizational view.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>AZDOI is a .NET tool distributed via <a href="https://www.nuget.org/packages/AZDOI/">NuGet.org</a>. You can install it either as a globally available tool or as a local tool using a tool manifest.</p>
+<h3 id="global-installation">Global Installation</h3>
+<p>To install AZDOI as a global tool, run the following command:</p>
+<pre><code class="language-bash">dotnet tool install --global AZDOI
+</code></pre>
+<p>Once installed globally, you can invoke AZDOI simply by using the command:</p>
+<pre><code class="language-bash">azdoi
+</code></pre>
+<h3 id="local-installation">Local Installation</h3>
+<p>If you prefer to install AZDOI locally (per repository), you can set up a tool manifest and install it with the following commands:</p>
+<pre><code class="language-bash"># Create tool manifest (only needed first time when setting up local/repo-versioned tools)
+dotnet new tool-manifest
+
+# Install tool into manifest
+dotnet tool install --local AZDOI
+</code></pre>
+<p>After installing, make sure to commit the manifest file located at <code>.config/dotnet-tools.json</code> into your repository. This allows anyone cloning the repo or using a DevOps pipeline to restore all versioned tools by executing:</p>
+<pre><code class="language-bash">dotnet tool restore
+</code></pre>
+<p>As a local tool, you can invoke AZDOI using:</p>
+<pre><code class="language-bash">dotnet azdoi
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>The basic usage of AZDOI is as follows:</p>
+<pre><code class="language-bash">azdoi inventory repositories &lt;devopsorg&gt; &lt;outputpath&gt; [OPTIONS]
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-bash">azdoi inventory repositories AZDOI /path/to/output
+</code></pre>
+<h3 id="options">Options</h3>
+<p>Here are some of the available options you can use with AZDOI inventory repositories command:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--help</code></td>
+<td>Used to get help with parameters</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--pat</code></td>
+<td>Personal Access Token for authentication</td>
+<td>Environment variable: AZDOI_PAT</td>
+</tr>
+<tr>
+<td><code>--entra-id-auth</code></td>
+<td>Use Entra ID for Azure DevOps Authentication</td>
+<td>False</td>
+</tr>
+<tr>
+<td><code>--azure-tenant-id</code></td>
+<td>Entra Azure Tenant ID for authentication</td>
+<td>Environment variable: AZURE_TENANT_ID</td>
+</tr>
+<tr>
+<td><code>--include-project</code></td>
+<td>Include specific projects</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--exclude-project</code></td>
+<td>Exclude specific projects</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--include-repository</code></td>
+<td>Include specific repositories</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--exclude-repository</code></td>
+<td>Exclude specific repositories</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--include-repository-readme</code></td>
+<td>Include specific repository README</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--exclude-repository-readme</code></td>
+<td>Exclude specific repository README</td>
+<td></td>
+</tr>
+<tr>
+<td><code>--run-in-parallel</code></td>
+<td>Enable parallel processing of projects</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+<p>When the <code>--entra-id-auth</code> option is specified, AZDOI will attempt to authenticate using the <a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet">DefaultAzureCredential</a>, which tries to authorize in the following order based on your environment:</p>
+<ol>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.environmentcredential?view=azure-dotnet">EnvironmentCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.workloadidentitycredential?view=azure-dotnet">WorkloadIdentityCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.managedidentitycredential?view=azure-dotnet">ManagedIdentityCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.sharedtokencachecredential?view=azure-dotnet">SharedTokenCacheCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocredential?view=azure-dotnet">VisualStudioCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocodecredential?view=azure-dotnet">VisualStudioCodeCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azureclicredential?view=azure-dotnet">AzureCliCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azurepowershellcredential?view=azure-dotnet">AzurePowerShellCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azuredeveloperclicredential?view=azure-dotnet">AzureDeveloperCliCredential</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.interactivebrowsercredential?view=azure-dotnet">InteractiveBrowserCredential</a></li>
+</ol>
+<h2 id="devops-pipeline">DevOps Pipeline</h2>
+<p>Below is a fairly minimal Azure Pipeline that runs daily to generate an inventory of Azure DevOps repositories. This pipeline uses Azure CLI authentication and uploads the results as a pipeline artifact.</p>
+<pre><code class="language-yaml"># azure-pipelines.yml
+trigger:
+  - main
+
+schedules:
+- cron: &quot;0 22 * * *&quot;
+  displayName: &quot;Daily build at 22:00&quot;
+  branches:
+    include:
+      - main
+  always: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI&#64;2
+  displayName: 'Generate Azure DevOps Inventory'
+  inputs:
+    azureSubscription: 'azure-devops-inventory-tool'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      URL=&quot;$(System.CollectionUri)&quot;
+      ORG_NAME=${URL#https://dev.azure.com/}
+      ORG_NAME=${ORG_NAME%/}
+      echo &quot;Organization name is: $ORG_NAME&quot;
+
+      dotnet tool restore \
+        &amp;&amp; dotnet AZDOI inventory repositories $ORG_NAME &quot;$(Build.ArtifactStagingDirectory)&quot; --entra-id-auth --run-in-parallel \
+        &amp;&amp; echo '##vso[artifact.upload artifactname=AzureDevOpsDocs]$(Build.ArtifactStagingDirectory)'
+</code></pre>
+<h3 id="pipeline-configuration-explanation">Pipeline Configuration Explanation</h3>
+<p>The Azure Pipeline configuration above does the following:</p>
+<h4 id="trigger">Trigger</h4>
+<ul>
+<li>The pipeline runs automatically when changes are pushed to the <code>main</code> branch.</li>
+<li>It is scheduled to run daily at 22:00 (10 PM) UTC through a cron schedule.</li>
+<li>The schedule is set to always run, even if there are no code changes.</li>
+</ul>
+<h4 id="environment">Environment</h4>
+<ul>
+<li>It uses the latest version of Ubuntu as the build agent.</li>
+</ul>
+<h4 id="steps">Steps</h4>
+<p>The pipeline has a single step using the Azure CLI task that:</p>
+<ol>
+<li>Extracts the Azure DevOps organization name from the collection URI.</li>
+<li>Runs the AZDOI tool to generate an inventory of repositories by:
+<ul>
+<li>Restoring .NET tools.</li>
+<li>Running the <code>inventory repositories</code> command for the organization.</li>
+<li>Using Entra ID (formerly Azure AD) authentication.</li>
+<li>Running operations in parallel for better performance.</li>
+<li>Saving output to the build artifacts directory.</li>
+</ul>
+</li>
+<li>Uploads the generated documentation as a build artifact named 'AzureDevOpsDocs'.</li>
+</ol>
+<p>The pipeline requires an Azure service connection named 'azure-devops-inventory-tool' with appropriate permissions to access Azure DevOps resources.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In this post, we introduced AZDOI, a .NET tool designed to document Azure DevOps organizations by generating a set of Markdown files. You can find the code for AZDOI at <a href="https://github.com/WCOMAB/AZDOI/">GitHub</a>, and the tool is available for installation via <a href="https://www.nuget.org/packages/AZDOI/">NuGet</a>.</p>
+<p>An example of the generated documentation can be viewed at <a href="https://wcomab.github.io/AZDOI/AZDOI/">AZDOI Example Documentation</a>.</p>
+<p>Take it for a spin, and feel free to let us know what you think!</p>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2025/2025-03-22-introducing-azdoi.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
+                    <br />
+                    <div id="search"></div>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ 
+            element: "#search",
+            showSubResults: true,
+             processResult: function (result) { 
+                result.meta.image = result.meta.image.replaceAll("&amp;", "&");
+                return result;
+            }
+        });
+        
+    });
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>
