@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Taking your build.cake to cake.cs">
+    <meta name="author" content="devlead">
+
+  <title>@devlead - Mattias Karlsson&#x27;s Blog - Migrating to Cake.Sdk</title>
+
+  <link rel="canonical" href="https://www.devlead.se/posts/2025/2025-07-28-migrating-to-cake-sdk">
+
+      <link type="application/rss+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.rss" />
+      <link type="application/atom+xml" rel="alternate" title="@devlead - Mattias Karlsson&#x27;s Blog" href="/feed.atom" />
+  
+  <meta name="application-name" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-tooltip" content="@devlead - Mattias Karlsson&#x27;s Blog" />
+  <meta name="msapplication-starturl" content="/" />
+
+  <meta property="og:title" content="@devlead - Mattias Karlsson&#x27;s Blog - Migrating to Cake.Sdk" />
+    <meta property="og:image" content="https://cdn.devlead.se/clipimg-vscode/2025/07/28/aba66765-b6fb-4c2a-1553-71ec0c766405.png?sv=2025-01-05&amp;st=2025-07-27T20%3A09%3A59Z&amp;se=2035-07-28T20%3A09%3A59Z&amp;sr=b&amp;sp=r&amp;sig=FsI7ji92JZB3VCtCDhCl5ujmhxlCLoi0xsw1ukh0nFw%3D" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.devlead.se/posts/2025/2025-07-28-migrating-to-cake-sdk" />
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/scss/bootstrap.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/brands.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css' data-no-mirror>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' data-no-mirror>
+  
+  <!-- Custom styles for this template -->
+  <link href="/scss/clean-blog.css" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/plugins/autoloader/prism-autoloader.min.js" data-no-mirror></script>
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.0.0/dist/quicklink.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.19.0/themes/prism.css">
+
+  <!-- Lunr search -->
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+.sponsorship { text-align: center; margin-top: 1em; }
+.sponsorship a { text-decoration: none; }
+.sponsorship a i.fa-heart { color: red; }
+.sponsorship a:hover i { color: white; transition-property: color; transition-duration: 350ms; }
+</style>
+<link href="/scss/TabGroup.css" rel="stylesheet" type="text/css">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+
+
+  
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">@devlead - Mattias Karlsson&#x27;s Blog</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/posts">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tags">Tags</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+</ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(&quot;https://cdn.devlead.se/clipimg-vscode/2025/07/28/aba66765-b6fb-4c2a-1553-71ec0c766405.png?sv=2025-01-05&amp;st=2025-07-27T20%3A09%3A59Z&amp;se=2035-07-28T20%3A09%3A59Z&amp;sr=b&amp;sp=r&amp;sig=FsI7ji92JZB3VCtCDhCl5ujmhxlCLoi0xsw1ukh0nFw%3D&quot;)">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="post-heading">
+          <h1>
+            Migrating to Cake.Sdk
+          </h1>
+            <h2 class="subheading">Taking your build.cake to cake.cs</h2>
+              <div class="meta">Published on Monday, 28 July 2025</div>
+                <div class="mt-3">
+                      <a href="/tags/net" class="badge badge-light"> .NET</a>
+                      <a href="/tags/csharp" class="badge badge-light"> CSharp</a>
+                      <a href="/tags/devops" class="badge badge-light"> DevOps</a>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <div class="container"y> 
+    <div class="row">
+      <div id="content" class="col-md-12" data-pagefind-body >  
+        <p>The Cake team recently announced <a href="https://cakebuild.net/blog/2025/07/dotnet-cake-cs">Cake.Sdk</a>, a new way to get the Cake tool scripting experience in regular .NET console applications. This brings the stellar experience of the new &quot;dotnet run app.cs&quot; feature (requires .NET 10), while also working seamlessly with .NET 8 and 9 for regular csproj projects.</p>
+<p>In this post, I'll walk you through migrating from a traditional Cake .NET Tool build script to the new Cake.Sdk single file approach.</p>
+<h2 id="whats-changing">What's Changing</h2>
+<p>The migration involves converting from a <code>build.cake</code> file with <code>#addin</code> and <code>#tool</code> directives to a <code>cake.cs</code> file with <code>#:sdk</code> and <code>#:package</code> directives. The <code>#tool</code> directive is replaced with the <code>InstallTool()</code> method call. The new approach leverages .NET 10's file-based execution while maintaining all the familiar Cake functionality.</p>
+<h2 id="migration-steps">Migration Steps</h2>
+<h3 id="update-global.json">1. Update global.json</h3>
+<p>First, add the Cake.Sdk to your <code>global.json</code> to pin the version:</p>
+<pre><code class="language-json">{
+  &quot;sdk&quot;: {
+    &quot;version&quot;: &quot;10.0.100-preview.6.25358.103&quot;,
+    &quot;allowPrerelease&quot;: false,
+    &quot;rollForward&quot;: &quot;latestMajor&quot;
+  },
+  &quot;msbuild-sdks&quot;: {
+    &quot;Cake.Sdk&quot;: &quot;5.0.25198.49-beta&quot;
+  }
+}
+</code></pre>
+<h3 id="rename-and-update-build-script">2. Rename and Update Build Script</h3>
+<p>Rename your <code>build.cake</code> to <code>cake.cs</code> and update the directives:</p>
+<p><strong>Example before (build.cake):</strong></p>
+<pre><code class="language-csharp">#addin nuget:?package=Cake.FileHelpers&amp;version=7.0.0
+#addin nuget:?package=Newtonsoft.Json&amp;version=13.0.3
+#tool dotnet:?package=GitVersion.Tool&amp;version=5.12.0
+
+// ... existing code ...
+</code></pre>
+<p><strong>Example after (cake.cs):</strong></p>
+<pre><code class="language-csharp">#:sdk Cake.Sdk
+#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+InstallTool(&quot;dotnet:https://api.nuget.org/v3/index.json?package=GitVersion.Tool&amp;version=5.12.0&quot;);
+
+// ... existing code ...
+</code></pre>
+<h3 id="update-package-management">3. Update Package Management</h3>
+<p>For Central Package Management (CPM), add the packages to your <code>Directory.Packages.props</code>:</p>
+<pre><code class="language-xml">&lt;ItemGroup&gt;
+  &lt;PackageVersion Include=&quot;Cake.FileHelpers&quot; Version=&quot;7.0.0&quot; /&gt;
+  &lt;PackageVersion Include=&quot;Newtonsoft.Json&quot; Version=&quot;13.0.3&quot; /&gt;
+  &lt;!-- ... existing packages ... --&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>Alternatively, you can specify versions directly in the package directives:</p>
+<pre><code class="language-csharp">#:package Cake.FileHelpers&#64;7.0.0
+#:package Newtonsoft.Json&#64;13.0.3
+</code></pre>
+<h3 id="update-build-command">4. Update Build Command</h3>
+<p>The build command changes from:</p>
+<pre><code class="language-bash">dotnet cake build.cake
+</code></pre>
+<p>To:</p>
+<pre><code class="language-bash">dotnet cake.cs
+</code></pre>
+<h2 id="key-differences">Key Differences</h2>
+<h3 id="package-references">Package References</h3>
+<p><strong>Old way:</strong></p>
+<pre><code class="language-csharp">#addin nuget:?package=Cake.FileHelpers&amp;version=7.0.0
+#addin nuget:?package=Newtonsoft.Json&amp;version=13.0.3
+</code></pre>
+<p><strong>New way:</strong></p>
+<pre><code class="language-csharp">#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+</code></pre>
+<h3 id="tool-installation">Tool Installation</h3>
+<p><strong>Old way:</strong></p>
+<pre><code class="language-csharp">#tool dotnet:?package=GitVersion.Tool&amp;version=5.12.0
+</code></pre>
+<p><strong>New way:</strong></p>
+<pre><code class="language-csharp">InstallTool(&quot;dotnet:https://api.nuget.org/v3/index.json?package=GitVersion.Tool&amp;version=5.12.0&quot;);
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>File-based approach</strong>: .NET 10 Preview 6 or later</li>
+<li><strong>Project-based approach</strong>: .NET 8.0 or later</li>
+</ul>
+<h2 id="benefits">Benefits</h2>
+<ol>
+<li><strong>Simplified Setup</strong>: No need for wrapper scripts or tool installation</li>
+<li><strong>Better IDE Support</strong>: Full IntelliSense and debugging capabilities</li>
+<li><strong>Centralized Package Management</strong>: Works seamlessly with CPM</li>
+<li><strong>Standard NuGet Auth Support</strong>: Uses your existing NuGet configuration and credentials</li>
+<li><strong>.NET SDK Tooling</strong>: Leverages standard .NET tooling and build processes</li>
+<li><strong>Directory.Build.props/targets Support</strong>: Integrates with MSBuild's directory-level customization for build settings</li>
+</ol>
+<h2 id="converting-to-project-based">Converting to Project-Based</h2>
+<p>If you prefer a traditional project-based approach, you can convert your <code>cake.cs</code> file to a full .NET project using:</p>
+<pre><code class="language-bash">dotnet project convert cake.cs
+</code></pre>
+<p>This command creates a new directory named for your file, scaffolds a <code>.csproj</code> file, moves your code into the new directory as <code>cake.cs</code>, and translates any <code>#:</code> directives into MSBuild properties and references.</p>
+<p><strong>Before (cake.cs):</strong></p>
+<pre><code class="language-csharp">#:sdk Cake.Sdk
+#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+#:property ProjectType=Test
+
+// ... existing code ...
+</code></pre>
+<p><strong>After (cake/cake.csproj):</strong></p>
+<pre><code class="language-xml">&lt;Project Sdk=&quot;Cake.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+    &lt;PublishAot&gt;true&lt;/PublishAot&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;PropertyGroup&gt;
+    &lt;ProjectType&gt;Test&lt;/ProjectType&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;Cake.FileHelpers&quot; /&gt;
+    &lt;PackageReference Include=&quot;Newtonsoft.Json&quot; /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;
+</code></pre>
+<p>The project-based approach works with .NET 8, 9, and 10, while the file-based approach requires .NET 10.</p>
+<h2 id="real-world-example">Real-World Example</h2>
+<p>The <a href="https://github.com/App-vNext/Polly">Polly</a> project recently migrated from Cake .NET Tool to Cake.Sdk in their <a href="https://github.com/App-vNext/Polly/pull/2676">dotnet-vnext branch</a>. The migration involved:</p>
+<ul>
+<li>Renaming <code>build.cake</code> to <code>cake.cs</code> and adding SDK directives</li>
+<li>Updating <code>build.ps1</code> to use <code>dotnet cake.cs</code> instead of <code>dotnet cake</code></li>
+<li>Adding <code>Cake.Sdk</code> to <code>global.json</code> <code>msbuild-sdks</code> section</li>
+<li>Moving <code>Cake.FileHelpers</code> and <code>Newtonsoft.Json</code> from <code>#addin</code> to <code>#package</code> directives</li>
+<li>Adding <code>ProjectType=Test</code> property for analyzer support</li>
+</ul>
+<p>This real-world example demonstrates how straightforward the migration process is, even for large, complex projects like Polly.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The migration to Cake.Sdk is straightforward and brings significant improvements to the development experience. The new approach maintains all existing functionality while providing better tooling support, simplified project structure, and enhanced IDE integration.</p>
+<p>For more information, check out the <a href="https://cakebuild.net/blog/2025/07/dotnet-cake-cs">official announcement</a> and the <a href="https://github.com/cake-build/cakesdk-example">example repository</a>.</p>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small">This post is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution 4.0 International License</a></p>
+                    <p><div class="sponsorship">
+    <a class="btn btn-lg btn-outline-primary btn-block" href="https://github.com/sponsors/devlead" title="Sponsor Mattias Karlsson on GitHub">
+        <i class="fa fa-heart"></i>
+        Sponsor Mattias
+    </a>
+</div></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="small"><a href="https://github.com/devlead/devlead.se/edit/main/src/DevLead/input/posts/2025/2025-07-28-migrating-to-cake-sdk.md"><i class="fas fa-edit"></i> Edit This Page <i class="fab fa-github"></i> </a></p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Footer -->  
+  <footer>
+    <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted m-0">&#xA9; Mattias Karlsson 2025</p>
+                    <br />
+                    <div id="search"></div>
+                    <br />
+                    <ul class="list-inline text-center small">
+                            <li class="list-inline-item">
+                                <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                            </li>
+                    </ul>
+                    <br />
+                    <div class="font-weight-bold small"><a href="https://statiq.dev">Generated by Statiq</a></div>
+                </div>
+        </div>
+    </div>
+</footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://unpkg.com/mermaid@11.4.1/dist/mermaid.min.js" integrity="sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I" crossorigin="anonymous"></script>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ 
+            element: "#search",
+            showSubResults: true,
+             processResult: function (result) { 
+                result.meta.image = result.meta.image.replaceAll("&amp;", "&");
+                return result;
+            }
+        });
+        
+    });
+</script>
+
+  
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/clean-blog.js"></script>
+
+</body>
+
+</html>

@@ -4,8 +4,150 @@
 	<title>@devlead - Mattias Karlsson's Blog</title>
 	<link rel="self" href="https://www.devlead.se/" />
 	<rights>© Mattias Karlsson 2025</rights>
-	<updated>2025-07-09T12:48:09Z</updated>
+	<updated>2025-07-28T20:18:30Z</updated>
 	<logo>https://cdn.devlead.se/clipimg-vscode/2021/01/11/1f2af322-a19f-753d-bd3e-00118dc674f1.png?sv=2019-12-12&amp;st=2021-01-10T15%253A16%253A48Z&amp;se=2031-01-11T15%253A16%253A48Z&amp;sr=b&amp;sp=r&amp;sig=RYHdZjTvO%252Fw0tUGsgnIiGJRhTiQQPHnEsSKtnV14Yoc%253D</logo>
+	<entry>
+		<id>https://www.devlead.se/posts/2025/2025-07-28-migrating-to-cake-sdk</id>
+		<title>Migrating to Cake.Sdk</title>
+		<author>
+			<name>devlead</name>
+		</author>
+		<link href="https://www.devlead.se/posts/2025/2025-07-28-migrating-to-cake-sdk" />
+		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2025/07/28/aba66765-b6fb-4c2a-1553-71ec0c766405.png?sv=2025-01-05&amp;st=2025-07-27T20%253A09%253A59Z&amp;se=2035-07-28T20%253A09%253A59Z&amp;sr=b&amp;sp=r&amp;sig=FsI7ji92JZB3VCtCDhCl5ujmhxlCLoi0xsw1ukh0nFw%253D" />
+		<updated>2025-07-28T00:00:00Z</updated>
+		<content>&lt;p&gt;The Cake team recently announced &lt;a href="https://cakebuild.net/blog/2025/07/dotnet-cake-cs"&gt;Cake.Sdk&lt;/a&gt;, a new way to get the Cake tool scripting experience in regular .NET console applications. This brings the stellar experience of the new &amp;quot;dotnet run app.cs&amp;quot; feature (requires .NET 10), while also working seamlessly with .NET 8 and 9 for regular csproj projects.&lt;/p&gt;
+&lt;p&gt;In this post, I'll walk you through migrating from a traditional Cake .NET Tool build script to the new Cake.Sdk single file approach.&lt;/p&gt;
+&lt;h2 id="whats-changing"&gt;What's Changing&lt;/h2&gt;
+&lt;p&gt;The migration involves converting from a &lt;code&gt;build.cake&lt;/code&gt; file with &lt;code&gt;#addin&lt;/code&gt; and &lt;code&gt;#tool&lt;/code&gt; directives to a &lt;code&gt;cake.cs&lt;/code&gt; file with &lt;code&gt;#:sdk&lt;/code&gt; and &lt;code&gt;#:package&lt;/code&gt; directives. The &lt;code&gt;#tool&lt;/code&gt; directive is replaced with the &lt;code&gt;InstallTool()&lt;/code&gt; method call. The new approach leverages .NET 10's file-based execution while maintaining all the familiar Cake functionality.&lt;/p&gt;
+&lt;h2 id="migration-steps"&gt;Migration Steps&lt;/h2&gt;
+&lt;h3 id="update-global.json"&gt;1. Update global.json&lt;/h3&gt;
+&lt;p&gt;First, add the Cake.Sdk to your &lt;code&gt;global.json&lt;/code&gt; to pin the version:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+  &amp;quot;sdk&amp;quot;: {
+    &amp;quot;version&amp;quot;: &amp;quot;10.0.100-preview.6.25358.103&amp;quot;,
+    &amp;quot;allowPrerelease&amp;quot;: false,
+    &amp;quot;rollForward&amp;quot;: &amp;quot;latestMajor&amp;quot;
+  },
+  &amp;quot;msbuild-sdks&amp;quot;: {
+    &amp;quot;Cake.Sdk&amp;quot;: &amp;quot;5.0.25198.49-beta&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="rename-and-update-build-script"&gt;2. Rename and Update Build Script&lt;/h3&gt;
+&lt;p&gt;Rename your &lt;code&gt;build.cake&lt;/code&gt; to &lt;code&gt;cake.cs&lt;/code&gt; and update the directives:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example before (build.cake):&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.FileHelpers&amp;amp;version=7.0.0
+#addin nuget:?package=Newtonsoft.Json&amp;amp;version=13.0.3
+#tool dotnet:?package=GitVersion.Tool&amp;amp;version=5.12.0
+
+// ... existing code ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Example after (cake.cs):&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#:sdk Cake.Sdk
+#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+InstallTool(&amp;quot;dotnet:https://api.nuget.org/v3/index.json?package=GitVersion.Tool&amp;amp;version=5.12.0&amp;quot;);
+
+// ... existing code ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="update-package-management"&gt;3. Update Package Management&lt;/h3&gt;
+&lt;p&gt;For Central Package Management (CPM), add the packages to your &lt;code&gt;Directory.Packages.props&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;ItemGroup&amp;gt;
+  &amp;lt;PackageVersion Include=&amp;quot;Cake.FileHelpers&amp;quot; Version=&amp;quot;7.0.0&amp;quot; /&amp;gt;
+  &amp;lt;PackageVersion Include=&amp;quot;Newtonsoft.Json&amp;quot; Version=&amp;quot;13.0.3&amp;quot; /&amp;gt;
+  &amp;lt;!-- ... existing packages ... --&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Alternatively, you can specify versions directly in the package directives:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#:package Cake.FileHelpers&amp;#64;7.0.0
+#:package Newtonsoft.Json&amp;#64;13.0.3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="update-build-command"&gt;4. Update Build Command&lt;/h3&gt;
+&lt;p&gt;The build command changes from:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet cake build.cake
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet cake.cs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="key-differences"&gt;Key Differences&lt;/h2&gt;
+&lt;h3 id="package-references"&gt;Package References&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Old way:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#addin nuget:?package=Cake.FileHelpers&amp;amp;version=7.0.0
+#addin nuget:?package=Newtonsoft.Json&amp;amp;version=13.0.3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;New way:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="tool-installation"&gt;Tool Installation&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Old way:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#tool dotnet:?package=GitVersion.Tool&amp;amp;version=5.12.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;New way:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;InstallTool(&amp;quot;dotnet:https://api.nuget.org/v3/index.json?package=GitVersion.Tool&amp;amp;version=5.12.0&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="requirements"&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;File-based approach&lt;/strong&gt;: .NET 10 Preview 6 or later&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Project-based approach&lt;/strong&gt;: .NET 8.0 or later&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="benefits"&gt;Benefits&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Simplified Setup&lt;/strong&gt;: No need for wrapper scripts or tool installation&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Better IDE Support&lt;/strong&gt;: Full IntelliSense and debugging capabilities&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Centralized Package Management&lt;/strong&gt;: Works seamlessly with CPM&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Standard NuGet Auth Support&lt;/strong&gt;: Uses your existing NuGet configuration and credentials&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;.NET SDK Tooling&lt;/strong&gt;: Leverages standard .NET tooling and build processes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Directory.Build.props/targets Support&lt;/strong&gt;: Integrates with MSBuild's directory-level customization for build settings&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="converting-to-project-based"&gt;Converting to Project-Based&lt;/h2&gt;
+&lt;p&gt;If you prefer a traditional project-based approach, you can convert your &lt;code&gt;cake.cs&lt;/code&gt; file to a full .NET project using:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet project convert cake.cs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This command creates a new directory named for your file, scaffolds a &lt;code&gt;.csproj&lt;/code&gt; file, moves your code into the new directory as &lt;code&gt;cake.cs&lt;/code&gt;, and translates any &lt;code&gt;#:&lt;/code&gt; directives into MSBuild properties and references.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Before (cake.cs):&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;#:sdk Cake.Sdk
+#:package Cake.FileHelpers
+#:package Newtonsoft.Json
+#:property ProjectType=Test
+
+// ... existing code ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;After (cake/cake.csproj):&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Project Sdk=&amp;quot;Cake.Sdk&amp;quot;&amp;gt;
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;OutputType&amp;gt;Exe&amp;lt;/OutputType&amp;gt;
+    &amp;lt;TargetFramework&amp;gt;net10.0&amp;lt;/TargetFramework&amp;gt;
+    &amp;lt;ImplicitUsings&amp;gt;enable&amp;lt;/ImplicitUsings&amp;gt;
+    &amp;lt;Nullable&amp;gt;enable&amp;lt;/Nullable&amp;gt;
+    &amp;lt;PublishAot&amp;gt;true&amp;lt;/PublishAot&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;ProjectType&amp;gt;Test&amp;lt;/ProjectType&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+  &amp;lt;ItemGroup&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Cake.FileHelpers&amp;quot; /&amp;gt;
+    &amp;lt;PackageReference Include=&amp;quot;Newtonsoft.Json&amp;quot; /&amp;gt;
+  &amp;lt;/ItemGroup&amp;gt;
+&amp;lt;/Project&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The project-based approach works with .NET 8, 9, and 10, while the file-based approach requires .NET 10.&lt;/p&gt;
+&lt;h2 id="real-world-example"&gt;Real-World Example&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="https://github.com/App-vNext/Polly"&gt;Polly&lt;/a&gt; project recently migrated from Cake .NET Tool to Cake.Sdk in their &lt;a href="https://github.com/App-vNext/Polly/pull/2676"&gt;dotnet-vnext branch&lt;/a&gt;. The migration involved:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Renaming &lt;code&gt;build.cake&lt;/code&gt; to &lt;code&gt;cake.cs&lt;/code&gt; and adding SDK directives&lt;/li&gt;
+&lt;li&gt;Updating &lt;code&gt;build.ps1&lt;/code&gt; to use &lt;code&gt;dotnet cake.cs&lt;/code&gt; instead of &lt;code&gt;dotnet cake&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Adding &lt;code&gt;Cake.Sdk&lt;/code&gt; to &lt;code&gt;global.json&lt;/code&gt; &lt;code&gt;msbuild-sdks&lt;/code&gt; section&lt;/li&gt;
+&lt;li&gt;Moving &lt;code&gt;Cake.FileHelpers&lt;/code&gt; and &lt;code&gt;Newtonsoft.Json&lt;/code&gt; from &lt;code&gt;#addin&lt;/code&gt; to &lt;code&gt;#package&lt;/code&gt; directives&lt;/li&gt;
+&lt;li&gt;Adding &lt;code&gt;ProjectType=Test&lt;/code&gt; property for analyzer support&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This real-world example demonstrates how straightforward the migration process is, even for large, complex projects like Polly.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The migration to Cake.Sdk is straightforward and brings significant improvements to the development experience. The new approach maintains all existing functionality while providing better tooling support, simplified project structure, and enhanced IDE integration.&lt;/p&gt;
+&lt;p&gt;For more information, check out the &lt;a href="https://cakebuild.net/blog/2025/07/dotnet-cake-cs"&gt;official announcement&lt;/a&gt; and the &lt;a href="https://github.com/cake-build/cakesdk-example"&gt;example repository&lt;/a&gt;.&lt;/p&gt;
+</content>
+		<summary>Taking your build.cake to cake.cs</summary>
+	</entry>
 	<entry>
 		<id>https://www.devlead.se/posts/2025/2025-03-22-introducing-azdoi</id>
 		<title>Introducing AZDOI</title>
@@ -1173,61 +1315,5 @@ UnpackDacPac is a cross-platform tool that runs on .NET SDK 6, 7, and 8 (&lt;em&
 &lt;p&gt;&lt;em&gt;Happy unpacking!&lt;/em&gt;&lt;/p&gt;
 </content>
 		<summary>A .NET Tool for Extracting DAC Packages</summary>
-	</entry>
-	<entry>
-		<id>https://www.devlead.se/posts/2023/2023-11-27-introducing-bri</id>
-		<title>Introducing BRI</title>
-		<author>
-			<name>devlead</name>
-		</author>
-		<link href="https://www.devlead.se/posts/2023/2023-11-27-introducing-bri" />
-		<link rel="enclosure" type="image" href="https://cdn.devlead.se/clipimg-vscode/2022/11/27/9a2ae7d59ab04134b044699dfa437e61.jpg?sv=2021-10-04&amp;st=2023-11-27T19%253A40%253A55Z&amp;se=2031-11-28T19%253A40%253A00Z&amp;sr=b&amp;sp=r&amp;sig=0KWUea7yaM5YorSAtmNaMUCHPjJRaMiqif95E1o%252BW%252Bo%253D" />
-		<updated>2023-11-27T00:00:00Z</updated>
-		<content>&lt;p&gt;Are you looking for a way to document your Azure &lt;a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep"&gt;Bicep&lt;/a&gt; &lt;a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/modules"&gt;modules&lt;/a&gt; in a simple and elegant way? If so, you might want to check out BRI, a .NET tool that I created to help you with that.&lt;/p&gt;
-&lt;h2 id="what-is-bri"&gt;What is BRI?&lt;/h2&gt;
-&lt;p&gt;BRI stands for Bicep registry inventory, and it does exactly what the name suggests: it scans a provided Azure Container Registry for any published Bicep modules and generates markdown files for each module version. These markdown files contain information about the module's input parameters, output values, and example usage. You can then use these files with any static site generator that supports markdown, such as &lt;a href="https://statiq.dev/"&gt;Statiq&lt;/a&gt;, to create a beautiful documentation site for your modules.&lt;/p&gt;
-&lt;h2 id="how-to-use-bri"&gt;How to use BRI?&lt;/h2&gt;
-&lt;p&gt;BRI is very easy to use. You just need to install it from &lt;a href="https://www.nuget.org/packages/bri"&gt;NuGet.org&lt;/a&gt; using the &lt;a href="https://get.dot.net/"&gt;.NET SDK&lt;/a&gt; &lt;a href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-tool-install"&gt;tool install command&lt;/a&gt;. It supports both .NET 7 and .NET 8, and you can install it globally or locally. For example, to install it globally, you can run:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --global BRI
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Or, to install it locally (tool manifest), you can run:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;dotnet tool install --local BRI
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once installed, you can run BRI by typing (&lt;code&gt;dotnet bri&lt;/code&gt; if installed locally):&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;bri inventory &amp;lt;container registry name&amp;gt; &amp;lt;output path&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;For example, to scan the container registry named myregistry.azurecr.io and generate markdown files in the ./output/path folder, you can run:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;bri inventory myregistry.azurecr.io ./output/path
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="example"&gt;Example&lt;/h2&gt;
-&lt;p&gt;You can see an example of the output that BRI generates at &lt;a href="https://www.devlead.se/bri/britool.azurecr.io/bicep/modules/bri/4.0.0.0.html"&gt;www.devlead.se/bri/&lt;/a&gt;
-&lt;a href="https://www.devlead.se/bri/britool.azurecr.io/bicep/modules/bri/4.0.0.0.html"&gt;&lt;img src="https://cdn.devlead.se/clipimg-vscode/2022/11/27/00ee924d-9de2-4b2b-90cc-1b5a8bcfb696_small.jpg?sv=2021-10-04&amp;amp;st=2023-11-27T19%3A39%3A50Z&amp;amp;se=2031-11-28T19%3A39%3A00Z&amp;amp;sr=b&amp;amp;sp=r&amp;amp;sig=oree1I2Ia%2BqTdwXxZ1teSRHTf9iPODDLjjp5HvUGVsA%3D" alt="example" /&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="authentication"&gt;Authentication&lt;/h2&gt;
-&lt;p&gt;By default, it'll try to authenticate using the &lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.defaultazurecredential?view=azure-dotnet"&gt;DefaultAzureCredential&lt;/a&gt; which tries to authorize in the following order based on your environment.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.environmentcredential?view=azure-dotnet"&gt;EnvironmentCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.workloadidentitycredential?view=azure-dotnet"&gt;WorkloadIdentityCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.managedidentitycredential?view=azure-dotnet"&gt;ManagedIdentityCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.sharedtokencachecredential?view=azure-dotnet"&gt;SharedTokenCacheCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocredential?view=azure-dotnet"&gt;VisualStudioCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.visualstudiocodecredential?view=azure-dotnet"&gt;VisualStudioCodeCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azureclicredential?view=azure-dotnet"&gt;AzureCliCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azurepowershellcredential?view=azure-dotnet"&gt;AzurePowerShellCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azuredeveloperclicredential?view=azure-dotnet"&gt;AzureDeveloperCliCredential&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://learn.microsoft.com/en-us/dotnet/api/azure.identity.interactivebrowsercredential?view=azure-dotnet"&gt;InteractiveBrowserCredential&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;If running in a DevOps pipeline recommended way is to use a managed/workload identity, or create an Entra ID &lt;a href="https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=browser"&gt;service principal&lt;/a&gt; and set the following environment variables fetched from pipeline secrets&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;AZURE_TENANT_ID&lt;/code&gt; to its tenant ID&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;AZURE_CLIENT_ID&lt;/code&gt; to its client ID&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;AZURE_CLIENT_SECRET&lt;/code&gt; to its secret.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;AZURE_AUTHORITY_HOST&lt;/code&gt; to &lt;code&gt;https://login.microsoftonline.com/&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id="where-to-find-bri"&gt;Where to find BRI?&lt;/h2&gt;
-&lt;p&gt;BRI is open source and licensed under the MIT license, so you can use it freely and modify it as you wish. You can find the source code on &lt;a href="https://github.com/devlead/BRI"&gt;GitHub&lt;/a&gt; and the NuGet package at &lt;a href="https://www.nuget.org/packages/bri"&gt;NuGet.org&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="feedback-and-suggestions"&gt;Feedback and suggestions&lt;/h2&gt;
-&lt;p&gt;I hope you find BRI useful and that it helps you with your Bicep module development. If you have any feedback or suggestions, please feel free to open an issue or a pull request on GitHub. Happy coding!&lt;/p&gt;
-</content>
-		<summary>A DevOps tool to document Bicep modules in a Azure container registry</summary>
 	</entry>
 </feed>
